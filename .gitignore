@@ -1,5 +1,5 @@
 # config
-app/assets/config.properties
+app/src/main/res/raw/config.properties
 
 # Built application files
 build/

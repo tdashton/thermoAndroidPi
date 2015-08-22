@@ -12,8 +12,6 @@ import java.util.Properties;
  */
 public class AssetManagerUtil {
 
-	protected final String PROP_FILE = "config.properties";
-
 //	AssetManager assetManager = resources.getAssets();
 //	Resources resources = this.getResources();
 	protected Resources resources = null;
@@ -21,11 +19,11 @@ public class AssetManagerUtil {
 
 	protected Properties mProperties;
 
-	public AssetManagerUtil(Resources resource) {
-	// Read from the /assets directory
+	public AssetManagerUtil(Resources resource, int rawConfigResource) {
+		this.resources = resource;
+		this.assetManager = resource.getAssets();
 		try {
-//			InputStream rawResource = resources.openRawResource(R.raw.micrologv2);
-			InputStream inputStream = assetManager.open(PROP_FILE);
+			InputStream inputStream = resources.openRawResource(rawConfigResource);
 			mProperties = new Properties();
 			mProperties.load(inputStream);
 			System.out.println("The properties are now loaded");
@@ -36,7 +34,7 @@ public class AssetManagerUtil {
 		}
 	}
 
-	String getProperty(String propertyName) {
+	public String getProperty(String propertyName) {
 		return mProperties.getProperty(propertyName);
 	}
 }
