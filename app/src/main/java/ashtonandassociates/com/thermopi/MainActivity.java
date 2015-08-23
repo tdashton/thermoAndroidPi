@@ -1,5 +1,6 @@
 package ashtonandassociates.com.thermopi;
 
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import ashtonandassociates.com.thermopi.ui.GraphActivity;
 import ashtonandassociates.com.thermopi.util.AssetManagerUtil;
 
 
@@ -31,16 +33,11 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-//		if (savedInstanceState == null) {
-//			getSupportFragmentManager().beginTransaction()
-//					.add(R.id.container, new PlaceholderFragment())
-//					.commit();
-//		}
-
-		// do asset management
-		AssetManagerUtil am = new AssetManagerUtil(getResources(), R.raw.config);
-		String theUrl = am.getProperty("server_url_base");
-		Log.i(this.getClass().getSimpleName(), theUrl);
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.container, new PlaceholderFragment())
+					.commit();
+		}
 
 		mDrawerTitle = mTitle = getTitle();
 
@@ -92,7 +89,9 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			Log.d(this.getClass().getSimpleName(), item.toString());
-			return true;
+			item.getItemId();
+			Intent intent = new Intent(this, GraphActivity.class);
+			startActivity(intent);			return true;
 		}
 
 		//noinspection SimplifiableIfStatement
@@ -114,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 								 Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.activity_main, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 			return rootView;
 		}
 	}
