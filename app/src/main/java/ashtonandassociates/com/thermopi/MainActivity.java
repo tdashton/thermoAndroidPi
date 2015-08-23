@@ -1,6 +1,6 @@
 package ashtonandassociates.com.thermopi;
 
-import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import ashtonandassociates.com.thermopi.ui.GraphActivity;
-import ashtonandassociates.com.thermopi.util.AssetManagerUtil;
+import java.util.ArrayList;
+
+import ashtonandassociates.com.thermopi.ui.GraphFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -29,13 +31,17 @@ public class MainActivity extends ActionBarActivity {
 	private CharSequence mTitle;
 	private String[] mDrawerItems;
 
+	private Fragment mMainFragment;
+	private ArrayList<Fragment> mActiveFragments;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
+			mMainFragment = new PlaceholderFragment();
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment())
+					.add(R.id.container, mMainFragment)
 					.commit();
 		}
 
@@ -44,24 +50,25 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.string.drawer_open, R.string.drawer_close) {
+				R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				getSupportActionBar().setTitle("Navigation!");
+				getSupportActionBar().setTitle(R.string.drawer_open);
 				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				getSupportActionBar().setTitle("Navigation!");
+				getSupportActionBar().setTitle(R.string.app_name);
 				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 		};
@@ -71,6 +78,38 @@ public class MainActivity extends ActionBarActivity {
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
+	}
+
+	protected class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			Log.i("arg1", arg1.toString());
+			Log.i("arg2", new Integer(arg2).toString());
+			Log.i("arg3", new Long(arg3).toString());
+			selectItem(arg2);
+		}
+	}
+
+	/** Swaps fragments in the main content view */
+	private void selectItem(int position) {
+		// Create a new fragment and specify the planet to show based on position
+		Fragment fragment;
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		switch(position) {
+			case 0:
+				fragmentManager.beginTransaction().attach(this.mMainFragment).commit();
+				break;
+
+			case 1:
+			default:
+				fragment = new GraphFragment();
+				fragmentManager.beginTransaction().detach(this.mMainFragment).replace(R.id.content_frame, fragment).commit();
+				break;
+
+		}
+		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
@@ -88,10 +127,8 @@ public class MainActivity extends ActionBarActivity {
 		int id = item.getItemId();
 
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			Log.d(this.getClass().getSimpleName(), item.toString());
-			item.getItemId();
-			Intent intent = new Intent(this, GraphActivity.class);
-			startActivity(intent);			return true;
+			Log.i("id", new Integer(id).toString());
+			return true;
 		}
 
 		//noinspection SimplifiableIfStatement
@@ -102,18 +139,26 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onBackPressed() {
+		if(this.mDrawerLayout.isDrawerOpen(mDrawerList)) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+			return;
+		}
+		super.onBackPressed();
+	}
+
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
 		public PlaceholderFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 								 Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
 			return rootView;
 		}
 	}

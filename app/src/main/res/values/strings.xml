@@ -2,12 +2,11 @@
 <resources>
 
     <string name="app_name">ThermoPi</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="main_header">Pfeilgasse</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Closed</string>
+    <string name="drawer_open">Choose</string>
 
     <string-array
         name="drawer_menu_items">

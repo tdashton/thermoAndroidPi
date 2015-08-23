@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.GraphActivity"
+            android:name=".ui.GraphFragment"
             android:label="@string/title_activity_graph" >
         </activity>
     </application>
