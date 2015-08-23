@@ -27,7 +27,7 @@ public class GraphFragment extends Fragment {
 		// Instantiate the RequestQueue.
 		RequestQueue queue = Volley.newRequestQueue(this.getActivity());
 		// do asset management
-		AssetManagerUtil am = new AssetManagerUtil(getResources(), R.raw.config);
+		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 
 		String url = am.getProperty(Constants.CONST_URL_BASE).concat(am.getProperty(Constants.CONST_URL_PATH));
 

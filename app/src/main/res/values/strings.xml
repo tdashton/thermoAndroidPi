@@ -3,7 +3,9 @@
 
     <string name="app_name">ThermoPi</string>
     <string name="main_header">Pfeilgasse</string>
+    <string name="main_date">Date</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Choose</string>
