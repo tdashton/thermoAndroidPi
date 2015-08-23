@@ -19,6 +19,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import ashtonandassociates.com.thermopi.ui.GraphFragment;
+import ashtonandassociates.com.thermopi.ui.OverviewFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
-			mMainFragment = new PlaceholderFragment();
+			mMainFragment = new OverviewFragment();
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, mMainFragment)
 					.commit();
@@ -148,18 +149,18 @@ public class MainActivity extends ActionBarActivity {
 		super.onBackPressed();
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-								 Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
-			return rootView;
-		}
-	}
+//	/**
+//	 * A placeholder fragment containing a simple view.
+//	 */
+//	public static class PlaceholderFragment extends Fragment {
+//		public PlaceholderFragment() {
+//		}
+//
+//		@Override
+//		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//								 Bundle savedInstanceState) {
+//			View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
+//			return rootView;
+//		}
+//	}
 }
