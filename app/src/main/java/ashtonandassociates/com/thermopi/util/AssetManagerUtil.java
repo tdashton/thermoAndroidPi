@@ -2,6 +2,7 @@ package ashtonandassociates.com.thermopi.util;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +13,6 @@ import java.util.Properties;
  */
 public class AssetManagerUtil {
 
-//	AssetManager assetManager = resources.getAssets();
-//	Resources resources = this.getResources();
 	protected Resources resources = null;
 	protected AssetManager assetManager = null;
 
@@ -26,10 +25,10 @@ public class AssetManagerUtil {
 			InputStream inputStream = resources.openRawResource(rawConfigResource);
 			mProperties = new Properties();
 			mProperties.load(inputStream);
-			System.out.println("The properties are now loaded");
-			System.out.println("properties: " + mProperties);
+			Log.d(this.getClass().getSimpleName(), "The properties are now loaded");
+			Log.d(this.getClass().getSimpleName(), "properties: " + mProperties);
 		} catch (IOException e) {
-			System.err.println("Failed to open microlog property file");
+			Log.e(this.getClass().getSimpleName(), "Failed to open microlog property file");
 			e.printStackTrace();
 		}
 	}

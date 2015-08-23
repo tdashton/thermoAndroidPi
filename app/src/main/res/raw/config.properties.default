@@ -1,3 +1,0 @@
-# save as config.properties in this directory
-server_url_base=http://server/
-server_url_json=/path/to/json/
