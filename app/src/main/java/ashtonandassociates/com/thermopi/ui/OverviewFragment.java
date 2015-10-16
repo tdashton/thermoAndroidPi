@@ -78,10 +78,29 @@ public class OverviewFragment extends Fragment {
 		mSensor1Value = (TextView) view.findViewById(R.id.sensor_1_value);
 		mSensor2Label = (TextView) view.findViewById(R.id.sensor_2_label);
 		mSensor2Value = (TextView) view.findViewById(R.id.sensor_2_value);
-
-		refreshValues();
+		if(savedInstanceState == null) {
+			refreshValues();
+		}
 
 		return view;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("dateString", mSensorDate.getText().toString());
+		outState.putString("valueOne", mSensor1Label.getText().toString());
+		outState.putString("valuetwo", mSensor2Label.getText().toString());
+	}
+
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if(savedInstanceState != null) {
+			mSensorDate.setText(savedInstanceState.getString("dateString"));
+			mSensor1Value.setText(savedInstanceState.getString("valueOne"));
+			mSensor2Value.setText(savedInstanceState.getString("valueTwo"));
+		}
 	}
 
 	@Override
