@@ -17,9 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+        <!--<activity
             android:name=".ui.GraphFragment"
             android:label="@string/title_activity_graph" >
-        </activity>
+        </activity>-->
     </application>
 </manifest>

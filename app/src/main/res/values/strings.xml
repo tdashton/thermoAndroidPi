@@ -9,6 +9,7 @@
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Choose</string>
+    <string name="search_hint">Search</string>
 
     <string-array
         name="drawer_menu_items">
