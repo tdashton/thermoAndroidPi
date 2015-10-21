@@ -1,17 +1,16 @@
 package ashtonandassociates.com.thermopi;
 
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -33,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
 	private String[] mDrawerItems;
 
 	private Fragment mMainFragment;
+	private Fragment mGraphFragment;
 	private ArrayList<Fragment> mActiveFragments;
 
 	@Override
@@ -41,9 +41,13 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
-			getSupportFragmentManager().beginTransaction()
+			mGraphFragment = new GraphFragment();
+			getFragmentManager().beginTransaction()
 					.add(R.id.container, mMainFragment)
+					.add(R.id.container, mGraphFragment)
+					.hide(mGraphFragment)
 					.commit();
+			;
 		}
 
 		mDrawerTitle = mTitle = getTitle();
@@ -55,7 +59,6 @@ public class MainActivity extends ActionBarActivity {
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
-
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.string.drawer_open, R.string.app_name) {
 
@@ -78,7 +81,8 @@ public class MainActivity extends ActionBarActivity {
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		//getSupportActionBar().setIcon(R.drawable.ic_drawer);
 	}
 
 	protected class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -95,18 +99,22 @@ public class MainActivity extends ActionBarActivity {
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
-		Fragment fragment;
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 
 		switch(position) {
 			case 0:
-				fragmentManager.beginTransaction().attach(this.mMainFragment).commit();
+				fragmentManager.beginTransaction()
+						.show(mMainFragment)
+						.hide(mGraphFragment)
+						.commit();
 				break;
 
 			case 1:
 			default:
-				fragment = new GraphFragment();
-				fragmentManager.beginTransaction().detach(this.mMainFragment).replace(R.id.content_frame, fragment).commit();
+				fragmentManager.beginTransaction()
+						.show(mGraphFragment)
+						.hide(mMainFragment)
+						.commit();
 				break;
 
 		}
