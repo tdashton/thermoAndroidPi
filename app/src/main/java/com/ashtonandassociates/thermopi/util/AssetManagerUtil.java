@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi.util;
+package com.ashtonandassociates.thermopi.util;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;

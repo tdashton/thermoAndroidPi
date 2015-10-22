@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi.util;
+package com.ashtonandassociates.thermopi.util;
 
 public class Constants {
 

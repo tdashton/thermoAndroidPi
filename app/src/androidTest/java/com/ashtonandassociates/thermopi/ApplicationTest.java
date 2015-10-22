@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi;
+package com.ashtonandassociates.thermopi;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

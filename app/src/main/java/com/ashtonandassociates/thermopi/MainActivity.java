@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi;
+package com.ashtonandassociates.thermopi;
 
 import android.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,8 +17,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import ashtonandassociates.com.thermopi.ui.GraphFragment;
-import ashtonandassociates.com.thermopi.ui.OverviewFragment;
+import com.ashtonandassociates.thermopi.ui.GraphFragment;
+import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 
 
 public class MainActivity extends ActionBarActivity {

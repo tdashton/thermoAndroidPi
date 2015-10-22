@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi.ui;
+package com.ashtonandassociates.thermopi.ui;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -11,9 +11,9 @@ import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import ashtonandassociates.com.thermopi.R;
-import ashtonandassociates.com.thermopi.util.AssetManagerUtil;
-import ashtonandassociates.com.thermopi.util.Constants;
+import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.Constants;
 
 public class GraphFragment extends Fragment {
 

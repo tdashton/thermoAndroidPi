@@ -1,4 +1,4 @@
-package ashtonandassociates.com.thermopi.ui;
+package com.ashtonandassociates.thermopi.ui;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -20,9 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ashtonandassociates.com.thermopi.R;
-import ashtonandassociates.com.thermopi.util.AssetManagerUtil;
-import ashtonandassociates.com.thermopi.util.Constants;
+import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.Constants;
 
 public class OverviewFragment extends Fragment {
 
