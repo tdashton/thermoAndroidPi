@@ -23,7 +23,25 @@ public class GraphFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_graph, null);
 		mTextView = (TextView) view.findViewById(R.id.textview);
+		if(savedInstanceState == null) {
+			refreshValues();
+		} else {
+			boolean hidden = savedInstanceState.getBoolean("fragHidden");
+			if(hidden) {
+				getFragmentManager().beginTransaction().hide(this).commit();
+			}
+		}
 
+		return view;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean("fragHidden", isHidden());
+		super.onSaveInstanceState(outState);
+	}
+
+	private void refreshValues() {
 		// Instantiate the RequestQueue.
 		RequestQueue queue = Volley.newRequestQueue(this.getActivity());
 		// do asset management
@@ -48,6 +66,6 @@ public class GraphFragment extends Fragment {
 		// Add the request to the RequestQueue.
 		queue.add(stringRequest);
 
-		return view;
 	}
+
 }

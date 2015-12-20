@@ -80,14 +80,19 @@ public class OverviewFragment extends Fragment {
 		mSensor2Value = (TextView) view.findViewById(R.id.sensor_2_value);
 		if(savedInstanceState == null) {
 			refreshValues();
+		} else {
+			boolean hidden = savedInstanceState.getBoolean("fragHidden");
+			if(hidden) {
+				getFragmentManager().beginTransaction().hide(this).commit();
+			}
 		}
-
 		return view;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putBoolean("fragHidden", isHidden());
 		outState.putString("dateString", mSensorDate.getText().toString());
 		outState.putString("valueOne", mSensor1Label.getText().toString());
 		outState.putString("valuetwo", mSensor2Label.getText().toString());

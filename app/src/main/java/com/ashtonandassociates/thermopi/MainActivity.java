@@ -15,42 +15,43 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 
-
 public class MainActivity extends ActionBarActivity {
+
+	final private String TAG = getClass().getSimpleName();
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
 	private String[] mDrawerItems;
 
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
-	private ArrayList<Fragment> mActiveFragments;
+//	private ArrayList<Fragment> mActiveFragments;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
 			mGraphFragment = new GraphFragment();
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, mMainFragment)
-					.add(R.id.container, mGraphFragment)
-					.hide(mGraphFragment)
-					.commit();
-			;
+				.add(R.id.container, mMainFragment, "mMainFragment")
+				.add(R.id.container, mGraphFragment, "mGraphFragment")
+				.hide(mGraphFragment)
+				.commit();
+		} else {
+			mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
+			mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
 		}
 
-		mDrawerTitle = mTitle = getTitle();
+		Log.v(TAG, mMainFragment.toString());
+		Log.v(TAG, mGraphFragment.toString());
 
 		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -59,8 +60,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.string.drawer_open, R.string.app_name) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
@@ -80,18 +80,23 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		//getSupportActionBar().setIcon(R.drawable.ic_drawer);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 	protected class DrawerItemClickListener implements ListView.OnItemClickListener {
 
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-			Log.i("arg1", arg1.toString());
-			Log.i("arg2", new Integer(arg2).toString());
-			Log.i("arg3", new Long(arg3).toString());
+			Log.v(TAG, "arg1: " + arg1.toString());
+			Log.v(TAG, "arg2: " + new Integer(arg2).toString());
+			Log.v(TAG, "arg3: " + new Long(arg3).toString());
 			selectItem(arg2);
 		}
 	}
