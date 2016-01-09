@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
+	private Fragment mControlFragment;
 //	private ArrayList<Fragment> mActiveFragments;
 
 	@Override
@@ -41,18 +43,23 @@ public class MainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
 			mGraphFragment = new GraphFragment();
+			mControlFragment = new ControlFragment();
 			getFragmentManager().beginTransaction()
 				.add(R.id.container, mMainFragment, "mMainFragment")
 				.add(R.id.container, mGraphFragment, "mGraphFragment")
+				.add(R.id.container, mControlFragment, "mControlFragment")
 				.hide(mGraphFragment)
+				.hide(mControlFragment)
 				.commit();
 		} else {
 			mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
 			mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
+			mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
 		}
 
 		Log.v(TAG, mMainFragment.toString());
 		Log.v(TAG, mGraphFragment.toString());
+		Log.v(TAG, mControlFragment.toString());
 
 		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -109,16 +116,26 @@ public class MainActivity extends ActionBarActivity {
 
 		switch(position) {
 			case 0:
+			default:
 				fragmentManager.beginTransaction()
 						.show(mMainFragment)
+						.hide(mControlFragment)
 						.hide(mGraphFragment)
 						.commit();
 				break;
 
 			case 1:
-			default:
 				fragmentManager.beginTransaction()
 						.show(mGraphFragment)
+						.hide(mControlFragment)
+						.hide(mMainFragment)
+						.commit();
+				break;
+
+			case 2:
+				fragmentManager.beginTransaction()
+						.hide(mGraphFragment)
+						.show(mControlFragment)
 						.hide(mMainFragment)
 						.commit();
 				break;

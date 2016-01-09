@@ -23,5 +23,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.squareup.retrofit:retrofit:1.9.+'
+    compile 'com.squareup.okhttp:okhttp:2.7.+'
     compile 'com.google.code.gson:gson:2.3'
 }
