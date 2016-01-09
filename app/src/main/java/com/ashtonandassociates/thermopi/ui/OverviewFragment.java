@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -80,18 +77,5 @@ public class OverviewFragment extends Fragment {
 		outState.putString("dateString", mSensorDate.getText().toString());
 		outState.putString("valueOne", mSensor1Label.getText().toString());
 		outState.putString("valuetwo", mSensor2Label.getText().toString());
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-			// Inflate the menu; this adds items to the action bar if it is present.
-		getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("i", item.toString());
-		refreshValues();
-		return super.onOptionsItemSelected(item);
 	}
 }

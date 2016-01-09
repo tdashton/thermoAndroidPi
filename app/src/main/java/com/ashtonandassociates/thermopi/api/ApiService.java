@@ -4,7 +4,6 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.response.HistoryResponse;
 
 import retrofit.Callback;
-import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.GET;
 import retrofit.http.POST;
