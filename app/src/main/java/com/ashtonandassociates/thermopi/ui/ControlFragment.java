@@ -17,7 +17,11 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.ControlResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
+import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -27,6 +31,9 @@ public class ControlFragment extends Fragment
 	implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlResponse> {
 
 	public static final String TAG = ControlFragment.class.getSimpleName();
+
+	public final String COMMAND_TIME = "CMD TIME";
+	public final String COMMAND_TEMP = "CMD TEMP";
 
 	protected RadioGroup mRadioGroup;
 	protected View mTemperatureGroup;
@@ -46,7 +53,7 @@ public class ControlFragment extends Fragment
 				for(CurrentResponse.Current current : currentResponse.data) {
 					if(current.description.equals("drinnen")) {
 						Double temp = new Double(current.value.toString());
-						mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp));
+						mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp) + "*");
 					}
 				}
 			}
@@ -128,7 +135,7 @@ public class ControlFragment extends Fragment
 
 				ApiTemperature temp = new ApiTemperature(new Double(mEditTextTemperature.getText().toString()), ApiTemperature.CONST_DEFAULT_SCALE);
 				String tempString = temp.getTemperature(ApiTemperature.CONST_API_SCALE).toString();
-				service.sendCommand("CMD TEMP", tempString, this);
+				service.sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
 				break;
 			case R.id.control_button_time:
 				Log.i(TAG, "time button");
@@ -138,7 +145,7 @@ public class ControlFragment extends Fragment
 				}
 				Integer inputMinutes = new Integer(mEditTextTime.getText().toString());
 				Integer minutes = inputMinutes * 60;
-				service.sendCommand("CMD TIME", minutes.toString(), this);
+				service.sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
 				break;
 		}
 	}
@@ -164,4 +171,32 @@ public class ControlFragment extends Fragment
 				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
 	}
+
+	private String getApiHashString(String command, String param) {
+		String retVal = null;
+		AppStateManager manager = AppStateManager.getInstance();
+		String sharedSecret = manager.getApiSharedSecret();
+		String nonce = manager.getApiNonce();
+		if(nonce == null) {
+			return null;
+		}
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
+//			Log.v(TAG, "hashme" + hashMe);
+
+			byte[] bytes = md.digest(hashMe.getBytes());
+			StringBuilder sb = new StringBuilder(2 * bytes.length);
+			for (byte b : bytes) {
+				sb.append("0123456789abcdef".charAt((b & 0xF0) >> 4));
+				sb.append("0123456789abcdef".charAt((b & 0x0F)));
+			}
+
+			retVal = sb.toString();
+		} catch(NoSuchAlgorithmException nsae) {
+			Log.e(TAG, nsae.toString());
+		}
+		return retVal;
+	}
+
 }

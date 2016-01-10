@@ -196,9 +196,8 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void success(ApiNonceResponse apiNonceResponse, Response response) {
 				AppStateManager manager = AppStateManager.getInstance();
-				manager.setApiNonce(apiNonceResponse.nonce);
-
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
 			}
 

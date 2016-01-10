@@ -1,10 +1,5 @@
 package com.ashtonandassociates.thermopi.util;
 
-import android.content.res.AssetManager;
-
-/**
- * Created by theKernel on 10.01.2016.
- */
 public class AppStateManager {
 
 	private static AppStateManager instance = null;

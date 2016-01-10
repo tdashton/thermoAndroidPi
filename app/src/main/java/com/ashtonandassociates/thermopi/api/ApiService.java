@@ -26,5 +26,5 @@ public interface ApiService {
 
 	@FormUrlEncoded
 	@POST("/control/command/")
-	void sendCommand(@Field("cmd") String command, @Field("param") String param, Callback<ControlResponse> cb);
+	void sendCommand(@Field("cmd") String command, @Field("param") String param, @Field("signature") String signature, Callback<ControlResponse> cb);
 }
