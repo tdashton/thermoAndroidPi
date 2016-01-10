@@ -17,18 +17,16 @@ import android.widget.ListView;
 
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
-import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 
-import org.apache.http.cookie.Cookie;
-
-import java.net.HttpCookie;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -199,6 +197,26 @@ public class MainActivity extends ActionBarActivity {
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
+
+				Class theClass = mMainFragment.getClass();
+
+				try
+				{
+					for(Method met : theClass.getMethods()){
+						if(met.isAnnotationPresent(ApiListener.class)) {
+							Class[] responseClasses = met.getAnnotation(ApiListener.class).responseClass();
+							for(Class clazz : responseClasses) {
+								if(clazz == apiNonceResponse.getClass())
+								met.invoke(mMainFragment, apiNonceResponse);
+							}
+						}
+					}
+				} catch(IllegalAccessException iae) {
+					Log.e(TAG, iae.toString());
+				} catch(InvocationTargetException ite) {
+					Log.e(TAG, ite.toString());
+				}
+
 			}
 
 			@Override
@@ -207,5 +225,4 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 	}
-
 }

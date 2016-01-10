@@ -2,6 +2,7 @@ package com.ashtonandassociates.thermopi.ui;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
+import com.ashtonandassociates.thermopi.api.annotation.*;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -29,28 +32,31 @@ public class OverviewFragment extends Fragment {
 
 	protected ApiService service;
 
+	@ApiListener(CurrentResponse.class)
+	public void onApiServiceResponse(CurrentResponse currentResponse) {
+		Log.d(TAG, currentResponse.toString());
+		if(currentResponse.data.size() != 0) {
+			if(currentResponse.data.get(0) != null) {
+				if (currentResponse.data.get(0) != null) {
+					mSensorDate.setText(currentResponse.data.get(0).datetime);
+					mSensor1Label.setText(currentResponse.data.get(0).description);
+					mSensor1Value.setText(currentResponse.data.get(0).value);
+				}
+			}
+
+			if (currentResponse.data.get(1) != null) {
+				if (currentResponse.data.get(1) != null) {
+					mSensor2Label.setText(currentResponse.data.get(1).description);
+					mSensor2Value.setText(currentResponse.data.get(1).value);
+				}
+			}
+		}
+	}
 	private void refreshValues() {
 		service = ServiceGenerator.createService(ApiService.class, getResources());
 		service.getCurrent(new Callback<CurrentResponse>() {
 			@Override
 			public void success(CurrentResponse currentResponse, Response response) {
-				Log.d(TAG, currentResponse.toString());
-				if(currentResponse.data.size() != 0) {
-					if(currentResponse.data.get(0) != null) {
-						if (currentResponse.data.get(0) != null) {
-							mSensorDate.setText(currentResponse.data.get(0).datetime);
-							mSensor1Label.setText(currentResponse.data.get(0).description);
-							mSensor1Value.setText(currentResponse.data.get(0).value);
-						}
-					}
-
-					if (currentResponse.data.get(1) != null) {
-						if (currentResponse.data.get(1) != null) {
-							mSensor2Label.setText(currentResponse.data.get(1).description);
-							mSensor2Value.setText(currentResponse.data.get(1).value);
-						}
-					}
-				}
 			}
 
 			@Override
