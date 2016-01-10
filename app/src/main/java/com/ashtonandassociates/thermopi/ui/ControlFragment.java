@@ -52,7 +52,7 @@ public class ControlFragment extends Fragment
 		Log.d(TAG, currentResponse.toString());
 		for(CurrentResponse.Current current : currentResponse.data) {
 			if(current.description.equals("drinnen")) {
-				Double temp = new Double(current.value.toString());
+				Double temp = new Double(current.value);
 				mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp) + "*");
 			}
 		}
@@ -174,7 +174,7 @@ public class ControlFragment extends Fragment
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
-//			Log.v(TAG, "hashme" + hashMe);
+			Log.v(TAG, "hashme:" + hashMe);
 
 			byte[] bytes = md.digest(hashMe.getBytes());
 			StringBuilder sb = new StringBuilder(2 * bytes.length);

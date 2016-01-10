@@ -15,9 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
-import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
@@ -59,7 +59,6 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		getApiNonce();
 		refreshValues();
 
 		if (savedInstanceState == null) {
@@ -121,8 +120,8 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 			Log.v(TAG, "arg1: " + arg1.toString());
-			Log.v(TAG, "arg2: " + new Integer(arg2).toString());
-			Log.v(TAG, "arg3: " + new Long(arg3).toString());
+			Log.v(TAG, "arg2: " + Integer.toString(arg2));
+			Log.v(TAG, "arg3: " + Long.toString(arg3));
 			selectItem(arg2);
 		}
 	}
@@ -151,6 +150,7 @@ public class MainActivity extends ActionBarActivity {
 				break;
 
 			case 2:
+				getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mGraphFragment)
 						.show(mControlFragment)
@@ -176,7 +176,7 @@ public class MainActivity extends ActionBarActivity {
 		int id = item.getItemId();
 
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			Log.i("id", new Integer(id).toString());
+			Log.i("id", Integer.toString(id));
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshValues();
@@ -201,6 +201,7 @@ public class MainActivity extends ActionBarActivity {
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
+				Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
 			}
 
@@ -241,7 +242,7 @@ public class MainActivity extends ActionBarActivity {
 			} catch(IllegalAccessException iae) {
 				Log.e(TAG, iae.toString());
 			} catch(InvocationTargetException ite) {
-				Log.e(TAG, ite.toString());
+				Log.e(TAG, "ite " + ite.toString());
 			}
 		}
 	}
