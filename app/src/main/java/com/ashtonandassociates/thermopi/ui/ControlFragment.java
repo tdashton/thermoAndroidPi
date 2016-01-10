@@ -17,6 +17,7 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.ControlResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
+import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -42,11 +43,12 @@ public class ControlFragment extends Fragment
 			@Override
 			public void success(CurrentResponse currentResponse, Response response) {
 				Log.d(TAG, currentResponse.toString());
-//				if(currentResponse.data.get(0) != null) {
-//				}
-//
-//				if (currentResponse.data.get(1) != null) {
-//				}
+				for(CurrentResponse.Current current : currentResponse.data) {
+					if(current.description.equals("drinnen")) {
+						Double temp = new Double(current.value.toString());
+						mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp));
+					}
+				}
 			}
 
 			@Override
@@ -100,6 +102,7 @@ public class ControlFragment extends Fragment
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
 				mTemperatureGroup.setVisibility(View.VISIBLE);
+				refreshValues();
 				break;
 
 			case R.id.control_radio_time:
@@ -133,8 +136,9 @@ public class ControlFragment extends Fragment
 					builder.show();
 					break;
 				}
-
-				service.sendCommand("CMD TIME", mEditTextTime.getText().toString(), this);
+				Integer inputMinutes = new Integer(mEditTextTime.getText().toString());
+				Integer minutes = inputMinutes * 60;
+				service.sendCommand("CMD TIME", minutes.toString(), this);
 				break;
 		}
 	}

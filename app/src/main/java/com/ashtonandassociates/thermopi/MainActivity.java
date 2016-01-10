@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
 	private Fragment mControlFragment;
-//	private ArrayList<Fragment> mActiveFragments;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -172,19 +170,4 @@ public class MainActivity extends ActionBarActivity {
 		}
 		super.onBackPressed();
 	}
-
-//	/**
-//	 * A placeholder fragment containing a simple view.
-//	 */
-//	public static class PlaceholderFragment extends Fragment {
-//		public PlaceholderFragment() {
-//		}
-//
-//		@Override
-//		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//								 Bundle savedInstanceState) {
-//			View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
-//			return rootView;
-//		}
-//	}
 }
