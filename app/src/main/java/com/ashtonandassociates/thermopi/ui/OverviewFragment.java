@@ -36,15 +36,19 @@ public class OverviewFragment extends Fragment {
 			public void success(CurrentResponse currentResponse, Response response) {
 				Log.d(TAG, currentResponse.toString());
 				if(currentResponse.data.size() != 0) {
-					if (currentResponse.data.get(0) != null) {
-						mSensorDate.setText(currentResponse.data.get(0).datetime);
-						mSensor1Label.setText(currentResponse.data.get(0).description);
-						mSensor1Value.setText(currentResponse.data.get(0).value);
+					if(currentResponse.data.get(0) != null) {
+						if (currentResponse.data.get(0) != null) {
+							mSensorDate.setText(currentResponse.data.get(0).datetime);
+							mSensor1Label.setText(currentResponse.data.get(0).description);
+							mSensor1Value.setText(currentResponse.data.get(0).value);
+						}
 					}
 
 					if (currentResponse.data.get(1) != null) {
-						mSensor2Label.setText(currentResponse.data.get(1).description);
-						mSensor2Value.setText(currentResponse.data.get(1).value);
+						if (currentResponse.data.get(1) != null) {
+							mSensor2Label.setText(currentResponse.data.get(1).description);
+							mSensor2Value.setText(currentResponse.data.get(1).value);
+						}
 					}
 				}
 			}

@@ -15,9 +15,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.ashtonandassociates.thermopi.api.ApiService;
+import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
+import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
+import com.ashtonandassociates.thermopi.util.AppStateManager;
+import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+
+import org.apache.http.cookie.Cookie;
+
+import java.net.HttpCookie;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -33,10 +48,19 @@ public class MainActivity extends ActionBarActivity {
 	private Fragment mGraphFragment;
 	private Fragment mControlFragment;
 
+	private ApiService service;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		service = ServiceGenerator.createService(ApiService.class, getResources());
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+		getApiNonce();
 
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
@@ -85,10 +109,6 @@ public class MainActivity extends ActionBarActivity {
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
 	}
 
 	@Override
@@ -170,4 +190,23 @@ public class MainActivity extends ActionBarActivity {
 		}
 		super.onBackPressed();
 	}
+
+	protected void getApiNonce() {
+		service.getApiNonce(new Callback<ApiNonceResponse>() {
+			@Override
+			public void success(ApiNonceResponse apiNonceResponse, Response response) {
+				AppStateManager manager = AppStateManager.getInstance();
+				manager.setApiNonce(apiNonceResponse.nonce);
+
+				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				Log.e(TAG, error.toString());
+			}
+		});
+	}
+
 }
