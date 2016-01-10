@@ -19,6 +19,7 @@ import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
+import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
@@ -59,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 		getApiNonce();
+		refreshValues();
 
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
@@ -176,6 +178,8 @@ public class MainActivity extends ActionBarActivity {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			Log.i("id", new Integer(id).toString());
 			return true;
+		} else if (id == R.id.action_refresh) {
+			refreshValues();
 		}
 		return false;
 	}
@@ -197,26 +201,7 @@ public class MainActivity extends ActionBarActivity {
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
-
-				Class theClass = mMainFragment.getClass();
-
-				try
-				{
-					for(Method met : theClass.getMethods()){
-						if(met.isAnnotationPresent(ApiListener.class)) {
-							Class[] responseClasses = met.getAnnotation(ApiListener.class).responseClass();
-							for(Class clazz : responseClasses) {
-								if(clazz == apiNonceResponse.getClass())
-								met.invoke(mMainFragment, apiNonceResponse);
-							}
-						}
-					}
-				} catch(IllegalAccessException iae) {
-					Log.e(TAG, iae.toString());
-				} catch(InvocationTargetException ite) {
-					Log.e(TAG, ite.toString());
-				}
-
+//				notifyApiListeners(apiNonceResponse);
 			}
 
 			@Override
@@ -224,5 +209,40 @@ public class MainActivity extends ActionBarActivity {
 				Log.e(TAG, error.toString());
 			}
 		});
+	}
+
+	private void refreshValues() {
+		service.getCurrent(new Callback<CurrentResponse>() {
+			@Override
+			public void success(CurrentResponse currentResponse, Response response) {
+				notifyApiListeners(currentResponse);
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				Log.d(TAG, error.toString());
+			}
+		});
+	}
+
+	private void notifyApiListeners(Object responseClass) {
+		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
+		for(Fragment frag : fragments) {
+			Class theClass = frag.getClass();
+			try	{
+				for(Method met : theClass.getMethods()){
+					if(met.isAnnotationPresent(ApiListener.class)) {
+						Class annotationResponseClass = met.getAnnotation(ApiListener.class).value();
+						if(annotationResponseClass == responseClass.getClass()) {
+							met.invoke(frag, responseClass);
+						}
+					}
+				}
+			} catch(IllegalAccessException iae) {
+				Log.e(TAG, iae.toString());
+			} catch(InvocationTargetException ite) {
+				Log.e(TAG, ite.toString());
+			}
+		}
 	}
 }

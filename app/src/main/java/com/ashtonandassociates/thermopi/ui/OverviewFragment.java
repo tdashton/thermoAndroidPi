@@ -2,7 +2,6 @@ package com.ashtonandassociates.thermopi.ui;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +10,8 @@ import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
-import com.ashtonandassociates.thermopi.api.ServiceGenerator;
-import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class OverviewFragment extends Fragment {
 
@@ -33,6 +26,7 @@ public class OverviewFragment extends Fragment {
 	protected ApiService service;
 
 	@ApiListener(CurrentResponse.class)
+	@SuppressWarnings("unused")
 	public void onApiServiceResponse(CurrentResponse currentResponse) {
 		Log.d(TAG, currentResponse.toString());
 		if(currentResponse.data.size() != 0) {
@@ -52,19 +46,6 @@ public class OverviewFragment extends Fragment {
 			}
 		}
 	}
-	private void refreshValues() {
-		service = ServiceGenerator.createService(ApiService.class, getResources());
-		service.getCurrent(new Callback<CurrentResponse>() {
-			@Override
-			public void success(CurrentResponse currentResponse, Response response) {
-			}
-
-			@Override
-			public void failure(RetrofitError error) {
-				Log.d(TAG, error.toString());
-			}
-		});
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +61,6 @@ public class OverviewFragment extends Fragment {
 				getFragmentManager().beginTransaction().hide(this).commit();
 			}
 		}
-		refreshValues();
 		return view;
 	}
 

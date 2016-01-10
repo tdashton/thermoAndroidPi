@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
@@ -45,24 +46,16 @@ public class ControlFragment extends Fragment
 
 	protected ApiService service;
 
-	private void refreshValues() {
-		service.getCurrent(new Callback<CurrentResponse>() {
-			@Override
-			public void success(CurrentResponse currentResponse, Response response) {
-				Log.d(TAG, currentResponse.toString());
-				for(CurrentResponse.Current current : currentResponse.data) {
-					if(current.description.equals("drinnen")) {
-						Double temp = new Double(current.value.toString());
-						mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp) + "*");
-					}
-				}
+	@ApiListener(CurrentResponse.class)
+	@SuppressWarnings("unused")
+	public void onApiServiceResponse(CurrentResponse currentResponse) {
+		Log.d(TAG, currentResponse.toString());
+		for(CurrentResponse.Current current : currentResponse.data) {
+			if(current.description.equals("drinnen")) {
+				Double temp = new Double(current.value.toString());
+				mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp) + "*");
 			}
-
-			@Override
-			public void failure(RetrofitError error) {
-				Log.d(TAG, error.toString());
-			}
-		});
+		}
 	}
 
 	@Override
@@ -92,7 +85,6 @@ public class ControlFragment extends Fragment
 			}
 		}
 
-		refreshValues();
 		return view;
 	}
 
@@ -109,7 +101,6 @@ public class ControlFragment extends Fragment
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
 				mTemperatureGroup.setVisibility(View.VISIBLE);
-				refreshValues();
 				break;
 
 			case R.id.control_radio_time:
