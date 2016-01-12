@@ -15,13 +15,15 @@
     <string name="control_submit">einstellen</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
+    <string name="action_generate_nonce">nonce anfordern</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Wählen</string>
     <string name="search_hint">Suche</string>
 
     <string name="control_alert_dialog_missing_value_message">Bitte einen Wert eingeben!</string>
-    <string name="control_alert_dialog_server_error_message">Serverfehler!</string>
+    <string name="control_alert_dialog_server_error_title">Serverfehler!</string>
+    <string name="control_alert_dialog_server_error_message">Server returned an error!</string>
     <string name="control_alert_dialog_server_ok_message">ThermoPi aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 

@@ -170,6 +170,8 @@ public class MainActivity extends ActionBarActivity
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshValues();
+		} else if (id == R.id.action_generate_nonce) {
+			getApiNonce();
 		}
 		return false;
 	}

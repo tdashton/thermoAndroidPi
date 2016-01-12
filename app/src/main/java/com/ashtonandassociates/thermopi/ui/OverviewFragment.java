@@ -18,6 +18,8 @@ public class OverviewFragment extends Fragment {
 
 	public static final String TAG = OverviewFragment.class.getSimpleName();
 
+	private boolean mInitialized = false;
+
 	protected TextView mSensor1Label;
 	protected TextView mSensor1Value;
 	protected TextView mSensor2Label;
@@ -30,8 +32,11 @@ public class OverviewFragment extends Fragment {
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(CurrentResponse currentResponse) {
 		Log.d(TAG, currentResponse.toString());
+		if(mInitialized == false) {
+			return;
+		}
 		if(currentResponse.data.size() != 0) {
-			if(currentResponse.data.get(0) != null) {
+			if (currentResponse.data.get(0) != null) {
 				if (currentResponse.data.get(0) != null) {
 					mSensorDate.setText(currentResponse.data.get(0).datetime);
 					mSensor1Label.setText(currentResponse.data.get(0).description);
@@ -58,6 +63,9 @@ public class OverviewFragment extends Fragment {
 		mSensor1Value = (TextView) view.findViewById(R.id.sensor_1_value);
 		mSensor2Label = (TextView) view.findViewById(R.id.sensor_2_label);
 		mSensor2Value = (TextView) view.findViewById(R.id.sensor_2_value);
+
+		mInitialized = true;
+
 		return view;
 	}
 

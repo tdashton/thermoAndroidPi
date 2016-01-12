@@ -15,12 +15,14 @@
     <string name="control_submit">einstellen</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_generate_nonce">Generate nonce</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Choose</string>
     <string name="search_hint">Search</string>
 
     <string name="control_alert_dialog_missing_value_message">Please enter a value!</string>
+    <string name="control_alert_dialog_server_error_title">Server Error</string>
     <string name="control_alert_dialog_server_error_message">Server returned an error!</string>
     <string name="control_alert_dialog_server_ok_message">Updated thermostat value!</string>
     <string name="control_alert_dialog_dismiss">Dismiss</string>

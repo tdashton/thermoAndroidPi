@@ -39,6 +39,8 @@ public class ControlFragment extends Fragment
 	public final String COMMAND_TIME = "CMD TIME";
 	public final String COMMAND_TEMP = "CMD TEMP";
 
+	private boolean mInitialized = false;
+
 	public SharedPreferences sharedPrefs;
 
 	protected RadioGroup mRadioGroup;
@@ -55,6 +57,9 @@ public class ControlFragment extends Fragment
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(CurrentResponse currentResponse) {
 		Log.d(TAG, currentResponse.toString());
+		if(mInitialized == false) {
+			return;
+		}
 		for(CurrentResponse.Current current : currentResponse.data) {
 			if(current.description.equals("drinnen")) {
 				Double temp = new Double(current.value);
@@ -90,6 +95,8 @@ public class ControlFragment extends Fragment
 		if(checked != 0) {
 			mRadioGroup.check(checked);
 		}
+
+		mInitialized = true;
 
 		return view;
 	}
@@ -158,6 +165,8 @@ public class ControlFragment extends Fragment
 			builder.setMessage(response.error.text);
 		} else {
 			builder.setMessage(getActivity().getString(R.string.control_alert_dialog_server_ok_message) + "\n" + response.result);
+			mEditTextTemperature.setText(null);
+			mEditTextTime.setText(null);
 		}
 		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
@@ -167,6 +176,7 @@ public class ControlFragment extends Fragment
 	public void failure(RetrofitError error) {
 		Log.e(TAG, error.toString());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_message))
 				.setMessage(getActivity().getString(R.string.control_alert_dialog_server_error_message))
 				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
