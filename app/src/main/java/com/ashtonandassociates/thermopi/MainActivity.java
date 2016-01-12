@@ -20,6 +20,7 @@ import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
+import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
@@ -33,7 +34,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity
+	implements ApiInterface {
 
 	final private String TAG = getClass().getSimpleName();
 
@@ -59,19 +61,13 @@ public class MainActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		refreshValues();
-
 		if (savedInstanceState == null) {
 			mMainFragment = new OverviewFragment();
 			mGraphFragment = new GraphFragment();
 			mControlFragment = new ControlFragment();
 			getFragmentManager().beginTransaction()
-				.add(R.id.container, mMainFragment, "mMainFragment")
-				.add(R.id.container, mGraphFragment, "mGraphFragment")
-				.add(R.id.container, mControlFragment, "mControlFragment")
-				.hide(mGraphFragment)
-				.hide(mControlFragment)
-				.commit();
+					.replace(R.id.content_frame, mMainFragment)
+					.commit();
 		} else {
 			mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
 			mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
@@ -135,26 +131,20 @@ public class MainActivity extends ActionBarActivity {
 			case 0:
 			default:
 				fragmentManager.beginTransaction()
-						.show(mMainFragment)
-						.hide(mControlFragment)
-						.hide(mGraphFragment)
+						.replace(R.id.content_frame, mMainFragment)
 						.commit();
 				break;
 
 			case 1:
 				fragmentManager.beginTransaction()
-						.show(mGraphFragment)
-						.hide(mControlFragment)
-						.hide(mMainFragment)
+						.replace(R.id.content_frame, mGraphFragment)
 						.commit();
 				break;
 
 			case 2:
 				getApiNonce();
 				fragmentManager.beginTransaction()
-						.hide(mGraphFragment)
-						.show(mControlFragment)
-						.hide(mMainFragment)
+						.replace(R.id.content_frame, mControlFragment)
 						.commit();
 				break;
 
@@ -212,7 +202,8 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 
-	private void refreshValues() {
+	@Override
+	public void refreshValues() {
 		service.getCurrent(new Callback<CurrentResponse>() {
 			@Override
 			public void success(CurrentResponse currentResponse, Response response) {

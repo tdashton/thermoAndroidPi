@@ -19,9 +19,6 @@ public class AppStateManager {
 	public void setApiNonce(String param) {
 		this.apiNonce = param;
 	}
-	public void setApiNonce(Long param) {
-		this.apiNonce = Double.toString(param);
-	}
 
 	public String getApiNonce() {
 		return this.apiNonce;

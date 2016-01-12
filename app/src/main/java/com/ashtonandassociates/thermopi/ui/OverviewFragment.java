@@ -12,6 +12,7 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
+import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 
 public class OverviewFragment extends Fragment {
 
@@ -50,26 +51,18 @@ public class OverviewFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_overview, null);
+		((ApiInterface)getActivity()).refreshValues();
+
 		mSensorDate = (TextView) view.findViewById(R.id.sensor_date);
 		mSensor1Label = (TextView) view.findViewById(R.id.sensor_1_label);
 		mSensor1Value = (TextView) view.findViewById(R.id.sensor_1_value);
 		mSensor2Label = (TextView) view.findViewById(R.id.sensor_2_label);
 		mSensor2Value = (TextView) view.findViewById(R.id.sensor_2_value);
-		if(savedInstanceState != null) {
-			boolean hidden = savedInstanceState.getBoolean("fragHidden");
-			if(hidden) {
-				getFragmentManager().beginTransaction().hide(this).commit();
-			}
-		}
 		return view;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putBoolean("fragHidden", isHidden());
-		outState.putString("dateString", mSensorDate.getText().toString());
-		outState.putString("valueOne", mSensor1Label.getText().toString());
-		outState.putString("valuetwo", mSensor2Label.getText().toString());
 	}
 }

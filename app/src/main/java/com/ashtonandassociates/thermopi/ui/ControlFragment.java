@@ -20,6 +20,7 @@ import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
+import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
@@ -66,6 +67,8 @@ public class ControlFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
+		((ApiInterface)getActivity()).refreshValues();
+
 		mRadioGroup = (RadioGroup)view.findViewById(R.id.control_radio_group);
 		mRadioGroup.setOnCheckedChangeListener(this);
 
@@ -81,13 +84,6 @@ public class ControlFragment extends Fragment
 
 		mEditTextTemperature = (EditText)view.findViewById(R.id.control_edittext_temperature);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
-
-		if(savedInstanceState != null) {
-			boolean hidden = savedInstanceState.getBoolean("fragHidden");
-			if(hidden) {
-				getFragmentManager().beginTransaction().hide(this).commit();
-			}
-		}
 
 		sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 		int checked = sharedPrefs.getInt("controlMode", 0);
