@@ -18,7 +18,7 @@ import android.widget.ListView;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
-import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
+import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
@@ -194,14 +194,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	protected void getApiNonce() {
-		service.getApiNonce(new Callback<ApiNonceResponse>() {
+		service.getApiNonce(new Callback<NonceResponse>() {
 			@Override
-			public void success(ApiNonceResponse apiNonceResponse, Response response) {
+			public void success(NonceResponse apiNonceResponse, Response response) {
 				AppStateManager manager = AppStateManager.getInstance();
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
-				Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
+				//Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
 			}
 

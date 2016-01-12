@@ -1,6 +1,6 @@
 package com.ashtonandassociates.thermopi.api;
 
-import com.ashtonandassociates.thermopi.api.response.ApiNonceResponse;
+import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.response.HistoryResponse;
@@ -16,7 +16,7 @@ import retrofit.http.Path;
 public interface ApiService {
 
 	@GET("/control/nonce/")
-	void getApiNonce(Callback<ApiNonceResponse> cb);
+	void getApiNonce(Callback<NonceResponse> cb);
 
 	@GET("/logs/history/json/{timePeriod}")
 	void getLogsHistory(@Path("timePeriod") String timePeriod, Callback<HistoryResponse> cb);

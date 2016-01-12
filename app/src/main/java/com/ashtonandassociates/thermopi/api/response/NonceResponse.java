@@ -1,7 +1,7 @@
 package com.ashtonandassociates.thermopi.api.response;
 
-public class ApiNonceResponse {
+public class NonceResponse {
 
-	public String nonce;
+	public Long nonce;
 
 }

@@ -2,6 +2,8 @@ package com.ashtonandassociates.thermopi.ui;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +37,8 @@ public class ControlFragment extends Fragment
 
 	public final String COMMAND_TIME = "CMD TIME";
 	public final String COMMAND_TEMP = "CMD TEMP";
+
+	public SharedPreferences sharedPrefs;
 
 	protected RadioGroup mRadioGroup;
 	protected View mTemperatureGroup;
@@ -85,6 +89,12 @@ public class ControlFragment extends Fragment
 			}
 		}
 
+		sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+		int checked = sharedPrefs.getInt("controlMode", 0);
+		if(checked != 0) {
+			mRadioGroup.check(checked);
+		}
+
 		return view;
 	}
 
@@ -96,7 +106,7 @@ public class ControlFragment extends Fragment
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		Log.v(TAG, "" + checkedId);
+		Log.v(TAG, "onCheckChanged" + checkedId);
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
@@ -108,6 +118,9 @@ public class ControlFragment extends Fragment
 				mTemperatureGroup.setVisibility(View.GONE);
 				break;
 		}
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putInt("controlMode", checkedId);
+		editor.commit();
 	}
 
 	@Override
@@ -174,7 +187,7 @@ public class ControlFragment extends Fragment
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
-			Log.v(TAG, "hashme:" + hashMe);
+			//Log.v(TAG, "hashme:" + hashMe);
 
 			byte[] bytes = md.digest(hashMe.getBytes());
 			StringBuilder sb = new StringBuilder(2 * bytes.length);
