@@ -17,7 +17,8 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
-import com.ashtonandassociates.thermopi.api.response.ControlResponse;
+import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
+import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
@@ -33,7 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ControlFragment extends Fragment
-	implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlResponse> {
+	implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse> {
 
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -55,27 +56,29 @@ public class ControlFragment extends Fragment
 
 	protected ApiService service;
 
-	@ApiListener(CurrentResponse.class)
+	@ApiListener(ControlReadResponse.class)
 	@SuppressWarnings("unused")
-	public void onApiServiceResponse(CurrentResponse currentResponse) {
-		Log.d(TAG, currentResponse.toString());
+	public void onApiServiceResponse(ControlReadResponse response) {
+		Log.d(TAG, response.toString());
 		if(mInitialized == false) {
 			return;
 		}
-		for(CurrentResponse.Current current : currentResponse.data) {
-			if(current.description.equals("drinnen")) {
-				Double temp = new Double(current.value);
-				mEditTextTemperature.setHint(NumberUtil.formatTemperature(temp) + "*");
+		for(ControlReadResponse.Result result : response.result) {
+			if(result.type.equals(COMMAND_TEMP)) {
+				Integer temp = new Integer(result.param);
+				ApiTemperature apiTemp = new ApiTemperature(temp, ApiTemperature.CONST_API_SCALE);
+				mEditTextTemperature.setHint(NumberUtil.formatTemperature(apiTemp.getTemperature(ApiTemperature.CONST_DEFAULT_SCALE)) + "*");
+				break;
 			}
 		}
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
-		((ApiInterface)getActivity()).refreshValues();
+		((ApiInterface)getActivity()).refreshControlValues();
 
 		mRadioGroup = (RadioGroup)view.findViewById(R.id.control_radio_group);
 		mRadioGroup.setOnCheckedChangeListener(this);
@@ -143,7 +146,7 @@ public class ControlFragment extends Fragment
 					break;
 				}
 
-				ApiTemperature temp = new ApiTemperature(new Double(mEditTextTemperature.getText().toString()), ApiTemperature.CONST_DEFAULT_SCALE);
+				ApiTemperature temp = new ApiTemperature(new Integer(mEditTextTemperature.getText().toString()), ApiTemperature.CONST_DEFAULT_SCALE);
 				String tempString = temp.getTemperature(ApiTemperature.CONST_API_SCALE).toString();
 				service.sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
 				break;
@@ -161,7 +164,7 @@ public class ControlFragment extends Fragment
 	}
 
 	@Override
-	public void success(ControlResponse response, Response response2) {
+	public void success(ControlCommandResponse response, Response response2) {
 		Log.d(TAG, response.toString());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		if(response.error != null) {
@@ -170,6 +173,7 @@ public class ControlFragment extends Fragment
 			builder.setMessage(getActivity().getString(R.string.control_alert_dialog_server_ok_message) + "\n" + response.result);
 			mEditTextTemperature.setText(null);
 			mEditTextTime.setText(null);
+			((ApiInterface)getActivity()).refreshControlValues();
 		}
 		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();

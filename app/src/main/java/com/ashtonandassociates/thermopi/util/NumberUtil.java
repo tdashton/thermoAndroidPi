@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
  */
 public class NumberUtil {
 
-	static public String formatTemperature(Double temperature) {
+	static public String formatTemperature(Integer temperature) {
 		DecimalFormat form = new DecimalFormat("0.00");
 		return form.format(temperature);
 	}

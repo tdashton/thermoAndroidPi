@@ -1,6 +1,6 @@
 package com.ashtonandassociates.thermopi.api.response;
 
-public class ControlResponse {
+public class ControlCommandResponse {
 
 	public String result;
 	public Error error;

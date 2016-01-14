@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
@@ -28,8 +26,6 @@ public class OverviewFragment extends Fragment {
 	protected TextView mSensor2Label;
 	protected TextView mSensor2Value;
 	protected TextView mSensorDate;
-
-	protected ApiService service;
 
 	@ApiListener(CurrentResponse.class)
 	@SuppressWarnings("unused")
@@ -60,7 +56,7 @@ public class OverviewFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_overview, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
-		((ApiInterface)getActivity()).refreshValues();
+		((ApiInterface)getActivity()).refreshCurrentValues();
 
 		mSensorDate = (TextView) view.findViewById(R.id.sensor_date);
 		mSensor1Label = (TextView) view.findViewById(R.id.sensor_1_label);

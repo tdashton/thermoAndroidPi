@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.net.CookieManager;
@@ -12,6 +14,7 @@ import java.net.CookiePolicy;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 
 public class ServiceGenerator {
 
@@ -28,7 +31,12 @@ public class ServiceGenerator {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		httpClient.setCookieHandler(cookieManager);
 
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd' 'HH:mm:ss")
+				.create();
+
 		builder.setEndpoint(url)
+				.setConverter(new GsonConverter(gson))
 				.setClient(new OkClient(httpClient))
 				.setLogLevel(RestAdapter.LogLevel.BASIC);
 		RestAdapter adapter = builder.build();
