@@ -37,7 +37,7 @@ import retrofit.client.Response;
 public class MainActivity extends ActionBarActivity
 	implements ApiInterface {
 
-	final private String TAG = getClass().getSimpleName();
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -61,17 +61,23 @@ public class MainActivity extends ActionBarActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		if (savedInstanceState == null) {
+		mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
+		if(mMainFragment == null) {
 			mMainFragment = new OverviewFragment();
+		}
+		mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
+		if(mGraphFragment == null) {
 			mGraphFragment = new GraphFragment();
+		}
+		mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
+		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
+		}
+
+		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.replace(R.id.content_frame, mMainFragment)
+					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.commit();
-		} else {
-			mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
-			mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
-			mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
 		}
 
 		Log.v(TAG, mMainFragment.toString());

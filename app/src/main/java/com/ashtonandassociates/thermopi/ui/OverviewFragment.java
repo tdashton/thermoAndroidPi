@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
@@ -13,10 +14,12 @@ import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 
 public class OverviewFragment extends Fragment {
 
 	public static final String TAG = OverviewFragment.class.getSimpleName();
+	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
 	private boolean mInitialized = false;
 
@@ -56,6 +59,7 @@ public class OverviewFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_overview, null);
+		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
 		((ApiInterface)getActivity()).refreshValues();
 
 		mSensorDate = (TextView) view.findViewById(R.id.sensor_date);
@@ -72,5 +76,6 @@ public class OverviewFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putBoolean("isHidden", isHidden());
 	}
 }

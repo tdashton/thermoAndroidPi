@@ -22,6 +22,7 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
+import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import java.security.MessageDigest;
@@ -34,7 +35,8 @@ import retrofit.client.Response;
 public class ControlFragment extends Fragment
 	implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlResponse> {
 
-	public static final String TAG = ControlFragment.class.getSimpleName();
+	private static final String TAG = ControlFragment.class.getSimpleName();
+	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
 	public final String COMMAND_TIME = "CMD TIME";
 	public final String COMMAND_TEMP = "CMD TEMP";
@@ -71,6 +73,7 @@ public class ControlFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
+		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
 		((ApiInterface)getActivity()).refreshValues();
 
@@ -104,7 +107,7 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putBoolean("fragHidden", isHidden());
+		outState.putBoolean("isHidden", isHidden());
 	}
 
 	@Override
