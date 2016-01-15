@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiService;
@@ -19,6 +20,7 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
+import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
@@ -41,6 +43,8 @@ public class ControlFragment extends Fragment
 	public final String COMMAND_TIME = "CMD TIME";
 	public final String COMMAND_TEMP = "CMD TEMP";
 
+	public final String CONSTANT_API_TEMP_INSIDE = "drinnen";
+
 	private boolean mInitialized = false;
 
 	public SharedPreferences sharedPrefs;
@@ -52,6 +56,7 @@ public class ControlFragment extends Fragment
 	protected Button mTemperatureButton;
 	protected EditText mEditTextTemperature;
 	protected EditText mEditTextTime;
+	protected TextView mTemperatureCurrentTextView;
 
 	protected ApiService service;
 
@@ -72,15 +77,37 @@ public class ControlFragment extends Fragment
 		}
 	}
 
+	@ApiListener(CurrentResponse.class)
+	@SuppressWarnings("unused")
+	public void onApiServiceResponse(CurrentResponse currentResponse) {
+		Log.d(TAG, currentResponse.toString());
+		if(mInitialized == false) {
+			return;
+		}
+		for(CurrentResponse.Current current : currentResponse.data) {
+			if(current.description.equals(CONSTANT_API_TEMP_INSIDE)) {
+				Double temp = new Double(current.value);
+				mTemperatureCurrentTextView.setText(String.format(
+						getString(R.string.control_set_temperature_current),
+						NumberUtil.formatTemperature(temp)
+				));
+			}
+		}
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
 		((ApiInterface)getActivity()).refreshControlValues();
+		((ApiInterface)getActivity()).refreshCurrentValues();
 
 		mRadioGroup = (RadioGroup)view.findViewById(R.id.control_radio_group);
 		mRadioGroup.setOnCheckedChangeListener(this);
+
+		mTemperatureCurrentTextView = (TextView)view.findViewById(R.id.control_set_temperature_current);
+		mTemperatureCurrentTextView.setText(String.format(getString(R.string.control_set_temperature_current), "-"));
 
 		mTemperatureButton = (Button)view.findViewById(R.id.control_button_temperature);
 		mTemperatureButton.setOnClickListener(this);

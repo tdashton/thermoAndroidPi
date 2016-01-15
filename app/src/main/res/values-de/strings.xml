@@ -9,13 +9,14 @@
     <string name="control_set_time_hint">15</string>
     <string name="control_set_temperature">Grad Celcius einstellen</string>
     <string name="control_set_temperature_hint">-</string>
-    <string name="control_set_temperature_detail">* akutelle Temperatur</string>
+    <string name="control_set_temperature_detail">* aktuelle eingestellte Temperatur</string>
+    <string name="control_set_temperature_current">Aktuelle Temperatur: %s</string>
     <string name="control_radio_time">Zeit</string>
     <string name="control_radio_temperature">Temperatur</string>
     <string name="control_submit">einstellen</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
-    <string name="action_generate_nonce">nonce anfordern</string>
+    <string name="action_generate_nonce">Eine Nonce anfordern</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Wählen</string>

@@ -9,7 +9,8 @@
     <string name="control_set_time_hint">15</string>
     <string name="control_set_temperature">Grad Celcius einstellen</string>
     <string name="control_set_temperature_hint">-</string>
-    <string name="control_set_temperature_detail">* represents the current temperature</string>
+    <string name="control_set_temperature_detail">* is the currently set temperature</string>
+    <string name="control_set_temperature_current">Current temperature: %s</string>
     <string name="control_radio_time">Zeit</string>
     <string name="control_radio_temperature">Temperatur</string>
     <string name="control_submit">einstellen</string>
