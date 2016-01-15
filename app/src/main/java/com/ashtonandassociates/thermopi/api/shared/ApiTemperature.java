@@ -8,10 +8,15 @@ public class ApiTemperature {
 	public static final int CONST_API_SCALE = 0; // mal 10000
 	public static final int CONST_DEFAULT_SCALE = 1; // normal
 
-	private Integer temperature;
+	private Double temperature;
 	private int scale = CONST_DEFAULT_SCALE;
 
 	public ApiTemperature(Integer temperature, int scale) {
+		this.temperature = temperature.doubleValue();
+		this.scale = scale;
+	}
+
+	public ApiTemperature(Double temperature, int scale) {
 		this.temperature = temperature;
 		this.scale = scale;
 	}
@@ -23,19 +28,23 @@ public class ApiTemperature {
 	 */
 	public void setTemperature(Integer param, int scale) {
 		this.scale = scale;
+		this.temperature = param.doubleValue();
+	}
+
+	public void setTemperature(Double param, int scale) {
+		this.scale = scale;
 		this.temperature = param;
 	}
 
-	public Integer getTemperature(int scale) {
-		Integer retVal = null;
+	public Double getTemperatureDouble(int scale) {
+		Double retVal = null;
 		if(this.scale == scale) {
 			retVal = this.temperature;
 		} else if(this.scale == CONST_DEFAULT_SCALE && scale == CONST_API_SCALE) {
-			retVal = this.temperature.intValue() * 1000;
+			retVal = this.temperature.doubleValue() * 1000;
 		} else if(this.scale == CONST_API_SCALE && scale == CONST_DEFAULT_SCALE) {
-			retVal = this.temperature.intValue() / 1000;
+			retVal = this.temperature.doubleValue() / 1000;
 		}
-		return retVal.intValue();
+		return retVal;
 	}
-
 }

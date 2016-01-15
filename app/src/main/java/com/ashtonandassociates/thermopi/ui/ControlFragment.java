@@ -19,7 +19,6 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
-import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
@@ -67,7 +66,7 @@ public class ControlFragment extends Fragment
 			if(result.type.equals(COMMAND_TEMP)) {
 				Integer temp = new Integer(result.param);
 				ApiTemperature apiTemp = new ApiTemperature(temp, ApiTemperature.CONST_API_SCALE);
-				mEditTextTemperature.setHint(NumberUtil.formatTemperature(apiTemp.getTemperature(ApiTemperature.CONST_DEFAULT_SCALE)) + "*");
+				mEditTextTemperature.setHint(NumberUtil.formatTemperature(apiTemp.getTemperatureDouble(ApiTemperature.CONST_DEFAULT_SCALE)) + "*");
 				break;
 			}
 		}
@@ -146,8 +145,12 @@ public class ControlFragment extends Fragment
 					break;
 				}
 
-				ApiTemperature temp = new ApiTemperature(new Integer(mEditTextTemperature.getText().toString()), ApiTemperature.CONST_DEFAULT_SCALE);
-				String tempString = temp.getTemperature(ApiTemperature.CONST_API_SCALE).toString();
+				ApiTemperature temp = new ApiTemperature(
+						Double.valueOf(mEditTextTemperature.getText().toString()),
+						ApiTemperature.CONST_DEFAULT_SCALE);
+				Double tempDouble = temp.getTemperatureDouble(
+						ApiTemperature.CONST_API_SCALE);
+				String tempString = Integer.toString(tempDouble.intValue());
 				service.sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
 				break;
 			case R.id.control_button_time:
@@ -156,7 +159,7 @@ public class ControlFragment extends Fragment
 					builder.show();
 					break;
 				}
-				Integer inputMinutes = new Integer(mEditTextTime.getText().toString());
+				Integer inputMinutes = Integer.parseInt(mEditTextTime.getText().toString());
 				Integer minutes = inputMinutes * 60;
 				service.sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
 				break;
