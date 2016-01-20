@@ -2,7 +2,6 @@ package com.ashtonandassociates.thermopi;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.support.v4.widget.DrawerLayout;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -41,7 +40,7 @@ import retrofit.client.Response;
 public class MainActivity extends ActionBarActivity
 	implements ApiInterface {
 
-	private static final String TAG = MainActivity.class.getSimpleName();
+	private final String TAG = this.getClass().getSimpleName();
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -99,7 +98,6 @@ public class MainActivity extends ActionBarActivity
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
-		mDrawerList.setSelection(1);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
@@ -118,7 +116,15 @@ public class MainActivity extends ActionBarActivity
 		};
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(this.mControlFragment.isHidden() == false) {
+			refreshControlValues();
+		}
+		refreshCurrentValues();
 	}
 
 	@Override
@@ -192,7 +198,7 @@ public class MainActivity extends ActionBarActivity
 		int id = item.getItemId();
 
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			Log.i("id", Integer.toString(id));
+			Log.v(TAG, "id: " + Integer.toString(id));
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshCurrentValues();
@@ -248,7 +254,6 @@ public class MainActivity extends ActionBarActivity
 		});
 	}
 
-	@Override
 	public void refreshControlValues() {
 		service.readCommandValue(new Callback<ControlReadResponse>() {
 			@Override

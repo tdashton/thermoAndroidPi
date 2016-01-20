@@ -16,6 +16,7 @@
     <string name="control_submit">einstellen</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
+    <string name="action_save">Speichern</string>
     <string name="action_generate_nonce">Eine Nonce anfordern</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_settings">Einstellungen</string>
@@ -27,6 +28,12 @@
     <string name="control_alert_dialog_server_error_message">Server returned an error!</string>
     <string name="control_alert_dialog_server_ok_message">ThermoPi aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
+
+    <string name="settings_shared_secret">Geteiltes Geheimnis</string>
+    <string name="settings_location_name">Standort Name</string>
+    <string name="settings_location_url_base">Basis URL</string>
+
+
 
     <string-array
         name="drawer_menu_items">
