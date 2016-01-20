@@ -80,6 +80,10 @@ public class MainActivity extends ActionBarActivity
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
+					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
+					.add(R.id.content_frame, mControlFragment, "mControlFragment")
+					.hide(mGraphFragment)
+					.hide(mControlFragment)
 					.commit();
 		}
 
@@ -140,20 +144,26 @@ public class MainActivity extends ActionBarActivity
 			case 0:
 			default:
 				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, mMainFragment)
+						.show(mMainFragment)
+						.hide(mGraphFragment)
+						.hide(mControlFragment)
 						.commit();
 				break;
 
 			case 1:
 				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, mGraphFragment)
+						.hide(mMainFragment)
+						.show(mGraphFragment)
+						.hide(mControlFragment)
 						.commit();
 				break;
 
 			case 2:
 				getApiNonce();
 				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, mControlFragment)
+						.hide(mMainFragment)
+						.hide(mGraphFragment)
+						.show(mControlFragment)
 						.commit();
 				break;
 
