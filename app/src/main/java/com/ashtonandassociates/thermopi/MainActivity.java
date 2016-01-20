@@ -256,6 +256,9 @@ public class MainActivity extends ActionBarActivity
 	private void notifyApiListeners(Object responseClass) {
 		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
 		for(Fragment frag : fragments) {
+			if(frag == null) {
+				return;
+			}
 			Class theClass = frag.getClass();
 			try	{
 				for(Method met : theClass.getMethods()){

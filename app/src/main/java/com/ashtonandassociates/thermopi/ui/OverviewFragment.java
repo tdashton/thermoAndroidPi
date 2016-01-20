@@ -56,7 +56,6 @@ public class OverviewFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_overview, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
-		((ApiInterface)getActivity()).refreshCurrentValues();
 
 		mSensorDate = (TextView) view.findViewById(R.id.sensor_date);
 		mSensor1Label = (TextView) view.findViewById(R.id.sensor_1_label);
@@ -67,6 +66,13 @@ public class OverviewFragment extends Fragment {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		if(hidden == false) {
+			((ApiInterface)getActivity()).refreshCurrentValues();
+		}
 	}
 
 	@Override

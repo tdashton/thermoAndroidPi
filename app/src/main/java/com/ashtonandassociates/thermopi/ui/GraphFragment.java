@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
@@ -19,6 +20,7 @@ public class GraphFragment extends Fragment {
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
 	protected WebView mWebView;
+	protected String mUrl;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,12 +30,18 @@ public class GraphFragment extends Fragment {
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
-		String url = am.getProperty(
+		mUrl = am.getProperty(
 				Constants.CONST_URL_BASE).concat(
 					am.getProperty(Constants.CONST_URL_PATH).concat(
 							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW)));
-		mWebView.loadUrl(url);
 		return view;
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		if(hidden == false) {
+			mWebView.loadUrl(mUrl);
+		}
 	}
 
 	@Override

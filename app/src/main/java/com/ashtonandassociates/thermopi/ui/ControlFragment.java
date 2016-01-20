@@ -100,8 +100,6 @@ public class ControlFragment extends Fragment
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
-		((ApiInterface)getActivity()).refreshControlValues();
-		((ApiInterface)getActivity()).refreshCurrentValues();
 
 		mRadioGroup = (RadioGroup)view.findViewById(R.id.control_radio_group);
 		mRadioGroup.setOnCheckedChangeListener(this);
@@ -131,6 +129,14 @@ public class ControlFragment extends Fragment
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		if(hidden == false) {
+			((ApiInterface)getActivity()).refreshControlValues();
+			((ApiInterface)getActivity()).refreshCurrentValues();
+		}
 	}
 
 	@Override
