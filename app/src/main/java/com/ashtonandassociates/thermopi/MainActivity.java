@@ -28,6 +28,7 @@ import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -211,7 +212,7 @@ public class MainActivity extends ActionBarActivity
 				AppStateManager manager = AppStateManager.getInstance();
 				AssetManagerUtil util = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
-				manager.setApiSharedSecret(util.getProperty("server_shared_secret"));
+				manager.setApiSharedSecret(util.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
 				//Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
 			}
