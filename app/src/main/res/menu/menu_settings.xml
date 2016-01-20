@@ -4,5 +4,6 @@
       tools:context="com.ashtonandassociates.thermopi.ui.SettingsActivity">
     <item android:id="@+id/settings_action_save"
           android:title="@string/action_save"
+          android:icon="@android:drawable/ic_menu_save"
           app:showAsAction="always"/>
 </menu>
