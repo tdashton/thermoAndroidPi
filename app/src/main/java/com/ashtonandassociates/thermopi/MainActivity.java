@@ -21,7 +21,6 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
-import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
@@ -29,7 +28,6 @@ import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
-import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -190,6 +188,9 @@ public class MainActivity extends ActionBarActivity
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshCurrentValues();
+			if(this.mControlFragment.isHidden() == false) {
+				refreshControlValues();
+			}
 		} else if (id == R.id.action_generate_nonce) {
 			getApiNonce();
 		}
