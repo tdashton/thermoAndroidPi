@@ -1,6 +1,8 @@
 package com.ashtonandassociates.thermopi;
 
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.support.v4.widget.DrawerLayout;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -97,6 +99,7 @@ public class MainActivity extends ActionBarActivity
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
+		mDrawerList.setSelection(1);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
@@ -166,6 +169,11 @@ public class MainActivity extends ActionBarActivity
 						.commit();
 				break;
 
+			case 3:
+				Intent intent = new Intent(this, SettingsActivity.class);
+				startActivity(intent);
+				mDrawerList.clearChoices();
+				break;
 		}
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}

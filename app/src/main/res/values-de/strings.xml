@@ -17,8 +17,8 @@
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_generate_nonce">Eine Nonce anfordern</string>
-    <string name="title_activity_graph">GraphActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Main</string>
+    <string name="title_activity_settings">Einstellungen</string>
     <string name="drawer_open">Wählen</string>
     <string name="search_hint">Suche</string>
 
@@ -30,9 +30,10 @@
 
     <string-array
         name="drawer_menu_items">
-        <item>Überblick</item>
-        <item>Einzelheiten</item>
+        <item>Akutell</item>
+        <item>Protokoll</item>
         <item>Steueren</item>
+        <item>Einstellungen</item>
     </string-array>
 
 </resources>
