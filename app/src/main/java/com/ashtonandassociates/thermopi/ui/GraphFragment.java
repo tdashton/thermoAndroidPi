@@ -9,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
@@ -34,14 +33,8 @@ public class GraphFragment extends Fragment {
 				Constants.CONST_URL_BASE).concat(
 					am.getProperty(Constants.CONST_URL_PATH).concat(
 							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW)));
+		mWebView.loadUrl(mUrl);
 		return view;
-	}
-
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		if(hidden == false) {
-			mWebView.loadUrl(mUrl);
-		}
 	}
 
 	@Override
