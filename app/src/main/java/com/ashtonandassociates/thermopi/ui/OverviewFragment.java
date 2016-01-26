@@ -13,6 +13,7 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
+import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 public class OverviewFragment extends Fragment {
 
@@ -39,14 +40,16 @@ public class OverviewFragment extends Fragment {
 				if (currentResponse.data.get(0) != null) {
 					mSensorDate.setText(currentResponse.data.get(0).datetime);
 					mSensor1Label.setText(currentResponse.data.get(0).description);
-					mSensor1Value.setText(currentResponse.data.get(0).value);
+					Double temp = Double.valueOf(currentResponse.data.get(0).value);
+					mSensor1Value.setText(NumberUtil.formatTemperature(temp));
 				}
 			}
 
 			if (currentResponse.data.get(1) != null) {
 				if (currentResponse.data.get(1) != null) {
 					mSensor2Label.setText(currentResponse.data.get(1).description);
-					mSensor2Value.setText(currentResponse.data.get(1).value);
+					Double temp = Double.valueOf(currentResponse.data.get(1).value);
+					mSensor2Value.setText(NumberUtil.formatTemperature(temp));
 				}
 			}
 		}
