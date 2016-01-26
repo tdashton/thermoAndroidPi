@@ -33,8 +33,13 @@ public class GraphFragment extends Fragment {
 				Constants.CONST_URL_BASE).concat(
 					am.getProperty(Constants.CONST_URL_PATH).concat(
 							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW)));
-		mWebView.loadUrl(mUrl);
+		loadUrl();
+
 		return view;
+	}
+
+	public void loadUrl() {
+		mWebView.loadUrl(mUrl);
 	}
 
 	@Override

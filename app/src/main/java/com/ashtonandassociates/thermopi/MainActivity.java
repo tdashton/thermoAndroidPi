@@ -205,6 +205,9 @@ public class MainActivity extends ActionBarActivity
 			if(this.mControlFragment.isHidden() == false) {
 				refreshControlValues();
 			}
+			if(this.mGraphFragment.isHidden() == false && this.mGraphFragment instanceof GraphFragment) {
+				((GraphFragment) this.mGraphFragment).loadUrl();
+			}
 		} else if (id == R.id.action_generate_nonce) {
 			getApiNonce();
 		}

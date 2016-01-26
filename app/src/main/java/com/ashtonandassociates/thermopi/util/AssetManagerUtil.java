@@ -35,7 +35,7 @@ public class AssetManagerUtil {
 			Log.d(this.getClass().getSimpleName(), "The properties are now loaded");
 			Log.d(this.getClass().getSimpleName(), "properties: " + mProperties);
 		} catch (IOException e) {
-			Log.e(this.getClass().getSimpleName(), "Failed to open microlog property file");
+			Log.e(this.getClass().getSimpleName(), "Failed to open property file");
 			e.printStackTrace();
 		}
 	}
