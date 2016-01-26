@@ -1,7 +1,6 @@
 package com.ashtonandassociates.thermopi;
 
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
 
 public class SettingsActivity extends ActionBarActivity {
@@ -33,6 +33,11 @@ public class SettingsActivity extends ActionBarActivity {
 		mTextViewSharedSecret = (EditText)findViewById(R.id.settings_shared_secret);
 		mTextViewLocationName = (EditText)findViewById(R.id.settings_location_name);
 		mTextViewURL = (EditText)findViewById(R.id.settings_url_base);
+
+		AssetManagerUtil util = AssetManagerUtil.getInstance(this.getResources(), R.raw.config);
+		mTextViewSharedSecret.setText(util.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
+		mTextViewURL.setText(util.getProperty(Constants.CONST_URL_BASE));
+		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 	}
 
 	@Override

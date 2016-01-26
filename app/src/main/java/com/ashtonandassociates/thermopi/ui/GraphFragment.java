@@ -31,8 +31,7 @@ public class GraphFragment extends Fragment {
 		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
 		mUrl = am.getProperty(
 				Constants.CONST_URL_BASE).concat(
-					am.getProperty(Constants.CONST_URL_PATH).concat(
-							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW)));
+							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
 		loadUrl();
 
 		return view;

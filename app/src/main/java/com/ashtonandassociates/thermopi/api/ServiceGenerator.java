@@ -25,7 +25,7 @@ public class ServiceGenerator {
 
 	public static <S> S createService(Class<S> serviceClass, Resources res) {
 		AssetManagerUtil am = AssetManagerUtil.getInstance(res, R.raw.config);
-		String url = am.getProperty(Constants.CONST_URL_BASE).concat(am.getProperty(Constants.CONST_URL_PATH));
+		String url = am.getProperty(Constants.CONST_URL_BASE);
 		OkHttpClient httpClient = new OkHttpClient();
 
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
