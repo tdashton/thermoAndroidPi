@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
@@ -18,6 +19,7 @@ public class SettingsActivity extends ActionBarActivity {
 	EditText mTextViewSharedSecret;
 	EditText mTextViewLocationName;
 	EditText mTextViewURL;
+	CheckBox mCheckBoxRememberTab;
 
 	public SharedPreferences sharedPrefs;
 
@@ -33,11 +35,13 @@ public class SettingsActivity extends ActionBarActivity {
 		mTextViewSharedSecret = (EditText)findViewById(R.id.settings_shared_secret);
 		mTextViewLocationName = (EditText)findViewById(R.id.settings_location_name);
 		mTextViewURL = (EditText)findViewById(R.id.settings_url_base);
+		mCheckBoxRememberTab = (CheckBox)findViewById(R.id.settings_restore_tab);
 
 		AssetManagerUtil util = AssetManagerUtil.getInstance(this.getResources(), R.raw.config);
 		mTextViewSharedSecret.setText(util.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
-		mTextViewURL.setText(util.getProperty(Constants.CONST_URL_BASE));
 		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
+		mTextViewURL.setText(util.getProperty(Constants.CONST_URL_BASE));
+		mCheckBoxRememberTab.setChecked(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_TAB, true));
 	}
 
 	@Override
@@ -68,6 +72,7 @@ public class SettingsActivity extends ActionBarActivity {
 		editor.putString(Constants.CONST_URL_BASE, mTextViewURL.getText().toString());
 		editor.putString(Constants.CONST_SERVER_SHARED_SECRET, mTextViewSharedSecret.getText().toString());
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
+		editor.putBoolean(Constants.CONST_REMEMBER_LAST_TAB, mCheckBoxRememberTab.isChecked());
 		editor.commit();
 		return true;
 	}

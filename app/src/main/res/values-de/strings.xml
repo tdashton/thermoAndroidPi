@@ -29,11 +29,10 @@
     <string name="control_alert_dialog_server_ok_message">ThermoPi aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 
-    <string name="settings_shared_secret">Geteiltes Geheimnis</string>
+    <string name="settings_shared_secret">Geteiltes Server-Geheimnis</string>
     <string name="settings_location_name">Standort Name</string>
-    <string name="settings_location_url_base">Basis URL</string>
-
-
+    <string name="settings_location_url_base">Basis Server-URL</string>
+    <string name="settings_restore_tab">Zuletzt verwendeter Tab merken</string>
 
     <string-array
         name="drawer_menu_items">

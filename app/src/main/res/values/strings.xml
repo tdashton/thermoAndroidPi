@@ -4,18 +4,19 @@
     <string name="app_name">ThermoPi</string>
     <string name="main_header">Pfeilgasse</string>
     <string name="main_date">Date</string>
-    <string name="main_set_temperature">Thermostat steueren</string>
-    <string name="control_set_time">Laufzeit in Minuten einstellen</string>
+    <string name="main_set_temperature">Thermostat control</string>
+    <string name="control_set_time">Set run time in minutes</string>
     <string name="control_set_time_hint">15</string>
-    <string name="control_set_temperature">Grad Celcius einstellen</string>
+    <string name="control_set_temperature">Set degrees celsius</string>
     <string name="control_set_temperature_hint">-</string>
     <string name="control_set_temperature_detail">* is the currently set temperature</string>
     <string name="control_set_temperature_current">Current temperature: %s</string>
-    <string name="control_radio_time">Zeit</string>
-    <string name="control_radio_temperature">Temperatur</string>
-    <string name="control_submit">einstellen</string>
+    <string name="control_radio_time">Time</string>
+    <string name="control_radio_temperature">Temperature</string>
+    <string name="control_submit">Set</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_save">Save</string>
     <string name="action_generate_nonce">Generate nonce</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_settings">Settings</string>
@@ -27,6 +28,11 @@
     <string name="control_alert_dialog_server_error_message">Server returned an error!</string>
     <string name="control_alert_dialog_server_ok_message">Updated thermostat value!</string>
     <string name="control_alert_dialog_dismiss">Dismiss</string>
+
+    <string name="settings_shared_secret">Server shared secret</string>
+    <string name="settings_location_name">Location name</string>
+    <string name="settings_location_url_base">Server base URL</string>
+    <string name="settings_restore_tab">Remember last used tab</string>
 
     <string-array
         name="drawer_menu_items">
