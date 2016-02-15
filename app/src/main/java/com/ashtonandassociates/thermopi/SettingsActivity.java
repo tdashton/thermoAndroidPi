@@ -23,6 +23,22 @@ public class SettingsActivity extends ActionBarActivity {
 
 	public SharedPreferences sharedPrefs;
 
+
+	private void sideloadSharedPrefs() {
+		sharedPrefs = getPreferences(MODE_PRIVATE);
+		if(sharedPrefs.getBoolean(Constants.CONST_USE_SHARED_SETTINGS, false) == false) {
+			Log.v(TAG, "sideloading preferences from raw data file");
+			// only end up here if the shared settings are not already set.
+			// the shared settings are read from the raw resource on the first launch
+			AssetManagerUtil assetManager = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+			SharedPreferences.Editor editor = sharedPrefs.edit();
+			editor.putString(Constants.CONST_URL_BASE, assetManager.getProperty(Constants.CONST_URL_BASE));
+			editor.putString(Constants.CONST_SERVER_SHARED_SECRET, assetManager.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
+			editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
+			editor.commit();
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,6 +46,7 @@ public class SettingsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+		sideloadSharedPrefs();
 		sharedPrefs = getPreferences(MODE_PRIVATE);
 
 		mTextViewSharedSecret = (EditText)findViewById(R.id.settings_shared_secret);
@@ -37,10 +54,9 @@ public class SettingsActivity extends ActionBarActivity {
 		mTextViewURL = (EditText)findViewById(R.id.settings_url_base);
 		mCheckBoxRememberTab = (CheckBox)findViewById(R.id.settings_restore_tab);
 
-		AssetManagerUtil util = AssetManagerUtil.getInstance(this.getResources(), R.raw.config);
-		mTextViewSharedSecret.setText(util.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
+		mTextViewSharedSecret.setText(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, null));
 		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
-		mTextViewURL.setText(util.getProperty(Constants.CONST_URL_BASE));
+		mTextViewURL.setText(sharedPrefs.getString(Constants.CONST_URL_BASE, null));
 		mCheckBoxRememberTab.setChecked(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_TAB, true));
 	}
 
@@ -73,6 +89,7 @@ public class SettingsActivity extends ActionBarActivity {
 		editor.putString(Constants.CONST_SERVER_SHARED_SECRET, mTextViewSharedSecret.getText().toString());
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putBoolean(Constants.CONST_REMEMBER_LAST_TAB, mCheckBoxRememberTab.isChecked());
+		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 		editor.commit();
 		return true;
 	}
