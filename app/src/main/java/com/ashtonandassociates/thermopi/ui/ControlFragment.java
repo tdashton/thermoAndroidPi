@@ -24,6 +24,7 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
+import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
@@ -120,11 +121,15 @@ public class ControlFragment extends Fragment
 		mEditTextTemperature = (EditText)view.findViewById(R.id.control_edittext_temperature);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
 
-		sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		int checked = sharedPrefs.getInt("controlMode", 0);
 		if(checked != 0) {
 			mRadioGroup.check(checked);
 		}
+
+		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		TextView locationName = (TextView) view.findViewById(R.id.control_location_name);
+		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 
 		mInitialized = true;
 

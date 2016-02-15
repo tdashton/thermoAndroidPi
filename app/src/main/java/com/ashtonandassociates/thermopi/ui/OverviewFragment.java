@@ -1,5 +1,7 @@
 package com.ashtonandassociates.thermopi.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -12,6 +14,7 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
 import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
@@ -65,6 +68,10 @@ public class OverviewFragment extends Fragment {
 		mSensor1Value = (TextView) view.findViewById(R.id.sensor_1_value);
 		mSensor2Label = (TextView) view.findViewById(R.id.sensor_2_label);
 		mSensor2Value = (TextView) view.findViewById(R.id.sensor_2_value);
+
+		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		TextView locationName = (TextView) view.findViewById(R.id.overview_location_name);
+		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 
 		mInitialized = true;
 

@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">ThermoPi</string>
-    <string name="main_header">Pfeilgasse</string>
     <string name="main_date">Date</string>
     <string name="main_set_temperature">Thermostat control</string>
     <string name="control_set_time">Set run time in minutes</string>

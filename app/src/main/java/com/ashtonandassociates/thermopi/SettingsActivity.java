@@ -1,5 +1,6 @@
 package com.ashtonandassociates.thermopi;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -23,9 +24,8 @@ public class SettingsActivity extends ActionBarActivity {
 
 	public SharedPreferences sharedPrefs;
 
-
 	private void sideloadSharedPrefs() {
-		sharedPrefs = getPreferences(MODE_PRIVATE);
+		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		if(sharedPrefs.getBoolean(Constants.CONST_USE_SHARED_SETTINGS, false) == false) {
 			Log.v(TAG, "sideloading preferences from raw data file");
 			// only end up here if the shared settings are not already set.
@@ -47,7 +47,7 @@ public class SettingsActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 		sideloadSharedPrefs();
-		sharedPrefs = getPreferences(MODE_PRIVATE);
+		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 
 		mTextViewSharedSecret = (EditText)findViewById(R.id.settings_shared_secret);
 		mTextViewLocationName = (EditText)findViewById(R.id.settings_location_name);
@@ -85,11 +85,13 @@ public class SettingsActivity extends ActionBarActivity {
 
 	private boolean saveSettings() {
 		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putString(Constants.CONST_URL_BASE, mTextViewURL.getText().toString());
 		editor.putString(Constants.CONST_SERVER_SHARED_SECRET, mTextViewSharedSecret.getText().toString());
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putBoolean(Constants.CONST_REMEMBER_LAST_TAB, mCheckBoxRememberTab.isChecked());
 		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
+		String tmp = mTextViewLocationName.getText().toString();
 		editor.commit();
 		return true;
 	}

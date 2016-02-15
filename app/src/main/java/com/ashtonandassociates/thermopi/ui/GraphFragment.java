@@ -1,7 +1,10 @@
 package com.ashtonandassociates.thermopi.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,9 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class GraphFragment extends Fragment {
 
@@ -28,16 +34,29 @@ public class GraphFragment extends Fragment {
 		mWebView = (WebView) view.findViewById(R.id.graph_webview);
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
-		mUrl = am.getProperty(
-				Constants.CONST_URL_BASE).concat(
-							am.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
 		loadUrl();
 
 		return view;
 	}
 
 	public void loadUrl() {
+		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		String locationName = null;
+		try {
+			locationName = URLEncoder.encode(
+					sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)),
+					"UTF-8");
+		} catch (UnsupportedEncodingException uee) {
+			Log.e(TAG, uee.toString());
+		}
+
+		mUrl = am.getProperty(Constants.CONST_URL_BASE)
+				.concat(am.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
+		if(locationName != null) {
+			mUrl.concat("?location_name=" + locationName);
+		}
+
 		mWebView.loadUrl(mUrl);
 	}
 

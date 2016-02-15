@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">ThermoPi</string>
-    <string name="main_header">Pfeilgasse</string>
     <string name="main_date">Datum</string>
     <string name="main_set_temperature">Thermostat steueren</string>
     <string name="control_set_time">Laufzeit in Minuten einstellen</string>
