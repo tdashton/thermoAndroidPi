@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 
 public class SettingsActivity extends ActionBarActivity {
@@ -30,7 +30,7 @@ public class SettingsActivity extends ActionBarActivity {
 			Log.v(TAG, "sideloading preferences from raw data file");
 			// only end up here if the shared settings are not already set.
 			// the shared settings are read from the raw resource on the first launch
-			AssetManagerUtil assetManager = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+			AssetManager assetManager = AssetManager.getInstance(getResources(), R.raw.config);
 			SharedPreferences.Editor editor = sharedPrefs.edit();
 			editor.putString(Constants.CONST_URL_BASE, assetManager.getProperty(Constants.CONST_URL_BASE));
 			editor.putString(Constants.CONST_SERVER_SHARED_SECRET, assetManager.getProperty(Constants.CONST_SERVER_SHARED_SECRET));

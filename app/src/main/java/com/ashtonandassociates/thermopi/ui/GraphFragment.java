@@ -12,7 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 
@@ -40,7 +40,7 @@ public class GraphFragment extends Fragment {
 	}
 
 	public void loadUrl() {
-		AssetManagerUtil am = AssetManagerUtil.getInstance(getResources(), R.raw.config);
+		AssetManager am = AssetManager.getInstance(getResources(), R.raw.config);
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		String locationName = null;
 		try {

@@ -1,6 +1,5 @@
 package com.ashtonandassociates.thermopi.util;
 
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -8,24 +7,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class AssetManagerUtil {
+public class AssetManager {
 
-	private static AssetManagerUtil instance = null;
+	private static AssetManager instance = null;
 
 	protected Resources resources = null;
-	protected AssetManager assetManager = null;
+	protected android.content.res.AssetManager assetManager = null;
 
 	protected Properties mProperties;
 
-	public static AssetManagerUtil getInstance(Resources resources, int rawConfigResource) {
+	public static AssetManager getInstance(Resources resources, int rawConfigResource) {
 		if(instance != null) {
 			return instance;
 		}
-		instance = new AssetManagerUtil(resources, rawConfigResource);
+		instance = new AssetManager(resources, rawConfigResource);
 		return instance;
 	}
 
-	protected AssetManagerUtil(Resources resource, int rawConfigResource) {
+	protected AssetManager(Resources resource, int rawConfigResource) {
 		this.resources = resource;
 		this.assetManager = resource.getAssets();
 		try {

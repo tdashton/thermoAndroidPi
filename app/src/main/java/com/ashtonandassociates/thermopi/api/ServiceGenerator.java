@@ -3,7 +3,7 @@ package com.ashtonandassociates.thermopi.api;
 import android.content.res.Resources;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.util.AssetManagerUtil;
+import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +24,7 @@ public class ServiceGenerator {
 	public static CookieManager cookieManager = new CookieManager();
 
 	public static <S> S createService(Class<S> serviceClass, Resources res) {
-		AssetManagerUtil am = AssetManagerUtil.getInstance(res, R.raw.config);
+		AssetManager am = AssetManager.getInstance(res, R.raw.config);
 		String url = am.getProperty(Constants.CONST_URL_BASE);
 		OkHttpClient httpClient = new OkHttpClient();
 
