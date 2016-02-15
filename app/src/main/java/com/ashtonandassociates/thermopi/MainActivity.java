@@ -174,12 +174,6 @@ public class MainActivity extends ActionBarActivity
 						.show(mControlFragment)
 						.commit();
 				break;
-
-			case 3:
-				Intent intent = new Intent(this, SettingsActivity.class);
-				startActivity(intent);
-				mDrawerList.clearChoices();
-				break;
 		}
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
@@ -210,6 +204,9 @@ public class MainActivity extends ActionBarActivity
 			}
 		} else if (id == R.id.action_generate_nonce) {
 			getApiNonce();
+		} else if (id == R.id.action_settings) {
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
 		}
 		return false;
 	}

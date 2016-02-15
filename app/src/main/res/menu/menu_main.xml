@@ -7,6 +7,9 @@
     <item android:id="@+id/action_generate_nonce"
           android:title="@string/action_generate_nonce"
           android:orderInCategory="200"/>
+    <item android:id="@+id/action_settings"
+          android:title="@string/action_settings"
+          android:orderInCategory="800"/>
     <!--item android:id="@+id/action_search"
           android:title="string/action_search"
           android:icon="@android:drawable/ic_menu_search"
