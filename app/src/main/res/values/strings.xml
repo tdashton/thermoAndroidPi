@@ -37,7 +37,7 @@
         name="drawer_menu_items">
         <item>Current</item>
         <item>Log</item>
-        <item>Control</item>
+        <item>Set</item>
     </string-array>
 
 </resources>

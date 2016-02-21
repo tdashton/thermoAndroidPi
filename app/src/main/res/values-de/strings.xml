@@ -37,7 +37,7 @@
         name="drawer_menu_items">
         <item>Akutell</item>
         <item>Protokoll</item>
-        <item>Steueren</item>
+        <item>Regulieren</item>
     </string-array>
 
 </resources>
