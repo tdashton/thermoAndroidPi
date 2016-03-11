@@ -220,7 +220,8 @@ public class MainActivity extends ActionBarActivity
 		super.onBackPressed();
 	}
 
-	protected void getApiNonce() {
+	@Override
+	public void getApiNonce() {
 		service.getApiNonce(new Callback<NonceResponse>() {
 			@Override
 			public void success(NonceResponse apiNonceResponse, Response response) {

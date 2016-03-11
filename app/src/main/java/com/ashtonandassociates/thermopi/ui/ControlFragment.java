@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,7 @@ public class ControlFragment extends Fragment
 	private boolean mInitialized = false;
 
 	public SharedPreferences sharedPrefs;
+	AppStateManager manager = AppStateManager.getInstance();
 
 	protected RadioGroup mRadioGroup;
 	protected View mTemperatureGroup;
@@ -58,6 +61,35 @@ public class ControlFragment extends Fragment
 	protected EditText mEditTextTemperature;
 	protected EditText mEditTextTime;
 	protected TextView mTemperatureCurrentTextView;
+
+	protected TextWatcher mTextWatcher = new TextWatcher() {
+
+		protected AppStateManager manager = AppStateManager.getInstance();
+
+		private synchronized void getNonceSynchronized() {
+			if(manager.getApiNonce() == null) {
+				((ApiInterface)getActivity()).getApiNonce();
+			} else {
+				Log.v(TAG, "already had a nonce");
+			}
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			Log.v(TAG, String.format("beforeTextChanged %d %d %d", i, i1, i2));
+			this.getNonceSynchronized();
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//			Log.v(TAG, String.format("onTextChanged %d %d %d", i, i1, i2));
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+//			Log.v(TAG, "afterTextChanged");
+		}
+	};
 
 	protected ApiService service;
 
@@ -119,7 +151,9 @@ public class ControlFragment extends Fragment
 		mTimeGroup.setVisibility(View.VISIBLE);
 
 		mEditTextTemperature = (EditText)view.findViewById(R.id.control_edittext_temperature);
+		mEditTextTemperature.addTextChangedListener(this.mTextWatcher);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
+		mEditTextTime.addTextChangedListener(this.mTextWatcher);
 
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		int checked = sharedPrefs.getInt("controlMode", 0);
@@ -218,6 +252,7 @@ public class ControlFragment extends Fragment
 		}
 		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
+		this.manager.setApiNonce(null);
 	}
 
 	@Override
@@ -232,9 +267,8 @@ public class ControlFragment extends Fragment
 
 	private String getApiHashString(String command, String param) {
 		String retVal = null;
-		AppStateManager manager = AppStateManager.getInstance();
-		String sharedSecret = manager.getApiSharedSecret();
-		String nonce = manager.getApiNonce();
+		String sharedSecret = this.manager.getApiSharedSecret();
+		String nonce = this.manager.getApiNonce();
 		if(nonce == null) {
 			return null;
 		}
