@@ -1,7 +1,9 @@
 package com.ashtonandassociates.thermopi;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -45,6 +47,7 @@ public class MainActivity extends ActionBarActivity
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
+	public SharedPreferences sharedPrefs;
 
 	private String[] mDrawerItems;
 
@@ -58,6 +61,7 @@ public class MainActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		service = ServiceGenerator.createService(ApiService.class, getResources());
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
@@ -128,8 +132,26 @@ public class MainActivity extends ActionBarActivity
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	protected void onStart() {
+		super.onStart();
+		if(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, false)) {
+			int lastFragment = sharedPrefs.getInt(Constants.CONST_LAST_FRAGMENT, 0);
+			this.selectItem(lastFragment);
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		int active = 0;
+		if(mGraphFragment.isVisible()) {
+			active = 1;
+		} else if (mControlFragment.isVisible()) {
+			active = 2;
+		}
+		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
+		editor.commit();
 	}
 
 	protected class DrawerItemClickListener implements ListView.OnItemClickListener {
