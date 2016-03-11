@@ -37,6 +37,7 @@ public class OverviewFragment extends Fragment {
 			return;
 		}
 
+		mSensorDataContainer.removeAllViews();
 		for(int i = 0; i < currentResponse.data.size(); i++) {
 			View container = getActivity().getLayoutInflater().inflate(R.layout.fragment_overview_sensor, null);
 			TextView mSensorLabel = (TextView) container.findViewById(R.id.sensor_x_label);
