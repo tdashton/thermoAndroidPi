@@ -54,7 +54,7 @@ public class GraphFragment extends Fragment {
 		mUrl = am.getProperty(Constants.CONST_URL_BASE)
 				.concat(am.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
 		if(locationName != null) {
-			mUrl.concat("?location_name=" + locationName);
+			mUrl = mUrl.concat("?location_name=" + locationName);
 		}
 
 		mWebView.loadUrl(mUrl);
