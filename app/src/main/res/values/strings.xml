@@ -31,7 +31,7 @@
     <string name="settings_shared_secret">Server shared secret</string>
     <string name="settings_location_name">Location name</string>
     <string name="settings_location_url_base">Server base URL</string>
-    <string name="settings_restore_tab">Remember last choice</string>
+    <string name="settings_restore_tab">Remember last selected tab</string>
 
     <string-array
         name="drawer_menu_items">
