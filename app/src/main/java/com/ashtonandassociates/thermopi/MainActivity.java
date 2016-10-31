@@ -242,16 +242,19 @@ public class MainActivity extends ActionBarActivity
 		super.onBackPressed();
 	}
 
+	public ApiService getApiService() {
+		return this.service;
+	}
+
 	@Override
 	public void getApiNonce() {
 		service.getApiNonce(new Callback<NonceResponse>() {
 			@Override
 			public void success(NonceResponse apiNonceResponse, Response response) {
 				AppStateManager manager = AppStateManager.getInstance();
-				AssetManager util = AssetManager.getInstance(getResources(), R.raw.config);
 				manager.setApiNonce(apiNonceResponse.nonce);
-				manager.setApiSharedSecret(util.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
-				//Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
+				manager.setApiSharedSecret(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, ""));
+//				Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
 			}
 

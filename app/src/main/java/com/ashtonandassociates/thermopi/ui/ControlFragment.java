@@ -91,8 +91,6 @@ public class ControlFragment extends Fragment
 		}
 	};
 
-	protected ApiService service;
-
 	@ApiListener(ControlReadResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(ControlReadResponse response) {
@@ -132,7 +130,6 @@ public class ControlFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
-		service = ServiceGenerator.createService(ApiService.class, getResources());
 
 		mRadioGroup = (RadioGroup)view.findViewById(R.id.control_radio_group);
 		mRadioGroup.setOnCheckedChangeListener(this);
@@ -223,7 +220,7 @@ public class ControlFragment extends Fragment
 				Double tempDouble = temp.getTemperatureDouble(
 						ApiTemperature.CONST_API_SCALE);
 				String tempString = Integer.toString(tempDouble.intValue());
-				service.sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
+				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
 				break;
 			case R.id.control_button_time:
 				Log.i(TAG, "time button");
@@ -233,7 +230,7 @@ public class ControlFragment extends Fragment
 				}
 				Integer inputMinutes = Integer.parseInt(mEditTextTime.getText().toString());
 				Integer minutes = inputMinutes * 60;
-				service.sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
+				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
 				break;
 		}
 	}
