@@ -34,6 +34,7 @@ public class SettingsActivity extends ActionBarActivity {
 			SharedPreferences.Editor editor = sharedPrefs.edit();
 			editor.putString(Constants.CONST_URL_BASE, assetManager.getProperty(Constants.CONST_URL_BASE));
 			editor.putString(Constants.CONST_SERVER_SHARED_SECRET, assetManager.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
+			editor.putString(Constants.CONST_URL_PATH_WEBVIEW, assetManager.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
 			editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 			editor.commit();
 		}

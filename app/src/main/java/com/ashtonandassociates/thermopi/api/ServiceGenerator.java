@@ -2,8 +2,6 @@ package com.ashtonandassociates.thermopi.api;
 
 import android.content.SharedPreferences;
 
-import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

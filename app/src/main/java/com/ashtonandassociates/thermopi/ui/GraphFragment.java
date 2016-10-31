@@ -12,7 +12,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 
@@ -24,8 +23,17 @@ public class GraphFragment extends Fragment {
 	private static final String TAG = GraphFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
+	protected SharedPreferences sharedPrefs;
+
 	protected WebView mWebView;
 	protected String mUrl;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +48,6 @@ public class GraphFragment extends Fragment {
 	}
 
 	public void loadUrl() {
-		AssetManager am = AssetManager.getInstance(getResources(), R.raw.config);
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		String locationName = null;
 		try {
@@ -51,8 +58,8 @@ public class GraphFragment extends Fragment {
 			Log.e(TAG, uee.toString());
 		}
 
-		mUrl = am.getProperty(Constants.CONST_URL_BASE)
-				.concat(am.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
+		mUrl = sharedPrefs.getString(Constants.CONST_URL_BASE, "http://localhost")
+				.concat(sharedPrefs.getString(Constants.CONST_URL_PATH_WEBVIEW, "/logs/graph"));
 		if(locationName != null) {
 			mUrl = mUrl.concat("?location_name=" + locationName);
 		}

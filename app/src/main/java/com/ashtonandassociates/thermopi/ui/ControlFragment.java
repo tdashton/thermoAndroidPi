@@ -17,8 +17,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
-import com.ashtonandassociates.thermopi.api.ApiService;
-import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
@@ -127,6 +125,12 @@ public class ControlFragment extends Fragment
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_control, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
@@ -152,7 +156,6 @@ public class ControlFragment extends Fragment
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
 		mEditTextTime.addTextChangedListener(this.mTextWatcher);
 
-		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		int checked = sharedPrefs.getInt("controlMode", 0);
 		if(checked != 0) {
 			mRadioGroup.check(checked);

@@ -10,10 +10,8 @@ import android.os.Bundle;
 public class FragmentVisibilitySaver {
 
 	public void restoreVisibilityState(FragmentManager manager, Fragment fragment, Bundle savedInstanceState) {
-		if(savedInstanceState!= null && savedInstanceState.get("isHidden") == true) {
+		if(savedInstanceState!= null && savedInstanceState.getBoolean("isHidden") == true) {
 			manager.beginTransaction().hide(fragment).commit();
 		}
 	}
 }
-
-

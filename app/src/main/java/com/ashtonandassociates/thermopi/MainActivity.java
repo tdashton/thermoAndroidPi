@@ -29,7 +29,6 @@ import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
-import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 
 import java.lang.reflect.InvocationTargetException;
@@ -62,7 +61,7 @@ public class MainActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
-		service = ServiceGenerator.createService(ApiService.class, getResources());
+		service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -120,6 +119,8 @@ public class MainActivity extends ActionBarActivity
 		};
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		checkForSharedPrefrences();
 	}
 
 	@Override
@@ -128,6 +129,7 @@ public class MainActivity extends ActionBarActivity
 		if(this.mControlFragment.isHidden() == false) {
 			refreshControlValues();
 		}
+		service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		refreshCurrentValues();
 	}
 
@@ -315,6 +317,15 @@ public class MainActivity extends ActionBarActivity
 			} catch(InvocationTargetException ite) {
 				Log.e(TAG, "ite " + ite.toString());
 			}
+		}
+	}
+
+	private void checkForSharedPrefrences() {
+		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		if (sharedPrefs.getBoolean(Constants.CONST_USE_SHARED_SETTINGS, false) == false) {
+			Log.v(TAG, "no prefs found, showing the settings activity");
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
 		}
 	}
 }
