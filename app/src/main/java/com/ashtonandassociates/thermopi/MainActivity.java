@@ -55,6 +55,9 @@ public class MainActivity extends ActionBarActivity
 	private Fragment mControlFragment;
 
 	private ApiService service;
+	private Callback<NonceResponse> mNonceResponseCallback;
+	private Callback<CurrentResponse> mCurrentResponseCallback;
+	private Callback<ControlReadResponse> mControlReadResponseCallback;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -250,7 +253,10 @@ public class MainActivity extends ActionBarActivity
 
 	@Override
 	public void getApiNonce() {
-		service.getApiNonce(new Callback<NonceResponse>() {
+		if(mNonceResponseCallback != null) {
+			return;
+		}
+		mNonceResponseCallback = new Callback<NonceResponse>() {
 			@Override
 			public void success(NonceResponse apiNonceResponse, Response response) {
 				AppStateManager manager = AppStateManager.getInstance();
@@ -258,42 +264,57 @@ public class MainActivity extends ActionBarActivity
 				manager.setApiSharedSecret(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, ""));
 //				Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
+				mNonceResponseCallback = null;
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
 				Log.e(TAG, error.toString());
+				mNonceResponseCallback = null;
 			}
-		});
+		};
+		service.getApiNonce(mNonceResponseCallback);
 	}
 
 	@Override
 	public void refreshCurrentValues() {
-		service.getCurrent(new Callback<CurrentResponse>() {
+		if(mCurrentResponseCallback != null) {
+			return;
+		}
+		mCurrentResponseCallback = new Callback<CurrentResponse>() {
 			@Override
 			public void success(CurrentResponse currentResponse, Response response) {
 				notifyApiListeners(currentResponse);
+				mCurrentResponseCallback = null;
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
 				Log.d(TAG, error.toString());
+				mCurrentResponseCallback = null;
 			}
-		});
+		};
+		service.getCurrent(mCurrentResponseCallback);
 	}
 
 	public void refreshControlValues() {
-		service.readCommandValue(new Callback<ControlReadResponse>() {
+		if(mControlReadResponseCallback!= null) {
+			return;
+		}
+		mControlReadResponseCallback = new Callback<ControlReadResponse>() {
 			@Override
 			public void success(ControlReadResponse controlReadResponse, Response response) {
 				notifyApiListeners(controlReadResponse);
+				mControlReadResponseCallback = null;
 			}
 
 			@Override
 			public void failure(RetrofitError error) {
 				Log.e(TAG, error.toString());
+				mControlReadResponseCallback = null;
 			}
-		});
+		};
+		service.readCommandValue(mControlReadResponseCallback);
 	}
 
 	private void notifyApiListeners(Object responseClass) {
