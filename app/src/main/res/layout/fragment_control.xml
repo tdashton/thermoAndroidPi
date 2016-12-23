@@ -28,6 +28,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="16dp"/>
             <TextView
+                android:id="@+id/control_set_temperature_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"/>
+            <TextView
                 android:text="@string/main_set_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,6 +130,24 @@
                     android:layout_height="wrap_content"
                     android:text="@string/control_submit"/>
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/control_debug_layout_group"
+            android:visibility="invisible"
+            android:orientation="vertical"
+            android:paddingTop="4dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:text="@string/control_text_debug_output"
+                android:textSize="18dp"/>
+            <TextView
+                android:id="@+id/control_debug_textview_debug"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

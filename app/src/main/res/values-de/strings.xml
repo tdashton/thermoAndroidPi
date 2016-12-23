@@ -10,9 +10,13 @@
     <string name="control_set_temperature_hint">-</string>
     <string name="control_set_temperature_detail">* aktuelle eingestellte Temperatur</string>
     <string name="control_set_temperature_current">Aktuelle Temperatur: %s</string>
+    <string name="control_set_temperature_status">Aktueller Zustand: %s</string>
     <string name="control_radio_time">Zeit</string>
     <string name="control_radio_temperature">Temperatur</string>
     <string name="control_submit">einstellen</string>
+    <string name="control_text_debug_output">Debugging Ausgabe</string>
+    <string name="control_status_running_true">heizen</string>
+    <string name="control_status_running_false">aus</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_save">Speichern</string>

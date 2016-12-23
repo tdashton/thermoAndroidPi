@@ -41,6 +41,7 @@ public class ControlFragment extends Fragment
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
+	public final String COMMAND_STATUS = "CMD RUNNING";
 	public final String COMMAND_TIME = "CMD TIME";
 	public final String COMMAND_TEMP = "CMD TEMP";
 
@@ -54,11 +55,14 @@ public class ControlFragment extends Fragment
 	protected RadioGroup mRadioGroup;
 	protected View mTemperatureGroup;
 	protected View mTimeGroup;
+	protected View mControlDebugOutputGroup;
 	protected Button mTimeButton;
 	protected Button mTemperatureButton;
 	protected EditText mEditTextTemperature;
 	protected EditText mEditTextTime;
 	protected TextView mTemperatureCurrentTextView;
+	protected TextView mTemperatureStatusTextView;
+	protected TextView mControlDebugOutput;
 
 	protected TextWatcher mTextWatcher = new TextWatcher() {
 
@@ -106,6 +110,34 @@ public class ControlFragment extends Fragment
 		}
 	}
 
+	@ApiListener(ControlReadResponse.class)
+	@SuppressWarnings("unused")
+	public void onApiControlReadResponse(ControlReadResponse controlReadResponse) {
+		Log.d(TAG, controlReadResponse.toString());
+		if(mInitialized == false) {
+			return;
+		}
+		if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
+			mControlDebugOutput.setText("source: " + controlReadResponse.source + "\n");
+		}
+		for(ControlReadResponse.Result result : controlReadResponse.result) {
+			if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
+				mControlDebugOutput.append(result.type.toString() + ": " + result.param.toString() + "\n");
+			}
+
+			if(result.type.equals(COMMAND_STATUS)) {
+				String status = getString(R.string.control_status_running_false);
+				if("1".equals(result.param)) {
+					status = getString(R.string.control_status_running_true);
+				}
+				mTemperatureStatusTextView.setText(String.format(
+						getString(R.string.control_set_temperature_status),
+						status
+				));
+			}
+		}
+	}
+
 	@ApiListener(CurrentResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(CurrentResponse currentResponse) {
@@ -141,6 +173,11 @@ public class ControlFragment extends Fragment
 		mTemperatureCurrentTextView = (TextView)view.findViewById(R.id.control_set_temperature_current);
 		mTemperatureCurrentTextView.setText(String.format(getString(R.string.control_set_temperature_current), "-"));
 
+		mTemperatureStatusTextView = (TextView)view.findViewById(R.id.control_set_temperature_status);
+		mTemperatureStatusTextView.setText(String.format(getString(R.string.control_set_temperature_status), "-"));
+
+		mControlDebugOutput = (TextView)view.findViewById(R.id.control_debug_textview_debug);
+
 		mTemperatureButton = (Button)view.findViewById(R.id.control_button_temperature);
 		mTemperatureButton.setOnClickListener(this);
 		mTimeButton = (Button)view.findViewById(R.id.control_button_time);
@@ -161,6 +198,11 @@ public class ControlFragment extends Fragment
 			mRadioGroup.check(checked);
 		}
 
+		mControlDebugOutputGroup = view.findViewById(R.id.control_debug_layout_group);
+		if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
+			mControlDebugOutputGroup.setVisibility(View.VISIBLE);
+		}
+
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		TextView locationName = (TextView) view.findViewById(R.id.control_location_name);
 		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
@@ -175,6 +217,7 @@ public class ControlFragment extends Fragment
 		if(hidden == false) {
 			((ApiInterface)getActivity()).refreshControlValues();
 			((ApiInterface)getActivity()).refreshCurrentValues();
+			mControlDebugOutputGroup.setVisibility((sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false) ? View.VISIBLE : View.INVISIBLE));
 		}
 	}
 
@@ -290,5 +333,4 @@ public class ControlFragment extends Fragment
 		}
 		return retVal;
 	}
-
 }

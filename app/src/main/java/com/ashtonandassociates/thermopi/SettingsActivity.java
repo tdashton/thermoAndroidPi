@@ -94,7 +94,7 @@ public class SettingsActivity extends ActionBarActivity {
 		editor.putString(Constants.CONST_SERVER_SHARED_SECRET, mTextViewSharedSecret.getText().toString());
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, mCheckBoxRememberTab.isChecked());
-		editor.putBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, mCheckBoxRememberTab.isChecked());
+		editor.putBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, mCheckboxServerDebugOutput.isChecked());
 		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 		String tmp = mTextViewLocationName.getText().toString();
 		editor.commit();

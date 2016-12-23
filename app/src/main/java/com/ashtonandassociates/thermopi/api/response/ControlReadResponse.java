@@ -7,6 +7,7 @@ public class ControlReadResponse {
 
 	public List<Result> result;
 	public Error error;
+	public String source;
 
 	public class Result {
 		public Date datetime;
