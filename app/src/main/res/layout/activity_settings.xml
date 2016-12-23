@@ -49,22 +49,16 @@
             android:layout_height="wrap_content"
             android:hint="..."/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <CheckBox android:id="@+id/settings_restore_tab"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/settings_restore_tab"/>
 
-            <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/settings_restore_tab"/>-->
+        <CheckBox android:id="@+id/settings_server_debug_output"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/settings_server_debug_output"/>
 
-            <CheckBox android:id="@+id/settings_restore_tab"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/settings_restore_tab"/>
-
-        </LinearLayout>
     </LinearLayout>
     <TextView
         android:id="@+id/settings_version"

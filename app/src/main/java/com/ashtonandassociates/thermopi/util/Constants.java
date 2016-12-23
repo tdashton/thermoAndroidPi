@@ -8,6 +8,7 @@ public class Constants {
 	public static final String CONST_LOCATION_NAME = "location_name";
 	public static final String CONST_LAST_FRAGMENT = "last_fragment";
 	public static final String CONST_REMEMBER_LAST_FRAGMENT = "remember_last_fragment";
+	public static final String CONST_SERVER_DEBUG_OUTPUT = "server_debug_output";
 
 	public static final String CONST_SHARED_PREFERENCES_FILE = "com.ashtonandassociates.thermopi.SharedPrefsFile";
 }
