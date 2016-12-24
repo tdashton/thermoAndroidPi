@@ -14,28 +14,33 @@
         android:layout_marginLeft="@dimen/fragment_margin_left"
         android:orientation="vertical">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/control_location_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Location Name"
+                android:textStyle="bold"
                 android:textSize="18dp"/>
             <TextView
                 android:id="@+id/control_set_temperature_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/control_set_temperature_current"
                 android:textSize="16dp"/>
             <TextView
                 android:id="@+id/control_set_temperature_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/control_set_temperature_status"
                 android:textSize="16dp"/>
             <TextView
                 android:text="@string/main_set_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:textSize="16dp"/>
         </LinearLayout>
         <LinearLayout

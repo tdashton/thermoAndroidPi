@@ -21,6 +21,8 @@
                     android:id="@+id/overview_location_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Location Name"
+                    android:textStyle="bold"
                     android:textSize="18dp"/>
                 <TextView
                     android:text="@string/main_date"
