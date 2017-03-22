@@ -17,9 +17,14 @@ public class SettingsActivity extends ActionBarActivity {
 
 	private final String TAG = this.getClass().getSimpleName();
 
+	public static final float TEMPERATURE_DEFAULT_MIN = 0;
+	public static final float TEMPERATURE_DEFAULT_MAX = 25;
+
 	EditText mTextViewSharedSecret;
 	EditText mTextViewLocationName;
 	EditText mTextViewURL;
+	EditText mTextViewControlTemperatureMinimum;
+	EditText mTextViewControlTemperatureMaximum;
 	CheckBox mCheckBoxRememberTab;
 	CheckBox mCheckboxServerDebugOutput;
 
@@ -36,6 +41,8 @@ public class SettingsActivity extends ActionBarActivity {
 			editor.putString(Constants.CONST_URL_BASE, assetManager.getProperty(Constants.CONST_URL_BASE));
 			editor.putString(Constants.CONST_SERVER_SHARED_SECRET, assetManager.getProperty(Constants.CONST_SERVER_SHARED_SECRET));
 			editor.putString(Constants.CONST_URL_PATH_WEBVIEW, assetManager.getProperty(Constants.CONST_URL_PATH_WEBVIEW));
+			editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MIN);
+			editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX);
 			editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 			editor.commit();
 		}
@@ -56,11 +63,21 @@ public class SettingsActivity extends ActionBarActivity {
 		mTextViewURL = (EditText)findViewById(R.id.settings_url_base);
 		mCheckBoxRememberTab = (CheckBox)findViewById(R.id.settings_restore_tab);
 		mCheckboxServerDebugOutput = (CheckBox)findViewById(R.id.settings_server_debug_output);
+		mTextViewControlTemperatureMinimum = (EditText)findViewById(R.id.settings_control_temperature_minimum);
+		mTextViewControlTemperatureMaximum = (EditText)findViewById(R.id.settings_control_temperature_maximum);
 
 		mTextViewSharedSecret.setText(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, null));
 		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 		mTextViewURL.setText(sharedPrefs.getString(Constants.CONST_URL_BASE, null));
 		mCheckBoxRememberTab.setChecked(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, true));
+		Log.d(TAG, Constants.CONST_CONTROL_TEMPERATURE_MINIMUM);
+		Log.d(TAG, Float.valueOf(SettingsActivity.TEMPERATURE_DEFAULT_MIN).toString());
+		mTextViewControlTemperatureMinimum.setText(
+				Float.valueOf(sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MIN)).toString()
+		);
+		mTextViewControlTemperatureMaximum.setText(
+				Float.valueOf(sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX)).toString()
+		);
 		mCheckboxServerDebugOutput.setChecked(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false));
 	}
 
@@ -95,6 +112,8 @@ public class SettingsActivity extends ActionBarActivity {
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, mCheckBoxRememberTab.isChecked());
 		editor.putBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, mCheckboxServerDebugOutput.isChecked());
+		editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, Float.valueOf(mTextViewControlTemperatureMinimum.getText().toString()));
+		editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, Float.valueOf(mTextViewControlTemperatureMaximum.getText().toString()));
 		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 		editor.commit();
 		return true;

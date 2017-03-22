@@ -37,6 +37,8 @@
     <string name="settings_location_url_base">Server base URL</string>
     <string name="settings_restore_tab">Remember last selected tab</string>
     <string name="settings_server_debug_output">Enable server debugging output</string>
+    <string name="label_settings_control_temperature_minimum">Min</string>
+    <string name="label_settings_control_temperature_maximum">Max</string>
 
     <string-array
         name="drawer_menu_items">

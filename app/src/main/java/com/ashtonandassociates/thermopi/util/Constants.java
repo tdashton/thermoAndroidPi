@@ -9,6 +9,8 @@ public class Constants {
 	public static final String CONST_LAST_FRAGMENT = "last_fragment";
 	public static final String CONST_REMEMBER_LAST_FRAGMENT = "remember_last_fragment";
 	public static final String CONST_SERVER_DEBUG_OUTPUT = "server_debug_output";
+	public static final String CONST_CONTROL_TEMPERATURE_MINIMUM = "control_temperature_minimum";
+	public static final String CONST_CONTROL_TEMPERATURE_MAXIMUM = "control_temperature_maximum";
 
 	public static final String CONST_SHARED_PREFERENCES_FILE = "com.ashtonandassociates.thermopi.SharedPrefsFile";
 }

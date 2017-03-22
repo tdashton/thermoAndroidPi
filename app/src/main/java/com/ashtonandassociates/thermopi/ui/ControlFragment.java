@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.SettingsActivity;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
@@ -49,6 +51,9 @@ public class ControlFragment extends Fragment
 
 	private boolean mInitialized = false;
 
+	protected float mMinimumTemperature = (float) SettingsActivity.TEMPERATURE_DEFAULT_MIN;
+	protected float mMaximumTemperature = (float) SettingsActivity.TEMPERATURE_DEFAULT_MAX;
+
 	public SharedPreferences sharedPrefs;
 	AppStateManager manager = AppStateManager.getInstance();
 
@@ -58,7 +63,8 @@ public class ControlFragment extends Fragment
 	protected View mControlDebugOutputGroup;
 	protected Button mTimeButton;
 	protected Button mTemperatureButton;
-	protected EditText mEditTextTemperature;
+	protected SeekBar mSeekBarTemperature;
+	protected TextView mEditTextTemperature;
 	protected EditText mEditTextTime;
 	protected TextView mTemperatureCurrentTextView;
 	protected TextView mTemperatureStatusTextView;
@@ -104,7 +110,14 @@ public class ControlFragment extends Fragment
 			if(result.type.equals(COMMAND_TEMP)) {
 				Integer temp = new Integer(result.param);
 				ApiTemperature apiTemp = new ApiTemperature(temp, ApiTemperature.CONST_API_SCALE);
-				mEditTextTemperature.setHint(NumberUtil.formatTemperature(apiTemp.getTemperatureDouble(ApiTemperature.CONST_DEFAULT_SCALE)) + "*");
+				mSeekBarTemperature.setProgress(
+					ControlFragment.this.temperatureToPercent(
+						apiTemp.getTemperatureDouble(ApiTemperature.CONST_DEFAULT_SCALE).floatValue()
+					)
+				);
+				mEditTextTemperature.setText(
+						apiTemp.toString()
+				);
 				break;
 			}
 		}
@@ -160,6 +173,8 @@ public class ControlFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		this.mMinimumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MIN);
+		this.mMaximumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX);
 	}
 
 	@Override
@@ -188,8 +203,31 @@ public class ControlFragment extends Fragment
 		mTimeGroup = view.findViewById(R.id.control_time_layout_group);
 		mTimeGroup.setVisibility(View.VISIBLE);
 
-		mEditTextTemperature = (EditText)view.findViewById(R.id.control_edittext_temperature);
-		mEditTextTemperature.addTextChangedListener(this.mTextWatcher);
+		mSeekBarTemperature = (SeekBar)view.findViewById(R.id.control_seekbar_temperature);
+		mSeekBarTemperature.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				Log.d(TAG, Integer.valueOf(i).toString());
+				Log.d(TAG, Boolean.valueOf(b).toString());
+				mEditTextTemperature.setText(
+						NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(i))) + ApiTemperature.CONST_DEGREES_CELSIUS
+				);
+//				Log.d(TAG, Float.valueOf(ControlFragment.this.percentToTemperature(i)).toString());
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+//				Log.d(TAG, "onStartTrackingTouch");
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+//				Log.d(TAG, "onStopTrackingTouch");
+
+			}
+		});
+		mEditTextTemperature = (TextView)view.findViewById(R.id.label_temperature_degrees);
+//		mSeekBarTemperature.addTextChangedListener(this.mTextWatcher);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
 		mEditTextTime.addTextChangedListener(this.mTextWatcher);
 
@@ -255,13 +293,9 @@ public class ControlFragment extends Fragment
 		switch(id) {
 			case R.id.control_button_temperature:
 				Log.i(TAG, "temperature button");
-				if(mEditTextTemperature.getText().length() == 0) {
-					builder.show();
-					break;
-				}
 
 				ApiTemperature temp = new ApiTemperature(
-						Double.valueOf(mEditTextTemperature.getText().toString()),
+						Double.valueOf(this.percentToTemperature(mSeekBarTemperature.getProgress())),
 						ApiTemperature.CONST_DEFAULT_SCALE);
 				Double tempDouble = temp.getTemperatureDouble(
 						ApiTemperature.CONST_API_SCALE);
@@ -289,7 +323,6 @@ public class ControlFragment extends Fragment
 			builder.setMessage(response.error.text);
 		} else {
 			builder.setMessage(getActivity().getString(R.string.control_alert_dialog_server_ok_message) + "\n" + response.result);
-			mEditTextTemperature.setText(null);
 			mEditTextTime.setText(null);
 			((ApiInterface)getActivity()).refreshControlValues();
 		}
@@ -333,4 +366,17 @@ public class ControlFragment extends Fragment
 		}
 		return retVal;
 	}
+
+	private int temperatureToPercent(float temperature) {
+		float percent = ((temperature - this.mMinimumTemperature) / (this.mMaximumTemperature - this.mMinimumTemperature)) * 100;
+		Log.d(TAG, "temperatureToPercent" + Float.valueOf(percent).toString());
+		return (int)percent;
+	}
+
+	private float percentToTemperature(int percent) {
+		float temperature = this.mMinimumTemperature + (this.mMaximumTemperature - this.mMinimumTemperature) * (float)(percent / 100.0);
+		Log.d(TAG, "percentToTemperature" + Float.valueOf(this.mMinimumTemperature + temperature).toString());
+		return temperature;
+	}
+
 }

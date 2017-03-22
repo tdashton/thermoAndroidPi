@@ -49,6 +49,39 @@
             android:layout_height="wrap_content"
             android:hint="..."/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_settings_control_temperature_minimum"/>
+
+            <EditText
+                android:layout_weight="1"
+                android:id="@+id/settings_control_temperature_minimum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="..."/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_settings_control_temperature_maximum"/>
+
+            <EditText
+                android:layout_weight="1"
+                android:id="@+id/settings_control_temperature_maximum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="..."/>
+
+        </LinearLayout>
+
         <CheckBox android:id="@+id/settings_restore_tab"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
