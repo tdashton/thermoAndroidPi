@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,35 +68,38 @@ public class ControlFragment extends Fragment
 	protected TextView mTemperatureStatusTextView;
 	protected TextView mControlDebugOutput;
 
-	protected TextWatcher mTextWatcher = new TextWatcher() {
-
-		protected AppStateManager manager = AppStateManager.getInstance();
+	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
 		private synchronized void getNonceSynchronized() {
-			if(manager.getApiNonce() == null) {
-				((ApiInterface)getActivity()).getApiNonce();
+			if (manager.getApiNonce() == null) {
+				((ApiInterface) getActivity()).getApiNonce();
 			} else {
 				Log.v(TAG, "already had a nonce");
 			}
 		}
 
 		@Override
-		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			Log.v(TAG, String.format("beforeTextChanged %d %d %d", i, i1, i2));
+		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			Log.v(TAG, String.format("onProgressChanged progress:%d fromUser:%s", progress, Boolean.valueOf(fromUser)).toString());
+			mEditTextTemperature.setText(
+					NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(progress))) + ApiTemperature.CONST_DEGREES_CELSIUS
+			);
 			this.getNonceSynchronized();
 		}
 
 		@Override
-		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//			Log.v(TAG, String.format("onTextChanged %d %d %d", i, i1, i2));
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			Log.v(TAG, "onStartTrackingTouch");
 		}
 
 		@Override
-		public void afterTextChanged(Editable editable) {
-//			Log.v(TAG, "afterTextChanged");
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			Log.v(TAG, "onStopTrackingTouch");
 		}
-	};
 
+		protected AppStateManager manager = AppStateManager.getInstance();
+
+	};
 	@ApiListener(ControlReadResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(ControlReadResponse response) {
@@ -204,32 +205,9 @@ public class ControlFragment extends Fragment
 		mTimeGroup.setVisibility(View.VISIBLE);
 
 		mSeekBarTemperature = (SeekBar)view.findViewById(R.id.control_seekbar_temperature);
-		mSeekBarTemperature.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-				Log.d(TAG, Integer.valueOf(i).toString());
-				Log.d(TAG, Boolean.valueOf(b).toString());
-				mEditTextTemperature.setText(
-						NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(i))) + ApiTemperature.CONST_DEGREES_CELSIUS
-				);
-//				Log.d(TAG, Float.valueOf(ControlFragment.this.percentToTemperature(i)).toString());
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "onStartTrackingTouch");
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "onStopTrackingTouch");
-
-			}
-		});
 		mEditTextTemperature = (TextView)view.findViewById(R.id.label_temperature_degrees);
-//		mSeekBarTemperature.addTextChangedListener(this.mTextWatcher);
+		mSeekBarTemperature.setOnSeekBarChangeListener(this.mSeekBarChangeListener);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
-		mEditTextTime.addTextChangedListener(this.mTextWatcher);
 
 		int checked = sharedPrefs.getInt("controlMode", 0);
 		if(checked != 0) {
