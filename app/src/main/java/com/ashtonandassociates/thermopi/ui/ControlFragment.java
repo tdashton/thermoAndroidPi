@@ -347,13 +347,13 @@ public class ControlFragment extends Fragment
 
 	private int temperatureToPercent(float temperature) {
 		float percent = ((temperature - this.mMinimumTemperature) / (this.mMaximumTemperature - this.mMinimumTemperature)) * 100;
-		Log.d(TAG, "temperatureToPercent" + Float.valueOf(percent).toString());
+		Log.d(TAG, "temperatureToPercent: " + Float.valueOf(percent).toString());
 		return (int)percent;
 	}
 
 	private float percentToTemperature(int percent) {
 		float temperature = this.mMinimumTemperature + (this.mMaximumTemperature - this.mMinimumTemperature) * (float)(percent / 100.0);
-		Log.d(TAG, "percentToTemperature" + Float.valueOf(this.mMinimumTemperature + temperature).toString());
+		Log.d(TAG, "percentToTemperature: " + Float.valueOf(this.mMinimumTemperature + temperature).toString());
 		return temperature;
 	}
 
