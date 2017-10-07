@@ -262,7 +262,7 @@ public class MainActivity extends ActionBarActivity
 				AppStateManager manager = AppStateManager.getInstance();
 				manager.setApiNonce(apiNonceResponse.nonce);
 				manager.setApiSharedSecret(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, ""));
-//				Log.v(TAG, "hashme: " + apiNonceResponse.nonce);
+				Log.v(TAG, "got nonce: " + apiNonceResponse.nonce);
 //				notifyApiListeners(apiNonceResponse);
 				mNonceResponseCallback = null;
 			}
