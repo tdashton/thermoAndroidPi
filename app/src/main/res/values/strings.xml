@@ -33,6 +33,9 @@
     <string name="control_alert_dialog_dismiss">Dismiss</string>
 
     <string name="settings_shared_secret">Server shared secret</string>
+    <string name="settings_gcm_token">GCM Token</string>
+    <string name="settings_gcm_token.available">available</string>
+    <string name="settings_gcm_token.not_available">not available</string>
     <string name="settings_location_name">Location name</string>
     <string name="settings_location_url_base">Server base URL</string>
     <string name="settings_restore_tab">Remember last selected tab</string>

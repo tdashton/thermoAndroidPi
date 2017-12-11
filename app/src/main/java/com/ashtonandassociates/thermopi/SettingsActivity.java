@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
@@ -25,6 +26,7 @@ public class SettingsActivity extends ActionBarActivity {
 	EditText mTextViewURL;
 	EditText mTextViewControlTemperatureMinimum;
 	EditText mTextViewControlTemperatureMaximum;
+	TextView mTextViewGcmTokenAvailability;
 	CheckBox mCheckBoxRememberTab;
 	CheckBox mCheckboxServerDebugOutput;
 
@@ -65,7 +67,7 @@ public class SettingsActivity extends ActionBarActivity {
 		mCheckboxServerDebugOutput = (CheckBox)findViewById(R.id.settings_server_debug_output);
 		mTextViewControlTemperatureMinimum = (EditText)findViewById(R.id.settings_control_temperature_minimum);
 		mTextViewControlTemperatureMaximum = (EditText)findViewById(R.id.settings_control_temperature_maximum);
-
+		mTextViewGcmTokenAvailability = (TextView)findViewById(R.id.settings_gcm_token_availability);
 		mTextViewSharedSecret.setText(sharedPrefs.getString(Constants.CONST_SERVER_SHARED_SECRET, null));
 		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 		mTextViewURL.setText(sharedPrefs.getString(Constants.CONST_URL_BASE, null));
@@ -79,6 +81,11 @@ public class SettingsActivity extends ActionBarActivity {
 				Float.valueOf(sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX)).toString()
 		);
 		mCheckboxServerDebugOutput.setChecked(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false));
+		if (sharedPrefs.getString(Constants.CONST_GCM_TOKEN, null) != null) {
+			mTextViewGcmTokenAvailability.setText(getString(R.string.settings_gcm_token_available));
+		} else {
+			mTextViewGcmTokenAvailability.setText(getString(R.string.settings_gcm_token_not_available));
+		}
 	}
 
 	@Override

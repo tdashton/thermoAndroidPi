@@ -7,6 +7,33 @@
         android:icon="@drawable/temperature_512"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.ashtonandassociates.thermopi" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.ashtonandassociates.thermopi.messaging.ThermoPiGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.ashtonandassociates.thermopi.messaging.ThermoPiIdListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.ashtonandassociates.thermopi.messaging.RegistrationIntentService"
+            android:exported="false">
+        </service>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
