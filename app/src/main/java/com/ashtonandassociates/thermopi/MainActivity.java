@@ -24,7 +24,7 @@ import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;

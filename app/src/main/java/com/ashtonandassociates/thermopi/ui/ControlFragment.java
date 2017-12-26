@@ -22,7 +22,7 @@ import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;

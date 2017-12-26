@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;

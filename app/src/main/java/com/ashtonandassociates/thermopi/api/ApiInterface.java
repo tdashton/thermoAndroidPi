@@ -1,6 +1,4 @@
-package com.ashtonandassociates.thermopi.interfaces;
-
-import com.ashtonandassociates.thermopi.api.ApiService;
+package com.ashtonandassociates.thermopi.api;
 
 public interface ApiInterface {
 
