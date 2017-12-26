@@ -1,5 +1,11 @@
 package com.ashtonandassociates.thermopi.util;
 
+import com.ashtonandassociates.thermopi.ui.ControlFragment;
+import com.ashtonandassociates.thermopi.ui.controlvalue.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppStateManager {
 
 	private static AppStateManager instance = null;
@@ -32,4 +38,12 @@ public class AppStateManager {
 		this.apiSharedSecret = param;
 	}
 
+	public List<Class> getRecentControlValues() {
+		List ary = new ArrayList<Item>();
+		ary.add(new Item(ControlFragment.COMMAND_TIME, "10"));
+		ary.add(new Item(ControlFragment.COMMAND_TIME, "11"));
+		ary.add(new Item(ControlFragment.COMMAND_TIME, "13"));
+
+		return ary;
+	}
 }

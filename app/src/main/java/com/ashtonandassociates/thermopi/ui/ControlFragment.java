@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.ui.controlvalue.Item;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
@@ -36,14 +40,14 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ControlFragment extends Fragment
-	implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse> {
+	implements AdapterView.OnItemClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse> {
 
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
 
-	public final String COMMAND_STATUS = "CMD RUNNING";
-	public final String COMMAND_TIME = "CMD TIME";
-	public final String COMMAND_TEMP = "CMD TEMP";
+	public static final String COMMAND_STATUS = "CMD RUNNING";
+	public static final String COMMAND_TIME = "CMD TIME";
+	public static final String COMMAND_TEMP = "CMD TEMP";
 
 	public final String CONSTANT_API_TEMP_INSIDE = "drinnen";
 
@@ -67,6 +71,7 @@ public class ControlFragment extends Fragment
 	protected TextView mTemperatureCurrentTextView;
 	protected TextView mTemperatureStatusTextView;
 	protected TextView mControlDebugOutput;
+	protected ListView mListViewControlRecent;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
@@ -223,6 +228,13 @@ public class ControlFragment extends Fragment
 		TextView locationName = (TextView) view.findViewById(R.id.control_location_name);
 		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 
+		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
+		ArrayAdapter adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1);
+		adapter.addAll(AppStateManager.getInstance().getRecentControlValues());
+
+		mListViewControlRecent .setAdapter(adapter);
+		mListViewControlRecent .setOnItemClickListener(this);
+
 		mInitialized = true;
 
 		return view;
@@ -291,6 +303,20 @@ public class ControlFragment extends Fragment
 				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
 				break;
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Log.v(ControlFragment.TAG, view.toString());
+		Log.v(ControlFragment.TAG, Integer.toString(position));
+		Log.v(ControlFragment.TAG, Long.toString(id));
+
+		Integer inputMinutes = (((Item)mListViewControlRecent.getAdapter().getItem(position)).getValue());
+		Integer minutes = inputMinutes * 60;
+		Log.d(ControlFragment.TAG, minutes.toString());
+
+//		((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
+
 	}
 
 	@Override

@@ -145,6 +145,11 @@
                     android:text="@string/control_submit"/>
             </LinearLayout>
         </LinearLayout>
+        <ListView
+            android:id="@+id/control_list_recent_control_values"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
         <LinearLayout
             android:id="@+id/control_debug_layout_group"
             android:visibility="invisible"
