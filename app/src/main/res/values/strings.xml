@@ -11,6 +11,8 @@
     <string name="control_set_temperature_detail">* is the currently set temperature</string>
     <string name="control_set_temperature_current">Current temperature: %s</string>
     <string name="control_set_temperature_status">Current status: %s</string>
+    <string name="control_list_cmd_time">Set time to %s</string>
+    <string name="control_list_cmd_temp">Set temperature to %s</string>
     <string name="control_radio_time">Time</string>
     <string name="control_radio_temperature">Temperature</string>
     <string name="control_submit">Set</string>

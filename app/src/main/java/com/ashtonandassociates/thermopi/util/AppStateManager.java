@@ -1,7 +1,8 @@
 package com.ashtonandassociates.thermopi.util;
 
-import com.ashtonandassociates.thermopi.ui.ControlFragment;
-import com.ashtonandassociates.thermopi.ui.controlvalue.Item;
+import android.content.Context;
+
+import com.ashtonandassociates.thermopi.ui.list.element.ControlRecentItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +39,11 @@ public class AppStateManager {
 		this.apiSharedSecret = param;
 	}
 
-	public List<Class> getRecentControlValues() {
-		List ary = new ArrayList<Item>();
-		ary.add(new Item(ControlFragment.COMMAND_TIME, "10"));
-		ary.add(new Item(ControlFragment.COMMAND_TIME, "11"));
-		ary.add(new Item(ControlFragment.COMMAND_TIME, "13"));
+	public List<Class> getRecentControlValues(Context ctx, String type) {
+		List ary = new ArrayList<ControlRecentItem>();
+		ary.add(new ControlRecentItem(ctx, type, 20 * 60));
+		ary.add(new ControlRecentItem(ctx, type, 10 * 60));
+		ary.add(new ControlRecentItem(ctx, type, 15 * 60));
 
 		return ary;
 	}

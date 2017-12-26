@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -22,11 +23,12 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.SettingsActivity;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
+import com.ashtonandassociates.thermopi.api.response.ControlHistoryResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
-import com.ashtonandassociates.thermopi.ui.controlvalue.Item;
+import com.ashtonandassociates.thermopi.ui.list.element.ControlRecentItem;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
@@ -229,11 +231,10 @@ public class ControlFragment extends Fragment
 		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 
 		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
-		ArrayAdapter adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1);
-		adapter.addAll(AppStateManager.getInstance().getRecentControlValues());
-
-		mListViewControlRecent .setAdapter(adapter);
-		mListViewControlRecent .setOnItemClickListener(this);
+		ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+		adapter.addAll(AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME));
+		mListViewControlRecent.setAdapter(adapter);
+		mListViewControlRecent.setOnItemClickListener(this);
 
 		mInitialized = true;
 
@@ -307,13 +308,17 @@ public class ControlFragment extends Fragment
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Log.v(ControlFragment.TAG, view.toString());
-		Log.v(ControlFragment.TAG, Integer.toString(position));
-		Log.v(ControlFragment.TAG, Long.toString(id));
+//		Log.v(ControlFragment.TAG, view.toString());
+//		Log.v(ControlFragment.TAG, Integer.toString(position));
+//		Log.v(ControlFragment.TAG, Long.toString(id));
 
-		Integer inputMinutes = (((Item)mListViewControlRecent.getAdapter().getItem(position)).getValue());
-		Integer minutes = inputMinutes * 60;
-		Log.d(ControlFragment.TAG, minutes.toString());
+		Integer inputMinutes = ((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position)).getValue();
+		Log.d(ControlFragment.TAG, inputMinutes.toString());
+		Log.d(ControlFragment.TAG, String.format(
+			"set %s to %d",
+			((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position)).getType(),
+			inputMinutes)
+		);
 
 //		((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
 
