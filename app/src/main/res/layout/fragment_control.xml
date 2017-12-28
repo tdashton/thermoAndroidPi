@@ -46,6 +46,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
             android:orientation="horizontal">
             <RadioGroup
                 android:id="@+id/control_radio_group"
@@ -70,6 +71,13 @@
                     />
             </RadioGroup>
         </LinearLayout>
+        <ListView
+            android:id="@+id/control_list_recent_control_values"
+            android:visibility="visible"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
         <LinearLayout
             android:id="@+id/control_temperature_layout_group"
             android:layout_marginTop="16dp"
@@ -115,7 +123,6 @@
                 android:text="@string/control_set_temperature_detail"
                 /-->
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/control_time_layout_group"
             android:layout_marginTop="16dp"
@@ -145,11 +152,6 @@
                     android:text="@string/control_submit"/>
             </LinearLayout>
         </LinearLayout>
-        <ListView
-            android:id="@+id/control_list_recent_control_values"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
         <LinearLayout
             android:id="@+id/control_debug_layout_group"
             android:visibility="invisible"

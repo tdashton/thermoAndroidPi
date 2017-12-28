@@ -41,9 +41,11 @@ public class AppStateManager {
 
 	public List<Class> getRecentControlValues(Context ctx, String type) {
 		List ary = new ArrayList<ControlRecentItem>();
-		ary.add(new ControlRecentItem(ctx, type, 20 * 60));
-		ary.add(new ControlRecentItem(ctx, type, 10 * 60));
-		ary.add(new ControlRecentItem(ctx, type, 15 * 60));
+		ary.add(new ControlRecentItem(ctx, type, 20));
+		ary.add(new ControlRecentItem(ctx, type, 10));
+		ary.add(new ControlRecentItem(ctx, type, 15));
+//		ary.add(new ControlRecentItem(ctx, type, 25));
+//		ary.add(new ControlRecentItem(ctx, type, 5));
 
 		return ary;
 	}

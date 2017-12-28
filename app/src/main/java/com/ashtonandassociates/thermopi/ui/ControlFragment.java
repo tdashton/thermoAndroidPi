@@ -232,7 +232,7 @@ public class ControlFragment extends Fragment
 
 		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
 		ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
-		adapter.addAll(AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME));
+		adapter.addAll(AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TEMP));
 		mListViewControlRecent.setAdapter(adapter);
 		mListViewControlRecent.setOnItemClickListener(this);
 
@@ -312,7 +312,8 @@ public class ControlFragment extends Fragment
 //		Log.v(ControlFragment.TAG, Integer.toString(position));
 //		Log.v(ControlFragment.TAG, Long.toString(id));
 
-		Integer inputMinutes = ((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position)).getValue();
+		ControlRecentItem item = ((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position));
+		Integer inputMinutes = item.getValue();
 		Log.d(ControlFragment.TAG, inputMinutes.toString());
 		Log.d(ControlFragment.TAG, String.format(
 			"set %s to %d",
