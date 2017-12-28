@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class ControlHistoryResponse {
+public class ControlLogsResponse {
 
 	public List<Result> result;
 	public Error error;
@@ -22,10 +22,9 @@ public class ControlHistoryResponse {
 			return this;
 		}
 
-		@SerializedName("countx")
 		public String type;
 		public Integer param;
-		public Date date;
+		@SerializedName("countx")
 		public Integer count;
 
 		public String toString() {

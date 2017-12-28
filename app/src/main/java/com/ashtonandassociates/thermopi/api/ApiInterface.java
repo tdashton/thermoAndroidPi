@@ -10,4 +10,5 @@ public interface ApiInterface {
 
 	void refreshControlValues();
 
+	void refreshControlLogValues();
 }

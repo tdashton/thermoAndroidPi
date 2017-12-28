@@ -1,5 +1,6 @@
 package com.ashtonandassociates.thermopi.api;
 
+import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
@@ -31,4 +32,7 @@ public interface ApiService {
 
 	@GET("/control/read/")
 	void readCommandValue(Callback<ControlReadResponse> cb);
+
+	@GET("/control/logs/")
+	void readControlLogs(Callback<ControlLogsResponse> cb);
 }

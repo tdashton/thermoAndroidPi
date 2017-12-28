@@ -2,7 +2,7 @@ package com.ashtonandassociates.thermopi.ui.list.element;
 
 import android.content.Context;
 
-import com.ashtonandassociates.thermopi.api.response.ControlHistoryResponse;
+import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.R;
 
@@ -24,7 +24,7 @@ public class ControlRecentItem {
 		this.value = value;
 	}
 
-	public ControlRecentItem(Context ctx, ControlHistoryResponse.Result result) {
+	public ControlRecentItem(Context ctx, ControlLogsResponse.Result result) {
 		this.context = ctx;
 		this.type = result.type;
 		this.value = result.param;

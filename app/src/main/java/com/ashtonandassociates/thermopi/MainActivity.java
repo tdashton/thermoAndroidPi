@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
@@ -33,6 +34,7 @@ import com.ashtonandassociates.thermopi.util.Constants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -57,6 +59,7 @@ public class MainActivity extends ActionBarActivity
 	private ApiService service;
 	private Callback<NonceResponse> mNonceResponseCallback;
 	private Callback<CurrentResponse> mCurrentResponseCallback;
+	private Callback<ControlLogsResponse> mControlHistoryResponseCallback;
 	private Callback<ControlReadResponse> mControlReadResponseCallback;
 
 	@Override
@@ -136,6 +139,7 @@ public class MainActivity extends ActionBarActivity
 			refreshControlValues();
 		}
 		refreshCurrentValues();
+		refreshControlLogValues();
 	}
 
 	@Override
@@ -276,6 +280,29 @@ public class MainActivity extends ActionBarActivity
 			}
 		};
 		service.getApiNonce(mNonceResponseCallback);
+	}
+
+	@Override
+	public void refreshControlLogValues()
+	{
+		if(mControlHistoryResponseCallback != null) {
+			return;
+		}
+		mControlHistoryResponseCallback = new Callback<ControlLogsResponse>() {
+			@Override
+			public void success(ControlLogsResponse controlLogsResponse, Response response) {
+				notifyApiListeners(controlLogsResponse);
+				List<ControlLogsResponse.Result> result = controlLogsResponse.result;
+				mControlHistoryResponseCallback = null;
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				Log.d(TAG, error.toString());
+				mControlHistoryResponseCallback = null;
+			}
+		};
+		service.readControlLogs(this.mControlHistoryResponseCallback);
 	}
 
 	@Override
