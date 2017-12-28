@@ -258,7 +258,7 @@ public class ControlFragment extends Fragment
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		Log.v(TAG, "onCheckChanged" + checkedId);
+//		Log.v(TAG, "onCheckChanged" + checkedId);
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
@@ -313,16 +313,41 @@ public class ControlFragment extends Fragment
 //		Log.v(ControlFragment.TAG, Long.toString(id));
 
 		ControlRecentItem item = ((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position));
-		Integer inputMinutes = item.getValue();
-		Log.d(ControlFragment.TAG, inputMinutes.toString());
+		Integer intParam = item.getValue();
+		String stringParam;
+		Log.d(ControlFragment.TAG, intParam.toString());
+
+		switch (item.getType()) {
+			case ControlFragment.COMMAND_TEMP:
+				ApiTemperature temp = new ApiTemperature(item.getValue(), ApiTemperature.CONST_DEFAULT_SCALE);
+				Double tempDouble = temp.getTemperatureDouble(ApiTemperature.CONST_API_SCALE);
+				stringParam = Integer.toString(tempDouble.intValue());
+
+				break;
+
+			case ControlFragment.COMMAND_TIME:
+				Integer inputMinutes = Integer.parseInt(mEditTextTime.getText().toString());
+				Integer minutes = inputMinutes * 60;
+				stringParam = minutes.toString();
+
+				break;
+
+			default:
+				throw new IllegalArgumentException();
+		}
+
 		Log.d(ControlFragment.TAG, String.format(
-			"set %s to %d",
-			((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position)).getType(),
-			inputMinutes)
+				"set %s to %s",
+				((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position)).getType(),
+				stringParam)
 		);
 
-//		((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
-
+//		((ApiInterface)getActivity()).getApiService().sendCommand(
+//				item.getType(),
+//				Integer.toString(item.getValue()),
+//				this.getApiHashString(item.getType(),
+//				Integer.toString(item.getValue())),
+//				this);
 	}
 
 	@Override
