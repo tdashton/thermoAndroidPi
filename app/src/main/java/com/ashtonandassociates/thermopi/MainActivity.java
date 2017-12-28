@@ -139,6 +139,7 @@ public class MainActivity extends ActionBarActivity
 			refreshControlValues();
 		}
 		refreshCurrentValues();
+		// @todo move this to a more appropriate place
 		refreshControlLogValues();
 	}
 
