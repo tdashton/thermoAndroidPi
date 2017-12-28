@@ -326,7 +326,7 @@ public class ControlFragment extends Fragment
 				break;
 
 			case ControlFragment.COMMAND_TIME:
-				Integer inputMinutes = Integer.parseInt(mEditTextTime.getText().toString());
+				Integer inputMinutes = item.getValue();
 				Integer minutes = inputMinutes * 60;
 				stringParam = minutes.toString();
 
