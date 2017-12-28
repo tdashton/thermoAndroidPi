@@ -36,6 +36,7 @@ import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -74,6 +75,8 @@ public class ControlFragment extends Fragment
 	protected TextView mTemperatureStatusTextView;
 	protected TextView mControlDebugOutput;
 	protected ListView mListViewControlRecent;
+	protected ArrayAdapter<ControlRecentItem> mListViewRecentAdapter;
+	protected List mListRecent;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
@@ -216,6 +219,12 @@ public class ControlFragment extends Fragment
 		mSeekBarTemperature.setOnSeekBarChangeListener(this.mSeekBarChangeListener);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
 
+		mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME);
+		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
+		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
+		mListViewControlRecent.setOnItemClickListener(this);
+
 		int checked = sharedPrefs.getInt("controlMode", 0);
 		if(checked != 0) {
 			mRadioGroup.check(checked);
@@ -229,12 +238,6 @@ public class ControlFragment extends Fragment
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		TextView locationName = (TextView) view.findViewById(R.id.control_location_name);
 		locationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
-
-		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
-		ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
-		adapter.addAll(AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TEMP));
-		mListViewControlRecent.setAdapter(adapter);
-		mListViewControlRecent.setOnItemClickListener(this);
 
 		mInitialized = true;
 
@@ -259,17 +262,22 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 //		Log.v(TAG, "onCheckChanged" + checkedId);
+		mListViewRecentAdapter.clear();
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
 				mTemperatureGroup.setVisibility(View.VISIBLE);
+				mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TEMP);
 				break;
 
 			case R.id.control_radio_time:
 				mTimeGroup.setVisibility(View.VISIBLE);
 				mTemperatureGroup.setVisibility(View.GONE);
+				mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME);
 				break;
 		}
+		mListViewRecentAdapter.addAll(mListRecent);
+		mListViewRecentAdapter.notifyDataSetChanged();
 		SharedPreferences.Editor editor = sharedPrefs.edit();
 		editor.putInt("controlMode", checkedId);
 		editor.commit();
