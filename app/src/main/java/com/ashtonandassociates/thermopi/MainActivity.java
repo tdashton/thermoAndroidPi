@@ -129,10 +129,12 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(service == null) {
+			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
+		}
 		if(this.mControlFragment.isHidden() == false) {
 			refreshControlValues();
 		}
-		service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		refreshCurrentValues();
 	}
 
