@@ -3,7 +3,7 @@ package com.ashtonandassociates.thermopi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
 	private final String TAG = this.getClass().getSimpleName();
 
