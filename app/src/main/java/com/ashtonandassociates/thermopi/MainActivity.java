@@ -306,6 +306,7 @@ public class MainActivity extends AppCompatActivity
 				insertTask.execute(daosParams);
 
 				mControlHistoryResponseCallback = null;
+				notifyApiListeners(controlLogsResponse);
 			}
 
 			@Override

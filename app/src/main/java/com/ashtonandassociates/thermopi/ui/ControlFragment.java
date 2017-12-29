@@ -1,7 +1,10 @@
 package com.ashtonandassociates.thermopi.ui;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,15 +25,19 @@ import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.SettingsActivity;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
+import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
+import com.ashtonandassociates.thermopi.ui.lifecycle.MainViewModel;
 import com.ashtonandassociates.thermopi.ui.list.element.ControlRecentItem;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
+import com.google.common.collect.Lists;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +48,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ControlFragment extends Fragment
-	implements AdapterView.OnItemClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse> {
+	implements AdapterView.OnItemClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse>, Observer<List<RecentLog>> {
 
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -75,6 +82,7 @@ public class ControlFragment extends Fragment
 	protected ListView mListViewControlRecent;
 	protected ArrayAdapter<ControlRecentItem> mListViewRecentAdapter;
 	protected List mListRecent;
+	protected MainViewModel mMainViewModel;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
@@ -108,6 +116,13 @@ public class ControlFragment extends Fragment
 		protected AppStateManager manager = AppStateManager.getInstance();
 
 	};
+
+	@ApiListener(ControlLogsResponse.class)
+	@SuppressWarnings("unused")
+	public void onApiServiceResponse(ControlLogsResponse response) {
+		Log.i(TAG, "on ControlLogsResponse");
+	}
+
 	@ApiListener(ControlReadResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(ControlReadResponse response) {
@@ -184,6 +199,11 @@ public class ControlFragment extends Fragment
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		this.mMinimumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MIN);
 		this.mMaximumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX);
+		this.mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+		int checked = sharedPrefs.getInt("controlMode", R.id.control_radio_time);
+		this.mMainViewModel
+				.getLogs(checked == R.id.control_radio_time ? ControlFragment.COMMAND_TIME : ControlFragment.COMMAND_TEMP)
+				.observe(this, this);
 	}
 
 	@Override
@@ -217,16 +237,10 @@ public class ControlFragment extends Fragment
 		mSeekBarTemperature.setOnSeekBarChangeListener(this.mSeekBarChangeListener);
 		mEditTextTime = (EditText)view.findViewById(R.id.control_edittext_time);
 
-		mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME);
-		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
 		mListViewControlRecent = (ListView)view.findViewById(R.id.control_list_recent_control_values);
-		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
-		mListViewControlRecent.setOnItemClickListener(this);
 
-		int checked = sharedPrefs.getInt("controlMode", 0);
-		if(checked != 0) {
-			mRadioGroup.check(checked);
-		}
+		int checked = sharedPrefs.getInt("controlMode", R.id.control_radio_time);
+		mRadioGroup.check(checked);
 
 		mControlDebugOutputGroup = view.findViewById(R.id.control_debug_layout_group);
 		if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
@@ -240,6 +254,21 @@ public class ControlFragment extends Fragment
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onChanged(@Nullable List<RecentLog> recentLogs) {
+		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
+		mListViewControlRecent.setOnItemClickListener(this);
+		mListViewRecentAdapter.clear();
+		mListRecent = Lists.transform(recentLogs, ControlRecentItem.transformFromRecentLog());
+		mListViewRecentAdapter.addAll(mListRecent);
+		mListViewRecentAdapter.notifyDataSetChanged();
+
+		for(RecentLog log : recentLogs) {
+			Log.v(TAG, "onChanged:" + log.type + " / " + log.param);
+		}
 	}
 
 	@Override
@@ -260,22 +289,19 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 //		Log.v(TAG, "onCheckChanged" + checkedId);
-		mListViewRecentAdapter.clear();
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
 				mTemperatureGroup.setVisibility(View.VISIBLE);
-				mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TEMP);
+				mMainViewModel.getLogs(ControlFragment.COMMAND_TEMP).observe(this, this);
 				break;
 
 			case R.id.control_radio_time:
 				mTimeGroup.setVisibility(View.VISIBLE);
 				mTemperatureGroup.setVisibility(View.GONE);
-				mListRecent = AppStateManager.getInstance().getRecentControlValues(getActivity(), ControlFragment.COMMAND_TIME);
+				mMainViewModel.getLogs(ControlFragment.COMMAND_TIME).observe(this, this);
 				break;
 		}
-		mListViewRecentAdapter.addAll(mListRecent);
-		mListViewRecentAdapter.notifyDataSetChanged();
 		SharedPreferences.Editor editor = sharedPrefs.edit();
 		editor.putInt("controlMode", checkedId);
 		editor.commit();
@@ -325,7 +351,7 @@ public class ControlFragment extends Fragment
 
 		switch (item.getType()) {
 			case ControlFragment.COMMAND_TEMP:
-				ApiTemperature temp = new ApiTemperature(Integer.valueOf(item.getValue()), ApiTemperature.CONST_DEFAULT_SCALE);
+				ApiTemperature temp = new ApiTemperature(Integer.valueOf(item.getValue()), ApiTemperature.CONST_API_SCALE);
 				Double tempDouble = temp.getTemperatureDouble(ApiTemperature.CONST_API_SCALE);
 				stringParam = Integer.toString(tempDouble.intValue());
 
@@ -333,8 +359,8 @@ public class ControlFragment extends Fragment
 
 			case ControlFragment.COMMAND_TIME:
 				Integer inputMinutes = Integer.valueOf(item.getValue());
-				Integer minutes = inputMinutes * 60;
-				stringParam = minutes.toString();
+//				Integer minutes = inputMinutes * 60;
+				stringParam = inputMinutes.toString();
 
 				break;
 
@@ -419,5 +445,4 @@ public class ControlFragment extends Fragment
 		Log.d(TAG, "percentToTemperature: " + Float.valueOf(this.mMinimumTemperature + temperature).toString());
 		return temperature;
 	}
-
 }

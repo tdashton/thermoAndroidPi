@@ -22,6 +22,8 @@ public class RecentLog
 	@NonNull
 	public String param;
 
+	public Integer count;
+
 	public static Function<ControlLogsResponse.Result, RecentLog> transform() {
 		return new Function<ControlLogsResponse.Result, RecentLog>() {
 			@Override
@@ -29,6 +31,7 @@ public class RecentLog
 				RecentLog obj = new RecentLog();
 				obj.type = input.type;
 				obj.param = input.param;
+				obj.count = input.count;
 
 				return obj;
 			}

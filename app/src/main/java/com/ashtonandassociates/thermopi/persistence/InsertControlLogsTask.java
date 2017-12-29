@@ -20,7 +20,7 @@ public class InsertControlLogsTask extends AsyncTask<RecentLog, Integer, Long>
     @Override
     protected Long doInBackground(RecentLog... models) {
         PiDatabase db = Room.databaseBuilder(ctx.getApplicationContext(),
-                PiDatabase.class, "pi-database").build();
+                PiDatabase.class, "pi-database").fallbackToDestructiveMigration().build();
 
         db.recentLogDao().insertAll(models);
 

@@ -12,8 +12,8 @@ import java.util.List;
 @Dao
 public interface RecentLogDao
 {
-	@Query("SELECT * FROM recent_log WHERE type = :type")
-	List<RecentLog> getAll(String type);
+	@Query("SELECT * FROM recent_log WHERE type = :type order by count desc")
+	List<RecentLog> getAllOfType(String type);
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAll(RecentLog... recentLogs);
