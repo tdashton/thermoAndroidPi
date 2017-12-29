@@ -1,7 +1,7 @@
 package com.ashtonandassociates.thermopi.ui;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

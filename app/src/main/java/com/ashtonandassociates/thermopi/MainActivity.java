@@ -1,13 +1,12 @@
 package com.ashtonandassociates.thermopi;
 
-import android.app.FragmentManager;
-import android.arch.persistence.room.Room;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +28,6 @@ import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.InsertControlLogsTask;
-import com.ashtonandassociates.thermopi.persistence.PiDatabase;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
@@ -38,7 +36,6 @@ import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.common.collect.Lists;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -80,21 +77,21 @@ public class MainActivity extends AppCompatActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
+		mMainFragment = getSupportFragmentManager().findFragmentByTag("mMainFragment");
 		if(mMainFragment == null) {
 			mMainFragment = new OverviewFragment();
 		}
-		mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
+		mGraphFragment = getSupportFragmentManager().findFragmentByTag("mGraphFragment");
 		if(mGraphFragment == null) {
 			mGraphFragment = new GraphFragment();
 		}
-		mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
+		mControlFragment = getSupportFragmentManager().findFragmentByTag("mControlFragment");
 		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
 		}
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
+			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
 					.add(R.id.content_frame, mControlFragment, "mControlFragment")
@@ -187,7 +184,7 @@ public class MainActivity extends AppCompatActivity
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 
 		switch(position) {
 			case 0:
