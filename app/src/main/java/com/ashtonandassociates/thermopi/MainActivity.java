@@ -1,11 +1,11 @@
 package com.ashtonandassociates.thermopi;
 
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -70,21 +70,21 @@ public class MainActivity extends ActionBarActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
+		mMainFragment = getSupportFragmentManager().findFragmentByTag("mMainFragment");
 		if(mMainFragment == null) {
 			mMainFragment = new OverviewFragment();
 		}
-		mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
+		mGraphFragment = getSupportFragmentManager().findFragmentByTag("mGraphFragment");
 		if(mGraphFragment == null) {
 			mGraphFragment = new GraphFragment();
 		}
-		mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
+		mControlFragment = getSupportFragmentManager().findFragmentByTag("mControlFragment");
 		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
 		}
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
+			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
 					.add(R.id.content_frame, mControlFragment, "mControlFragment")
@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 
 		switch(position) {
 			case 0:
