@@ -14,11 +14,11 @@ public class ControlRecentItem {
 
 	protected String type;
 
-	protected int value;
+	protected String value;
 
 	protected Context context;
 
-	public ControlRecentItem(Context ctx, String type, int value) {
+	public ControlRecentItem(Context ctx, String type, String value) {
 		this.context = ctx;
 		this.type = type;
 		this.value = value;
@@ -57,11 +57,11 @@ public class ControlRecentItem {
 		this.type = type;
 	}
 
-	public int getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 }

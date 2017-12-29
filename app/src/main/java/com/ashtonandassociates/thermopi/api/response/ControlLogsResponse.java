@@ -13,7 +13,7 @@ public class ControlLogsResponse {
 	public class Result {
 		public String type;
 
-		public Integer param;
+		public String param;
 
 		@SerializedName("countx")
 		public Integer count;

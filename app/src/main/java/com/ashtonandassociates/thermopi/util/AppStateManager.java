@@ -41,11 +41,11 @@ public class AppStateManager {
 
 	public List<Class> getRecentControlValues(Context ctx, String type) {
 		List ary = new ArrayList<ControlRecentItem>();
-		ary.add(new ControlRecentItem(ctx, type, 20));
-		ary.add(new ControlRecentItem(ctx, type, 10));
-		ary.add(new ControlRecentItem(ctx, type, 15));
-//		ary.add(new ControlRecentItem(ctx, type, 25));
-//		ary.add(new ControlRecentItem(ctx, type, 5));
+		ary.add(new ControlRecentItem(ctx, type, Integer.valueOf(20).toString()));
+		ary.add(new ControlRecentItem(ctx, type, Integer.valueOf(10).toString()));
+		ary.add(new ControlRecentItem(ctx, type, Integer.valueOf(15).toString()));
+//		ary.add(new ControlRecentItem(ctx, type, Integer.valueOf(25));
+//		ary.add(new ControlRecentItem(ctx, type, Integer.valueOf(5));
 
 		return ary;
 	}

@@ -1,9 +1,11 @@
 package com.ashtonandassociates.thermopi;
 
 import android.app.FragmentManager;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -26,12 +28,17 @@ import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.persistence.InsertControlLogsTask;
+import com.ashtonandassociates.thermopi.persistence.PiDatabase;
+import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
+import com.google.common.collect.Lists;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -292,8 +299,15 @@ public class MainActivity extends AppCompatActivity
 		mControlHistoryResponseCallback = new Callback<ControlLogsResponse>() {
 			@Override
 			public void success(ControlLogsResponse controlLogsResponse, Response response) {
-				notifyApiListeners(controlLogsResponse);
 				List<ControlLogsResponse.Result> result = controlLogsResponse.result;
+				List<RecentLog> daos = Lists.transform(result, RecentLog.transform());
+
+				RecentLog[] daosParams = new RecentLog[daos.size()];
+				daosParams = daos.toArray(daosParams);
+
+				AsyncTask insertTask = new InsertControlLogsTask(MainActivity.this);
+				insertTask.execute(daosParams);
+
 				mControlHistoryResponseCallback = null;
 			}
 

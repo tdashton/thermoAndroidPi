@@ -319,20 +319,20 @@ public class ControlFragment extends Fragment
 //		Log.v(ControlFragment.TAG, Long.toString(id));
 
 		ControlRecentItem item = ((ControlRecentItem)mListViewControlRecent.getAdapter().getItem(position));
-		Integer intParam = item.getValue();
+		Integer intParam = Integer.valueOf(item.getValue());
 		String stringParam;
 		Log.d(ControlFragment.TAG, intParam.toString());
 
 		switch (item.getType()) {
 			case ControlFragment.COMMAND_TEMP:
-				ApiTemperature temp = new ApiTemperature(item.getValue(), ApiTemperature.CONST_DEFAULT_SCALE);
+				ApiTemperature temp = new ApiTemperature(Integer.valueOf(item.getValue()), ApiTemperature.CONST_DEFAULT_SCALE);
 				Double tempDouble = temp.getTemperatureDouble(ApiTemperature.CONST_API_SCALE);
 				stringParam = Integer.toString(tempDouble.intValue());
 
 				break;
 
 			case ControlFragment.COMMAND_TIME:
-				Integer inputMinutes = item.getValue();
+				Integer inputMinutes = Integer.valueOf(item.getValue());
 				Integer minutes = inputMinutes * 60;
 				stringParam = minutes.toString();
 
