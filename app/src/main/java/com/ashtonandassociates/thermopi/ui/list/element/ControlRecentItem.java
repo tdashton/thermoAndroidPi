@@ -29,21 +29,7 @@ public class ControlRecentItem {
 	}
 
 	public String toString() {
-		String ret = Integer.valueOf(this.value).toString() + ":" + this.type;
-		switch (this.type) {
-			case ControlFragment.COMMAND_TEMP:
-//				ret = String.format(this.context.getString(R.string.control_list_cmd_temp), Integer.valueOf(this.value).toString());
-
-				break;
-
-			default:
-			case ControlFragment.COMMAND_TIME:
-//				ret = String.format(this.context.getString(R.string.control_list_cmd_time), Integer.valueOf(this.value).toString());
-
-				break;
-		}
-
-		return ret;
+		return Integer.valueOf(this.value).toString() + ":" + this.type;
 	}
 
 	public static Function<RecentLog, ControlRecentItem> transformFromRecentLog() {
