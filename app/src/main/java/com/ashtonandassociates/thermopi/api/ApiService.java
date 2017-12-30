@@ -33,6 +33,6 @@ public interface ApiService {
 	@GET("/control/read")
 	void readCommandValue(Callback<ControlReadResponse> cb);
 
-	@GET("/control/logs/")
+	@GET("/control/logs")
 	void readControlLogs(Callback<ControlLogsResponse> cb);
 }
