@@ -116,6 +116,7 @@ public class SettingsActivity extends ActionBarActivity {
 		editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, Float.valueOf(mTextViewControlTemperatureMaximum.getText().toString()));
 		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
 		editor.commit();
+
 		return true;
 	}
 }
