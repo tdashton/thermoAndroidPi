@@ -245,8 +245,8 @@ public class ControlFragment extends Fragment
 
 		mTemperatureGroup = view.findViewById(R.id.control_temperature_layout_group);
 		mTemperatureGroup.setVisibility(View.GONE);
+
 		mTimeGroup = view.findViewById(R.id.control_time_layout_group);
-		mTimeGroup.setVisibility(View.VISIBLE);
 
 		mSeekBarTemperature = (SeekBar)view.findViewById(R.id.control_seekbar_temperature);
 		mEditTextTemperature = (TextView)view.findViewById(R.id.label_temperature_degrees);
@@ -331,16 +331,20 @@ public class ControlFragment extends Fragment
 
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
-				mTimeGroup.setVisibility(View.GONE);
-				mTemperatureGroup.setVisibility(View.VISIBLE);
+				if (sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true)) {
+					mTimeGroup.setVisibility(View.GONE);
+					mTemperatureGroup.setVisibility(View.VISIBLE);
+				}
 				if (mListRecent.get(ControlFragment.COMMAND_TEMP) != null) {
 					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TEMP));
 				}
 				break;
 
 			case R.id.control_radio_time:
-				mTimeGroup.setVisibility(View.VISIBLE);
-				mTemperatureGroup.setVisibility(View.GONE);
+				if (sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true)) {
+					mTimeGroup.setVisibility(View.VISIBLE);
+					mTemperatureGroup.setVisibility(View.GONE);
+				}
 				if (mListRecent.get(ControlFragment.COMMAND_TIME) != null) {
 					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TIME));
 				}

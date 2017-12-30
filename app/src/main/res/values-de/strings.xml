@@ -39,6 +39,7 @@
     <string name="settings_location_url_base">Basis Server-URL</string>
     <string name="settings_restore_tab">Zuletzt gewählter Tab merken</string>
     <string name="settings_server_debug_output">Server debugging Ausgabe einblenden</string>
+    <string name="settings_control_manual_input">Erlaube händische Engabe beim Steueren</string>
 
     <string-array
         name="drawer_menu_items">

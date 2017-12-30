@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
 	EditText mTextViewControlTemperatureMaximum;
 	CheckBox mCheckBoxRememberTab;
 	CheckBox mCheckboxServerDebugOutput;
+	CheckBox mCheckboxShowManualControlInput;
 
 	public SharedPreferences sharedPrefs;
 
@@ -63,6 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
 		mTextViewURL = (EditText)findViewById(R.id.settings_url_base);
 		mCheckBoxRememberTab = (CheckBox)findViewById(R.id.settings_restore_tab);
 		mCheckboxServerDebugOutput = (CheckBox)findViewById(R.id.settings_server_debug_output);
+		mCheckboxShowManualControlInput = (CheckBox)findViewById(R.id.settings_control_manual_input);
 		mTextViewControlTemperatureMinimum = (EditText)findViewById(R.id.settings_control_temperature_minimum);
 		mTextViewControlTemperatureMaximum = (EditText)findViewById(R.id.settings_control_temperature_maximum);
 
@@ -70,6 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
 		mTextViewLocationName.setText(sharedPrefs.getString(Constants.CONST_LOCATION_NAME, getString(R.string.settings_location_name)));
 		mTextViewURL.setText(sharedPrefs.getString(Constants.CONST_URL_BASE, null));
 		mCheckBoxRememberTab.setChecked(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, true));
+		mCheckboxShowManualControlInput.setChecked(sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true));
 		Log.d(TAG, Constants.CONST_CONTROL_TEMPERATURE_MINIMUM);
 		Log.d(TAG, Float.valueOf(SettingsActivity.TEMPERATURE_DEFAULT_MIN).toString());
 		mTextViewControlTemperatureMinimum.setText(
@@ -121,6 +124,7 @@ public class SettingsActivity extends AppCompatActivity {
 		editor.putString(Constants.CONST_LOCATION_NAME, mTextViewLocationName.getText().toString());
 		editor.putBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, mCheckBoxRememberTab.isChecked());
 		editor.putBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, mCheckboxServerDebugOutput.isChecked());
+		editor.putBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, mCheckboxShowManualControlInput.isChecked());
 		editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, Float.valueOf(mTextViewControlTemperatureMinimum.getText().toString()));
 		editor.putFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, Float.valueOf(mTextViewControlTemperatureMaximum.getText().toString()));
 		editor.putBoolean(Constants.CONST_USE_SHARED_SETTINGS, true);
