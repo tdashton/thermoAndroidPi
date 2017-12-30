@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity
 
 	private final String TAG = this.getClass().getSimpleName();
 
+	protected static final int SETTINGS_ACTIVITY_REQUEST = 1;
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		checkForSharedPrefrences();
+		checkForSharedPreferences();
 	}
 
 	@Override
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity
 			getApiNonce();
 		} else if (id == R.id.action_settings) {
 			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, this.SETTINGS_ACTIVITY_REQUEST);
 		}
 		return false;
 	}
@@ -381,12 +383,19 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
-	private void checkForSharedPrefrences() {
+	private void checkForSharedPreferences() {
 		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		if (sharedPrefs.getBoolean(Constants.CONST_USE_SHARED_SETTINGS, false) == false) {
 			Log.v(TAG, "no prefs found, showing the settings activity");
 			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, this.SETTINGS_ACTIVITY_REQUEST);
+		}
+	}
+
+	protected void onActivityResult(int requestCode, int ResultCode, Intent data) {
+		if (requestCode == SETTINGS_ACTIVITY_REQUEST) {
+			this.service = null;
+			onResume();
 		}
 	}
 }
