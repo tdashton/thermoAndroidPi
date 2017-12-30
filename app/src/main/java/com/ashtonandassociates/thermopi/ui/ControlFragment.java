@@ -40,8 +40,6 @@ import com.ashtonandassociates.thermopi.util.HashUtil;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 import com.google.common.collect.Lists;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +99,7 @@ public class ControlFragment extends Fragment
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			Log.v(TAG, String.format("onProgressChanged progress:%d fromUser:%s", progress, Boolean.valueOf(fromUser)).toString());
 			mEditTextTemperature.setText(
-					NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(progress))) + ApiTemperature.CONST_DEGREES_CELSIUS
+					NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(progress)))
 			);
 			this.getNonceSynchronized();
 		}
