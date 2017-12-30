@@ -131,10 +131,12 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(service == null) {
+			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
+		}
 		if(this.mControlFragment.isHidden() == false) {
 			refreshControlValues();
 		}
-		service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		refreshCurrentValues();
 	}
 
@@ -352,10 +354,12 @@ public class MainActivity extends ActionBarActivity
 		}
 	}
 
-	protected void onActivityResult(int requestCode, int ResultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SETTINGS_ACTIVITY_REQUEST) {
-			this.service = null;
-			onResume();
+			if (resultCode == RESULT_OK) {
+				this.service = null;
+				Log.v(TAG, "nulled ApiService, onResume should regenerate it");
+			}
 		}
 	}
 }
