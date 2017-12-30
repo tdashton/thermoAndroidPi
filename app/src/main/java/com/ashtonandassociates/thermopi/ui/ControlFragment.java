@@ -26,6 +26,7 @@ import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
+import com.ashtonandassociates.thermopi.util.HashUtil;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
 import java.security.MessageDigest;
@@ -320,29 +321,15 @@ public class ControlFragment extends Fragment
 	}
 
 	private String getApiHashString(String command, String param) {
-		String retVal = null;
+
 		String sharedSecret = this.manager.getApiSharedSecret();
 		String nonce = this.manager.getApiNonce();
 		if(nonce == null) {
 			return null;
 		}
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
-			//Log.v(TAG, "hashme:" + hashMe);
 
-			byte[] bytes = md.digest(hashMe.getBytes());
-			StringBuilder sb = new StringBuilder(2 * bytes.length);
-			for (byte b : bytes) {
-				sb.append("0123456789abcdef".charAt((b & 0xF0) >> 4));
-				sb.append("0123456789abcdef".charAt((b & 0x0F)));
-			}
-
-			retVal = sb.toString();
-		} catch(NoSuchAlgorithmException nsae) {
-			Log.e(TAG, nsae.toString());
-		}
-		return retVal;
+		String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
+		return HashUtil.getInstance().getMessageDigestHash(hashMe);
 	}
 
 	private int temperatureToPercent(float temperature) {
