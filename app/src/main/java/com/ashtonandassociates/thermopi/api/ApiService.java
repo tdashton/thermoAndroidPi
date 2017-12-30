@@ -17,7 +17,7 @@ import retrofit.http.Path;
 
 public interface ApiService {
 
-	@GET("/control/nonce/")
+	@GET("/control/nonce")
 	void getApiNonce(Callback<NonceResponse> cb);
 
 	@GET("/logs/history/json/{timePeriod}")
@@ -27,10 +27,10 @@ public interface ApiService {
 	void getCurrent(Callback<CurrentResponse> cb);
 
 	@FormUrlEncoded
-	@POST("/control/command/")
+	@POST("/control/command")
 	void sendCommand(@Field("cmd") String command, @Field("param") String param, @Field("signature") String signature, Callback<ControlCommandResponse> cb);
 
-	@GET("/control/read/")
+	@GET("/control/read")
 	void readCommandValue(Callback<ControlReadResponse> cb);
 
 	@GET("/control/logs/")

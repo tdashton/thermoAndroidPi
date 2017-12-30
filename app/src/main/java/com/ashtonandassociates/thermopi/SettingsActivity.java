@@ -94,14 +94,23 @@ public class SettingsActivity extends AppCompatActivity {
 		int id = item.getItemId();
 		Log.v(TAG, "id: " + Integer.toString(id));
 		if(id == android.R.id.home) {
+			setResult(RESULT_CANCELED);
 			finish();
 		} else if (id == R.id.settings_action_save) {
 			Log.v(TAG, "save and finish()");
 			if(this.saveSettings() == true) {
+				setResult(RESULT_OK);
 				finish();
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		setResult(RESULT_CANCELED);
+		finish();
 	}
 
 	private boolean saveSettings() {

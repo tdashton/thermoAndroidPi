@@ -205,7 +205,6 @@ public class MainActivity extends AppCompatActivity
 				break;
 
 			case 2:
-				getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
@@ -392,10 +391,12 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
-	protected void onActivityResult(int requestCode, int ResultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SETTINGS_ACTIVITY_REQUEST) {
-			this.service = null;
-			onResume();
+			if (resultCode == RESULT_OK) {
+				this.service = null;
+				Log.v(TAG, "nulled ApiService, onResume should regenerate it");
+			}
 		}
 	}
 }
