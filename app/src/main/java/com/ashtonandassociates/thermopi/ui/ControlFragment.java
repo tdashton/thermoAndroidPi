@@ -420,12 +420,11 @@ public class ControlFragment extends Fragment
 				stringParam)
 		);
 
-//		((ApiInterface)getActivity()).getApiService().sendCommand(
-//				item.getType(),
-//				Integer.toString(item.getValue()),
-//				this.getApiHashString(item.getType(),
-//				Integer.toString(item.getValue())),
-//				this);
+		((ApiInterface)getActivity()).getApiService().sendCommand(
+				item.getType(),
+				stringParam,
+				this.getApiHashString(item.getType(), stringParam),
+				this);
 	}
 
 	@Override
