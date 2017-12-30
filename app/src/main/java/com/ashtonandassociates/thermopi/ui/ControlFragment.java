@@ -172,6 +172,12 @@ public class ControlFragment extends Fragment
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		((ApiInterface)getActivity()).getApiNonce();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);

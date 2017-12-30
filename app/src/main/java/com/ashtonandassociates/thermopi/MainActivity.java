@@ -198,7 +198,6 @@ public class MainActivity extends ActionBarActivity
 				break;
 
 			case 2:
-				getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
