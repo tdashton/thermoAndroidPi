@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,6 +31,7 @@ import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.lifecycle.MainViewModel;
+import com.ashtonandassociates.thermopi.ui.list.RecentLogAdapter;
 import com.ashtonandassociates.thermopi.ui.list.element.ControlRecentItem;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
@@ -81,7 +81,7 @@ public class ControlFragment extends Fragment
 	protected TextView mTemperatureStatusTextView;
 	protected TextView mControlDebugOutput;
 	protected ListView mListViewControlRecent;
-	protected ArrayAdapter<ControlRecentItem> mListViewRecentAdapter;
+	protected RecentLogAdapter mListViewRecentAdapter;
 	protected Map<String, List> mListRecent;
 	protected MainViewModel mMainViewModel;
 
@@ -294,16 +294,16 @@ public class ControlFragment extends Fragment
 		}
 
 		if (updateUi) {
-			mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+			mListViewRecentAdapter = new RecentLogAdapter(getActivity(), android.R.layout.simple_list_item_1);
 			mListViewControlRecent.setAdapter(mListViewRecentAdapter);
 			mListViewControlRecent.setOnItemClickListener(this);
 			mListViewRecentAdapter.clear();
 			mListViewRecentAdapter.addAll(mListRecent.get(recentLogs.get(0).type));
 			mListViewRecentAdapter.notifyDataSetChanged();
 		}
-		for(RecentLog log : recentLogs) {
-			Log.v(TAG, "onChanged:" + log.type + " / " + log.param);
-		}
+//		for(RecentLog log : recentLogs) {
+//			Log.v(TAG, "onChanged:" + log.type + " / " + log.param);
+//		}
 	}
 
 	@Override
@@ -324,7 +324,7 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 //		Log.v(TAG, "onCheckChanged" + checkedId);
-		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+		mListViewRecentAdapter = new RecentLogAdapter(getActivity(), android.R.layout.simple_list_item_1);
 		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
 		mListViewControlRecent.setOnItemClickListener(this);
 		mListViewRecentAdapter.clear();
