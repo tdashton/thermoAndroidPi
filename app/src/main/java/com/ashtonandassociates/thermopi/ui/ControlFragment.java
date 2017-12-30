@@ -29,9 +29,6 @@ import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.HashUtil;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -83,7 +80,7 @@ public class ControlFragment extends Fragment
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			Log.v(TAG, String.format("onProgressChanged progress:%d fromUser:%s", progress, Boolean.valueOf(fromUser)).toString());
 			mEditTextTemperature.setText(
-					NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(progress))) + ApiTemperature.CONST_DEGREES_CELSIUS
+					NumberUtil.formatTemperature(Double.valueOf(ControlFragment.this.percentToTemperature(progress)))
 			);
 			this.getNonceSynchronized();
 		}
