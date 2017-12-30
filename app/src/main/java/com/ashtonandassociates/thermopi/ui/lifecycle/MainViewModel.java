@@ -27,11 +27,18 @@ public class MainViewModel extends AndroidViewModel
 	}
 
 	public LiveData<List<RecentLog>> getLogs(String type) {
+		return this.getLogs(type, false);
+	}
+
+	public LiveData<List<RecentLog>> getLogs(String type, boolean forceRefresh) {
 		if (this.logsCache == null) {
 			this.logsCache = new HashMap<>();
 		}
 		if (!this.logsCache.containsKey(type)) {
 			this.logsCache.put(type, new MutableLiveData<List<RecentLog>>());
+			forceRefresh = true;
+		}
+		if (forceRefresh == true) {
 			loadLogs(type);
 		}
 		return this.logsCache.get(type);
@@ -62,9 +69,7 @@ public class MainViewModel extends AndroidViewModel
 		}
 
 		protected void onPostExecute(List<RecentLog> result) {
-			MainViewModel.this.logsCache.get(type).setValue(result);
+			MainViewModel.this.logsCache.get(type).postValue(result);
 		}
 	}
 }
-
-

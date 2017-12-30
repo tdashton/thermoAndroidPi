@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity
 			refreshControlValues();
 		}
 		refreshCurrentValues();
-		// @todo move this to a more appropriate place
-		refreshControlLogValues();
 	}
 
 	@Override
@@ -234,6 +232,7 @@ public class MainActivity extends AppCompatActivity
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshCurrentValues();
+			refreshControlLogValues();
 			if(this.mControlFragment.isHidden() == false) {
 				refreshControlValues();
 			}
@@ -302,11 +301,10 @@ public class MainActivity extends AppCompatActivity
 				RecentLog[] daosParams = new RecentLog[daos.size()];
 				daosParams = daos.toArray(daosParams);
 
-				AsyncTask insertTask = new InsertControlLogsTask(MainActivity.this);
+				AsyncTask insertTask = new InsertControlLogsTask(getApplication(), MainActivity.this);
 				insertTask.execute(daosParams);
 
 				mControlHistoryResponseCallback = null;
-				notifyApiListeners(controlLogsResponse);
 			}
 
 			@Override
@@ -359,7 +357,7 @@ public class MainActivity extends AppCompatActivity
 		service.readCommandValue(mControlReadResponseCallback);
 	}
 
-	private void notifyApiListeners(Object responseClass) {
+	public void notifyApiListeners(Object responseClass) {
 		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
 		for(Fragment frag : fragments) {
 			if(frag == null) {

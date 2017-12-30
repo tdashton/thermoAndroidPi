@@ -41,7 +41,9 @@ import com.google.common.collect.Lists;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -81,7 +83,7 @@ public class ControlFragment extends Fragment
 	protected TextView mControlDebugOutput;
 	protected ListView mListViewControlRecent;
 	protected ArrayAdapter<ControlRecentItem> mListViewRecentAdapter;
-	protected List mListRecent;
+	protected Map<String, List> mListRecent;
 	protected MainViewModel mMainViewModel;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -121,6 +123,12 @@ public class ControlFragment extends Fragment
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(ControlLogsResponse response) {
 		Log.i(TAG, "on ControlLogsResponse");
+		this.mMainViewModel
+				.getLogs(ControlFragment.COMMAND_TIME, true)
+				.observe(this, this);
+		this.mMainViewModel
+				.getLogs(ControlFragment.COMMAND_TEMP, true)
+				.observe(this, this);
 	}
 
 	@ApiListener(ControlReadResponse.class)
@@ -200,9 +208,12 @@ public class ControlFragment extends Fragment
 		this.mMinimumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MINIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MIN);
 		this.mMaximumTemperature = sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX);
 		this.mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-		int checked = sharedPrefs.getInt("controlMode", R.id.control_radio_time);
+		this.mListRecent = new HashMap<>();
 		this.mMainViewModel
-				.getLogs(checked == R.id.control_radio_time ? ControlFragment.COMMAND_TIME : ControlFragment.COMMAND_TEMP)
+				.getLogs(ControlFragment.COMMAND_TIME)
+				.observe(this, this);
+		this.mMainViewModel
+				.getLogs(ControlFragment.COMMAND_TEMP)
 				.observe(this, this);
 	}
 
@@ -258,14 +269,33 @@ public class ControlFragment extends Fragment
 
 	@Override
 	public void onChanged(@Nullable List<RecentLog> recentLogs) {
-		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
-		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
-		mListViewControlRecent.setOnItemClickListener(this);
-		mListViewRecentAdapter.clear();
-		mListRecent = Lists.transform(recentLogs, ControlRecentItem.transformFromRecentLog());
-		mListViewRecentAdapter.addAll(mListRecent);
-		mListViewRecentAdapter.notifyDataSetChanged();
+		if (recentLogs.size() == 0) {
+			return;
+		}
+		mListRecent.put(recentLogs.get(0).type, Lists.transform(recentLogs, ControlRecentItem.transformFromRecentLog()));
+		boolean updateUi = false;
+		switch (recentLogs.get(0).type) {
+			case ControlFragment.COMMAND_TIME:
+				if (this.mRadioGroup.getCheckedRadioButtonId() == R.id.control_radio_time) {
+					updateUi = true;
+				}
+				break;
 
+			case ControlFragment.COMMAND_TEMP:
+				if (this.mRadioGroup.getCheckedRadioButtonId() == R.id.control_radio_temperature) {
+					updateUi = true;
+				}
+				break;
+		}
+
+		if (updateUi) {
+			mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+			mListViewControlRecent.setAdapter(mListViewRecentAdapter);
+			mListViewControlRecent.setOnItemClickListener(this);
+			mListViewRecentAdapter.clear();
+			mListViewRecentAdapter.addAll(mListRecent.get(recentLogs.get(0).type));
+			mListViewRecentAdapter.notifyDataSetChanged();
+		}
 		for(RecentLog log : recentLogs) {
 			Log.v(TAG, "onChanged:" + log.type + " / " + log.param);
 		}
@@ -289,19 +319,30 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 //		Log.v(TAG, "onCheckChanged" + checkedId);
+		mListViewRecentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+		mListViewControlRecent.setAdapter(mListViewRecentAdapter);
+		mListViewControlRecent.setOnItemClickListener(this);
+		mListViewRecentAdapter.clear();
+
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
 				mTimeGroup.setVisibility(View.GONE);
 				mTemperatureGroup.setVisibility(View.VISIBLE);
-				mMainViewModel.getLogs(ControlFragment.COMMAND_TEMP).observe(this, this);
+				if (mListRecent.get(ControlFragment.COMMAND_TEMP) != null) {
+					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TEMP));
+				}
 				break;
 
 			case R.id.control_radio_time:
 				mTimeGroup.setVisibility(View.VISIBLE);
 				mTemperatureGroup.setVisibility(View.GONE);
-				mMainViewModel.getLogs(ControlFragment.COMMAND_TIME).observe(this, this);
+				if (mListRecent.get(ControlFragment.COMMAND_TIME) != null) {
+					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TIME));
+				}
 				break;
 		}
+
+		mListViewRecentAdapter.notifyDataSetChanged();
 		SharedPreferences.Editor editor = sharedPrefs.edit();
 		editor.putInt("controlMode", checkedId);
 		editor.commit();

@@ -11,4 +11,6 @@ public interface ApiInterface {
 	void refreshControlValues();
 
 	void refreshControlLogValues();
+
+	void notifyApiListeners(Object responseClass);
 }
