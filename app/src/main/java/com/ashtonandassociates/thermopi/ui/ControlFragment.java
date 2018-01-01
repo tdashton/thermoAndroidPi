@@ -121,7 +121,7 @@ public class ControlFragment extends Fragment
 	@ApiListener(ControlLogsResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(ControlLogsResponse response) {
-		Log.i(TAG, "on ControlLogsResponse");
+		Log.i(TAG, response.getClass().getSimpleName());
 		this.mMainViewModel
 				.getLogs(ControlFragment.COMMAND_TIME, true)
 				.observe(this, this);
@@ -203,6 +203,9 @@ public class ControlFragment extends Fragment
 	@Override
 	public void onResume() {
 		super.onResume();
+		this.toggleManualInput(
+				(this.mRadioGroup.getCheckedRadioButtonId() == R.id.control_radio_time) ? ControlFragment.COMMAND_TIME : ControlFragment.COMMAND_TEMP
+		);
 		((ApiInterface)getActivity()).getApiNonce();
 	}
 
@@ -331,20 +334,14 @@ public class ControlFragment extends Fragment
 
 		switch(checkedId) {
 			case R.id.control_radio_temperature:
-				if (sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true)) {
-					mTimeGroup.setVisibility(View.GONE);
-					mTemperatureGroup.setVisibility(View.VISIBLE);
-				}
+				this.toggleManualInput(ControlFragment.COMMAND_TEMP);
 				if (mListRecent.get(ControlFragment.COMMAND_TEMP) != null) {
 					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TEMP));
 				}
 				break;
 
 			case R.id.control_radio_time:
-				if (sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true)) {
-					mTimeGroup.setVisibility(View.VISIBLE);
-					mTemperatureGroup.setVisibility(View.GONE);
-				}
+				this.toggleManualInput(ControlFragment.COMMAND_TIME);
 				if (mListRecent.get(ControlFragment.COMMAND_TIME) != null) {
 					mListViewRecentAdapter.addAll(mListRecent.get(ControlFragment.COMMAND_TIME));
 				}
@@ -429,6 +426,27 @@ public class ControlFragment extends Fragment
 				stringParam,
 				this.getApiHashString(item.getType(), stringParam),
 				this);
+	}
+
+	public void toggleManualInput(String type) {
+		if (sharedPrefs.getBoolean(Constants.CONST_SHOW_CONTROL_MANUAL_INPUT, true)) {
+			switch (type) {
+				case ControlFragment.COMMAND_TEMP:
+					mTimeGroup.setVisibility(View.GONE);
+					mTemperatureGroup.setVisibility(View.VISIBLE);
+
+					break;
+
+				case ControlFragment.COMMAND_TIME:
+					mTimeGroup.setVisibility(View.VISIBLE);
+					mTemperatureGroup.setVisibility(View.GONE);
+
+					break;
+			}
+		} else {
+			mTimeGroup.setVisibility(View.GONE);
+			mTemperatureGroup.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
