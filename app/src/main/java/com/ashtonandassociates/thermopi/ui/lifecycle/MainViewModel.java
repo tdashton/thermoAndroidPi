@@ -65,7 +65,11 @@ public class MainViewModel extends AndroidViewModel
 			PiDatabase db = Room.databaseBuilder(this.application.getApplicationContext(),
 					PiDatabase.class, "pi-database").build();
 
-			return db.recentLogDao().getAllOfType(types[0]);
+			List<RecentLog> ret = db.recentLogDao().getAllOfType(types[0]);
+
+			db.close();
+
+			return ret;
 		}
 
 		protected void onPostExecute(List<RecentLog> result) {

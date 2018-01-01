@@ -30,6 +30,8 @@ public class InsertControlLogsTask extends AsyncTask<RecentLog, Void, Integer>
 
         db.recentLogDao().insertAll(models);
 
+        db.close();
+
         return 1;
     }
 
