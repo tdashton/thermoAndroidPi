@@ -15,6 +15,15 @@ public interface RecentLogDao
 	@Query("SELECT * FROM recent_log WHERE type = :type order by count desc")
 	List<RecentLog> getAllOfType(String type);
 
+	@Query("SELECT * FROM recent_log")
+	List<RecentLog> getAll();
+
+	@Query("SELECT count(*) FROM recent_log")
+	Double getCount();
+
+	@Query("DELETE FROM recent_log")
+	void removeAll();
+
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAll(RecentLog... recentLogs);
 }
