@@ -3,7 +3,7 @@
 
     <string name="app_name">ThermoPi</string>
     <string name="main_date">Datum</string>
-    <string name="main_set_temperature">Thermostat steueren</string>
+    <string name="main_set_temperature">Thermostat steuern</string>
     <string name="control_set_time">Laufzeit in Minuten einstellen</string>
     <string name="control_set_time_hint">15</string>
     <string name="control_set_temperature">Grad Celcius einstellen</string>
@@ -45,7 +45,7 @@
         name="drawer_menu_items">
         <item>Akutell</item>
         <item>Protokoll</item>
-        <item>Steueren</item>
+        <item>Steuerung</item>
     </string-array>
 
 </resources>
