@@ -63,7 +63,7 @@ public class MainViewModel extends AndroidViewModel
 		@Override
 		protected List<RecentLog> doInBackground(String[] types) {
 			PiDatabase db = Room.databaseBuilder(this.application.getApplicationContext(),
-					PiDatabase.class, "pi-database").build();
+					PiDatabase.class, "pi-database").fallbackToDestructiveMigration().build();
 
 			List<RecentLog> ret = db.recentLogDao().getAllOfType(types[0]);
 

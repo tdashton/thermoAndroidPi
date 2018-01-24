@@ -3,6 +3,7 @@ package com.ashtonandassociates.thermopi.ui;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
@@ -29,6 +30,7 @@ import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.shared.ApiTemperature;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.persistence.HideRecentLogTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.lifecycle.MainViewModel;
 import com.ashtonandassociates.thermopi.ui.list.RecentLogAdapter;
@@ -49,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ControlFragment extends Fragment
-	implements AdapterView.OnItemClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse>, Observer<List<RecentLog>> {
+	implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse>, Observer<List<RecentLog>> {
 
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -82,7 +84,9 @@ public class ControlFragment extends Fragment
 	protected TextView mControlDebugOutput;
 	protected ListView mListViewControlRecent;
 	protected RecentLogAdapter mListViewRecentAdapter;
+	/** Map<String, List<RecentLog> mListRecent; Eigentlich dies... */
 	protected Map<String, List> mListRecent;
+	protected RecentLog mLogToUpdate;
 	protected MainViewModel mMainViewModel;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -300,6 +304,7 @@ public class ControlFragment extends Fragment
 			mListViewRecentAdapter = new RecentLogAdapter(getActivity(), android.R.layout.simple_list_item_1);
 			mListViewControlRecent.setAdapter(mListViewRecentAdapter);
 			mListViewControlRecent.setOnItemClickListener(this);
+			mListViewControlRecent.setOnItemLongClickListener(this);
 			mListViewRecentAdapter.clear();
 			mListViewRecentAdapter.addAll(mListRecent.get(recentLogs.get(0).type));
 			mListViewRecentAdapter.notifyDataSetChanged();
@@ -385,6 +390,34 @@ public class ControlFragment extends Fragment
 		}
 	}
 
+	/** Method to receive click events from the ListView */
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+		String type = (ControlFragment.this.mRadioGroup.getCheckedRadioButtonId() == R.id.control_radio_time ? ControlFragment.COMMAND_TIME : ControlFragment.COMMAND_TEMP);
+		ControlRecentItem clickedRecentLog = (ControlRecentItem)ControlFragment.this.mListRecent.get(type).get(i);
+		mLogToUpdate = new RecentLog(clickedRecentLog);
+		final int postion = i;
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+				.setMessage(getActivity().getString(R.string.control_alert_dialog_missing_value_message))
+				.setCancelable(true)
+				.setNegativeButton("no", null)
+				.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						new HideRecentLogTask(getActivity().getApplication()).execute(ControlFragment.this.mLogToUpdate);
+						ControlFragment.this.mListRecent.get(mLogToUpdate.type).remove(postion);
+						ControlFragment.this.mListViewRecentAdapter.notifyDataSetChanged();
+						dialogInterface.dismiss();
+					}
+				});
+
+		builder.show();
+
+		return true;
+	}
+
+	/** Method to receive click events from the ListView */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //		Log.v(ControlFragment.TAG, view.toString());

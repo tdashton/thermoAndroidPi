@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity
 		if(this.mControlFragment.isHidden() == false) {
 			refreshControlValues();
 		}
+		refreshControlLogValues();
 		refreshCurrentValues();
 	}
 

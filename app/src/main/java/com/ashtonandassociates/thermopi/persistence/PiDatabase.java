@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import com.ashtonandassociates.thermopi.persistence.dao.RecentLogDao;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 
-@Database(entities = {RecentLog.class}, version = 2, exportSchema = false)
+@Database(entities = {RecentLog.class}, version = 3, exportSchema = false)
 public abstract class PiDatabase extends RoomDatabase {
 	public abstract RecentLogDao recentLogDao();
 }

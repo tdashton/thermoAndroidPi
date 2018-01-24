@@ -11,6 +11,9 @@ import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 
 /**
+ * Asynchronous task to insert the control values read from the server into
+ * the database for display.
+ *
  * Created by tashton on 29.12.17.
  */
 public class InsertControlLogsTask extends AsyncTask<RecentLog, Void, Integer>
