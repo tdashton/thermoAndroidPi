@@ -87,6 +87,7 @@ public class ControlFragment extends Fragment
 	/** Map<String, List<RecentLog> mListRecent; Eigentlich dies... */
 	protected Map<String, List> mListRecent;
 	protected RecentLog mLogToUpdate;
+	protected int mLogToUpdatePosition;
 	protected MainViewModel mMainViewModel;
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -396,7 +397,7 @@ public class ControlFragment extends Fragment
 		String type = (ControlFragment.this.mRadioGroup.getCheckedRadioButtonId() == R.id.control_radio_time ? ControlFragment.COMMAND_TIME : ControlFragment.COMMAND_TEMP);
 		ControlRecentItem clickedRecentLog = (ControlRecentItem)ControlFragment.this.mListRecent.get(type).get(i);
 		mLogToUpdate = new RecentLog(clickedRecentLog);
-		final int postion = i;
+		mLogToUpdatePosition = i;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 				.setMessage(getActivity().getString(R.string.control_alert_dialog_missing_value_message))
@@ -406,7 +407,11 @@ public class ControlFragment extends Fragment
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						new HideRecentLogTask(getActivity().getApplication()).execute(ControlFragment.this.mLogToUpdate);
-						ControlFragment.this.mListRecent.get(mLogToUpdate.type).remove(postion);
+						ControlFragment.this.mListRecent.get(mLogToUpdate.type).remove(ControlFragment.this.mLogToUpdatePosition);
+						ControlRecentItem item = ControlFragment.this.mListViewRecentAdapter.getItem(ControlFragment.this.mLogToUpdatePosition);
+						ControlFragment.this.mListViewRecentAdapter.remove(
+								item
+						);
 						ControlFragment.this.mListViewRecentAdapter.notifyDataSetChanged();
 						dialogInterface.dismiss();
 					}

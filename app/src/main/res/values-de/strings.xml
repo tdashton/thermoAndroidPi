@@ -34,7 +34,7 @@
     <string name="control_alert_dialog_server_ok_message">Thermostat aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 
-    <string name="control_alert_dialog_positive">Ja</string>
+    <string name="control_alert_dialog_positive">Verbergen</string>
     <string name="control_alert_dialog_negative">Abbrechen</string>
 
     <string name="settings_shared_secret">Geteiltes Server-Geheimnis</string>

@@ -34,6 +34,9 @@
     <string name="control_alert_dialog_server_ok_message">Updated thermostat value!</string>
     <string name="control_alert_dialog_dismiss">Dismiss</string>
 
+    <string name="control_alert_dialog_positive">Hide</string>
+    <string name="control_alert_dialog_negative">Cancel</string>
+
     <string name="settings_shared_secret">Server shared secret</string>
     <string name="settings_location_name">Location name</string>
     <string name="settings_location_url_base">Server base URL</string>
