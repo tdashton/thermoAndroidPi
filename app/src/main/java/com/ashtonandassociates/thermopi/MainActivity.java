@@ -27,7 +27,7 @@ import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
-import com.ashtonandassociates.thermopi.persistence.InsertControlLogsTask;
+import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
 				RecentLog[] daosParams = new RecentLog[daos.size()];
 				daosParams = daos.toArray(daosParams);
 
-				AsyncTask insertTask = new InsertControlLogsTask(getApplication(), MainActivity.this);
+				AsyncTask insertTask = new InsertRecentLogsTask(getApplication(), MainActivity.this);
 				insertTask.execute(daosParams);
 
 				mControlHistoryResponseCallback = null;

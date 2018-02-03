@@ -2,7 +2,6 @@ package com.ashtonandassociates.thermopi.persistence;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -16,15 +15,15 @@ import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
  *
  * Created by tashton on 29.12.17.
  */
-public class InsertControlLogsTask extends AsyncTask<RecentLog, Void, Integer>
+public class InsertRecentLogsTask extends AsyncTask<RecentLog, Void, Integer>
 {
-    static String TAG = InsertControlLogsTask.class.getSimpleName();
+    static String TAG = InsertRecentLogsTask.class.getSimpleName();
 
     protected Application application;
     protected ApiInterface apiInterface;
 
 
-    public InsertControlLogsTask(Application application, ApiInterface apiInterface) {
+    public InsertRecentLogsTask(Application application, ApiInterface apiInterface) {
         this.application = application;
         this.apiInterface = apiInterface;
     }
