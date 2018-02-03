@@ -33,4 +33,7 @@ public interface RecentLogDao
 
 	@Query("UPDATE recent_log set hide = 1 WHERE type = :type AND param = :param")
 	void hide(String type, String param);
+
+	@Query("UPDATE recent_log set hide = 0")
+	void showAll();
 }

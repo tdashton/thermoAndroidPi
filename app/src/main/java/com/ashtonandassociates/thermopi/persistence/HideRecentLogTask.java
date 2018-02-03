@@ -35,8 +35,8 @@ public class HideRecentLogTask extends AsyncTask<RecentLog, Void, Integer> {
 		return 1;
 	}
 
-	@Override
-	protected void onPostExecute(Integer integer) {
+//	@Override
+//	protected void onPostExecute(Integer integer) {
 //		this.recentLogAdapter.notifyDataSetChanged();
-	}
+//	}
 }

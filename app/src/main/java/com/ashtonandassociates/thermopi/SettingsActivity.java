@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.ashtonandassociates.thermopi.persistence.ShowAllRecentLogsTask;
 import com.ashtonandassociates.thermopi.util.AssetManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 
@@ -28,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
 	CheckBox mCheckBoxRememberTab;
 	CheckBox mCheckboxServerDebugOutput;
 	CheckBox mCheckboxShowManualControlInput;
+	Button mButtonUnhideControlValues;
 
 	public SharedPreferences sharedPrefs;
 
@@ -82,6 +86,16 @@ public class SettingsActivity extends AppCompatActivity {
 				Float.valueOf(sharedPrefs.getFloat(Constants.CONST_CONTROL_TEMPERATURE_MAXIMUM, SettingsActivity.TEMPERATURE_DEFAULT_MAX)).toString()
 		);
 		mCheckboxServerDebugOutput.setChecked(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false));
+
+		mButtonUnhideControlValues = findViewById(R.id.settings_unhide_control_values);
+		mButtonUnhideControlValues.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				ShowAllRecentLogsTask task = new ShowAllRecentLogsTask(getApplication());
+				task.execute();
+			}
+		});
+
 	}
 
 	@Override

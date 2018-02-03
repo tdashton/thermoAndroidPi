@@ -400,10 +400,10 @@ public class ControlFragment extends Fragment
 		mLogToUpdatePosition = i;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-				.setMessage(getActivity().getString(R.string.control_alert_dialog_missing_value_message))
+				.setMessage(getActivity().getString(R.string.control_hide_alert_dialog_title))
 				.setCancelable(true)
-				.setNegativeButton("no", null)
-				.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+				.setNegativeButton(getResources().getString(R.string.control_hide_alert_dialog_negative), null)
+				.setPositiveButton(getResources().getString(R.string.control_hide_alert_dialog_positive), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						new HideRecentLogTask(getActivity().getApplication()).execute(ControlFragment.this.mLogToUpdate);

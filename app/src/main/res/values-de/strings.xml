@@ -34,8 +34,9 @@
     <string name="control_alert_dialog_server_ok_message">Thermostat aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 
-    <string name="control_alert_dialog_positive">Verbergen</string>
-    <string name="control_alert_dialog_negative">Abbrechen</string>
+    <string name="control_hide_alert_dialog_title">Eintrag verbergen</string>
+    <string name="control_hide_alert_dialog_positive">Verbergen</string>
+    <string name="control_hide_alert_dialog_negative">Abbrechen</string>
 
     <string name="settings_shared_secret">Geteiltes Server-Geheimnis</string>
     <string name="settings_location_name">Standort Name</string>
@@ -43,6 +44,7 @@
     <string name="settings_restore_tab">Zuletzt gewählter Tab merken</string>
     <string name="settings_server_debug_output">Server debugging Ausgabe einblenden</string>
     <string name="settings_control_manual_input">Erlaube händische Engabe beim Steueren</string>
+    <string name="settings_hide_reset_all_hidden">Versteckte Steuerungswerte erneuert einblenden</string>
 
     <string-array
         name="drawer_menu_items">

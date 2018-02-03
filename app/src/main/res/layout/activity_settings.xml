@@ -97,6 +97,12 @@
                   android:layout_height="wrap_content"
                   android:text="@string/settings_server_debug_output"/>
 
+        <Button
+            android:id="@+id/settings_unhide_control_values"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_hide_reset_all_hidden"/>
+
     </LinearLayout>
     <TextView
         android:id="@+id/settings_version"

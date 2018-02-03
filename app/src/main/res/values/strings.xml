@@ -34,8 +34,9 @@
     <string name="control_alert_dialog_server_ok_message">Updated thermostat value!</string>
     <string name="control_alert_dialog_dismiss">Dismiss</string>
 
-    <string name="control_alert_dialog_positive">Hide</string>
-    <string name="control_alert_dialog_negative">Cancel</string>
+    <string name="control_hide_alert_dialog_title">Hide from list</string>
+    <string name="control_hide_alert_dialog_positive">Hide</string>
+    <string name="control_hide_alert_dialog_negative">Cancel</string>
 
     <string name="settings_shared_secret">Server shared secret</string>
     <string name="settings_location_name">Location name</string>
@@ -43,6 +44,7 @@
     <string name="settings_restore_tab">Remember last selected tab</string>
     <string name="settings_server_debug_output">Enable server debugging output</string>
     <string name="settings_control_manual_input">Show manual input for control</string>
+    <string name="settings_hide_reset_all_hidden">Show hidden control values</string>
     <string name="label_settings_control_temperature_minimum">Min</string>
     <string name="label_settings_control_temperature_maximum">Max</string>
 
