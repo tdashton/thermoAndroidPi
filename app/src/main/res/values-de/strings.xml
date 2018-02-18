@@ -47,7 +47,7 @@
     <string name="settings_hide_reset_all_hidden">Versteckte Steuerungswerte erneuert einblenden</string>
 
     <string name="drawer_menu_item_current">Aktuell</string>
-    <string name="drawer_menu_item_control">Protokoll</string>
-    <string name="drawer_menu_item_log">Steuerung</string>
+    <string name="drawer_menu_item_control">Steuerung</string>
+    <string name="drawer_menu_item_log">Protokoll</string>
 
 </resources>
