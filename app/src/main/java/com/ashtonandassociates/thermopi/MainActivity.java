@@ -1,14 +1,15 @@
 package com.ashtonandassociates.thermopi;
 
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.widget.DrawerLayout;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import android.view.Menu;
@@ -21,11 +22,14 @@ import android.widget.ListView;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
+import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.messaging.RegistrationIntentService;
+import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
+import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
@@ -33,19 +37,23 @@ import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
 	implements ApiInterface {
 
 	private final String TAG = this.getClass().getSimpleName();
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+	protected static final int SETTINGS_ACTIVITY_REQUEST = 1;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -61,6 +69,7 @@ public class MainActivity extends ActionBarActivity
 	private ApiService service;
 	private Callback<NonceResponse> mNonceResponseCallback;
 	private Callback<CurrentResponse> mCurrentResponseCallback;
+	private Callback<ControlLogsResponse> mControlHistoryResponseCallback;
 	private Callback<ControlReadResponse> mControlReadResponseCallback;
 
 	@Override
@@ -74,21 +83,21 @@ public class MainActivity extends ActionBarActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-		mMainFragment = getFragmentManager().findFragmentByTag("mMainFragment");
+		mMainFragment = getSupportFragmentManager().findFragmentByTag("mMainFragment");
 		if(mMainFragment == null) {
 			mMainFragment = new OverviewFragment();
 		}
-		mGraphFragment = getFragmentManager().findFragmentByTag("mGraphFragment");
+		mGraphFragment = getSupportFragmentManager().findFragmentByTag("mGraphFragment");
 		if(mGraphFragment == null) {
 			mGraphFragment = new GraphFragment();
 		}
-		mControlFragment = getFragmentManager().findFragmentByTag("mControlFragment");
+		mControlFragment = getSupportFragmentManager().findFragmentByTag("mControlFragment");
 		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
 		}
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
+			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
 					.add(R.id.content_frame, mControlFragment, "mControlFragment")
@@ -127,7 +136,7 @@ public class MainActivity extends ActionBarActivity
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		checkForSharedPrefrences();
+		checkForSharedPreferences();
 		if(checkPlayServices()) {
 			// Start IntentService to register this application with GCM.
 			Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -138,10 +147,13 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(service == null) {
+			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
+		}
 		if(this.mControlFragment.isHidden() == false) {
 			refreshControlValues();
 		}
-		service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
+		refreshControlLogValues();
 		refreshCurrentValues();
 	}
 
@@ -182,7 +194,7 @@ public class MainActivity extends ActionBarActivity
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 
 		switch(position) {
 			case 0:
@@ -203,7 +215,6 @@ public class MainActivity extends ActionBarActivity
 				break;
 
 			case 2:
-				getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
@@ -232,6 +243,7 @@ public class MainActivity extends ActionBarActivity
 			return true;
 		} else if (id == R.id.action_refresh) {
 			refreshCurrentValues();
+			refreshControlLogValues();
 			if(this.mControlFragment.isHidden() == false) {
 				refreshControlValues();
 			}
@@ -242,7 +254,7 @@ public class MainActivity extends ActionBarActivity
 			getApiNonce();
 		} else if (id == R.id.action_settings) {
 			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, this.SETTINGS_ACTIVITY_REQUEST);
 		}
 		return false;
 	}
@@ -286,6 +298,36 @@ public class MainActivity extends ActionBarActivity
 	}
 
 	@Override
+	public void refreshControlLogValues()
+	{
+		if(mControlHistoryResponseCallback != null) {
+			return;
+		}
+		mControlHistoryResponseCallback = new Callback<ControlLogsResponse>() {
+			@Override
+			public void success(ControlLogsResponse controlLogsResponse, Response response) {
+				List<ControlLogsResponse.Result> result = controlLogsResponse.result;
+				List<RecentLog> daos = Lists.transform(result, RecentLog.transform());
+
+				RecentLog[] daosParams = new RecentLog[daos.size()];
+				daosParams = daos.toArray(daosParams);
+
+				AsyncTask insertTask = new InsertRecentLogsTask(getApplication(), MainActivity.this);
+				insertTask.execute(daosParams);
+
+				mControlHistoryResponseCallback = null;
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				Log.d(TAG, error.toString());
+				mControlHistoryResponseCallback = null;
+			}
+		};
+		service.readControlLogs(this.mControlHistoryResponseCallback);
+	}
+
+	@Override
 	public void refreshCurrentValues() {
 		if(mCurrentResponseCallback != null) {
 			return;
@@ -326,7 +368,7 @@ public class MainActivity extends ActionBarActivity
 		service.readCommandValue(mControlReadResponseCallback);
 	}
 
-	private void notifyApiListeners(Object responseClass) {
+	public void notifyApiListeners(Object responseClass) {
 		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
 		for(Fragment frag : fragments) {
 			if(frag == null) {
@@ -350,12 +392,21 @@ public class MainActivity extends ActionBarActivity
 		}
 	}
 
-	private void checkForSharedPrefrences() {
+	private void checkForSharedPreferences() {
 		sharedPrefs = getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		if (sharedPrefs.getBoolean(Constants.CONST_USE_SHARED_SETTINGS, false) == false) {
 			Log.v(TAG, "no prefs found, showing the settings activity");
 			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, this.SETTINGS_ACTIVITY_REQUEST);
+		}
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == SETTINGS_ACTIVITY_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				this.service = null;
+				Log.v(TAG, "nulled ApiService, onResume should regenerate it");
+			}
 		}
 	}
 

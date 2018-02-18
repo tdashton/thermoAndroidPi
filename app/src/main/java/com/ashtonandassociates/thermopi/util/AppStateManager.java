@@ -31,5 +31,4 @@ public class AppStateManager {
 	public void setApiSharedSecret(String param) {
 		this.apiSharedSecret = param;
 	}
-
 }

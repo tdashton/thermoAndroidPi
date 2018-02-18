@@ -3,7 +3,7 @@ package com.ashtonandassociates.thermopi.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +14,13 @@ import android.widget.TextView;
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
-import com.ashtonandassociates.thermopi.interfaces.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 public class OverviewFragment extends Fragment {
 
@@ -42,7 +45,10 @@ public class OverviewFragment extends Fragment {
 			View container = getActivity().getLayoutInflater().inflate(R.layout.fragment_overview_sensor, null);
 			TextView mSensorLabel = (TextView) container.findViewById(R.id.sensor_x_label);
 			TextView mSensorValue = (TextView) container.findViewById(R.id.sensor_x_value);
-			mSensorDate.setText(currentResponse.data.get(i).datetime);
+			DateFormat df = DateFormat.getDateTimeInstance();
+			mSensorDate.setText(
+					df.format(new Date(currentResponse.data.get(i).datetime))
+			);
 			mSensorLabel.setText(currentResponse.data.get(i).description);
 			Double temp = Double.valueOf(currentResponse.data.get(i).value);
 			mSensorValue.setText(NumberUtil.formatTemperature(temp));

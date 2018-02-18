@@ -1,6 +1,4 @@
-package com.ashtonandassociates.thermopi.interfaces;
-
-import com.ashtonandassociates.thermopi.api.ApiService;
+package com.ashtonandassociates.thermopi.api;
 
 public interface ApiInterface {
 
@@ -12,4 +10,7 @@ public interface ApiInterface {
 
 	void refreshControlValues();
 
+	void refreshControlLogValues();
+
+	void notifyApiListeners(Object responseClass);
 }

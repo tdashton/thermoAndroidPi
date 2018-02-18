@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.ashtonandassociates.thermopi.OverviewFragment$PlaceholderFragment">
+    tools:context="com.ashtonandassociates.thermopi.ui.ControlFragment" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,6 +46,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
             android:orientation="horizontal">
             <RadioGroup
                 android:id="@+id/control_radio_group"
@@ -70,13 +71,20 @@
                     />
             </RadioGroup>
         </LinearLayout>
+        <ListView
+            android:id="@+id/control_list_recent_control_values"
+            android:visibility="visible"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
         <LinearLayout
             android:id="@+id/control_temperature_layout_group"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
             <TextView
                 android:id="@+id/control_temperature_degrees"
                 android:text="@string/control_set_temperature"
@@ -115,13 +123,13 @@
                 android:text="@string/control_set_temperature_detail"
                 /-->
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/control_time_layout_group"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
             <TextView
                 android:id="@+id/control_label_time"
                 android:text="@string/control_set_time"

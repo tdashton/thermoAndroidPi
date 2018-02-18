@@ -3,7 +3,7 @@
 
     <string name="app_name">ThermoPi</string>
     <string name="main_date">Datum</string>
-    <string name="main_set_temperature">Thermostat steueren</string>
+    <string name="main_set_temperature">Thermostat steuern</string>
     <string name="control_set_time">Laufzeit in Minuten einstellen</string>
     <string name="control_set_time_hint">15</string>
     <string name="control_set_temperature">Grad Celcius einstellen</string>
@@ -11,6 +11,8 @@
     <string name="control_set_temperature_detail">* aktuelle eingestellte Temperatur</string>
     <string name="control_set_temperature_current">Aktuelle Temperatur: %s</string>
     <string name="control_set_temperature_status">Aktueller Zustand: %s</string>
+    <string name="control_list_cmd_time">Laufzeit %s Minuten</string>
+    <string name="control_list_cmd_temp">%s einstellen</string>
     <string name="control_radio_time">Zeit</string>
     <string name="control_radio_temperature">Temperatur</string>
     <string name="control_submit">einstellen</string>
@@ -32,17 +34,23 @@
     <string name="control_alert_dialog_server_ok_message">Thermostat aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 
+    <string name="control_hide_alert_dialog_title">Eintrag verbergen</string>
+    <string name="control_hide_alert_dialog_positive">Verbergen</string>
+    <string name="control_hide_alert_dialog_negative">Abbrechen</string>
+
     <string name="settings_shared_secret">Geteiltes Server-Geheimnis</string>
     <string name="settings_location_name">Standort Name</string>
     <string name="settings_location_url_base">Basis Server-URL</string>
     <string name="settings_restore_tab">Zuletzt gewählter Tab merken</string>
     <string name="settings_server_debug_output">Server debugging Ausgabe einblenden</string>
+    <string name="settings_control_manual_input">Erlaube händische Engabe beim Steueren</string>
+    <string name="settings_hide_reset_all_hidden">Versteckte Steuerungswerte erneuert einblenden</string>
 
     <string-array
         name="drawer_menu_items">
         <item>Akutell</item>
         <item>Protokoll</item>
-        <item>Steueren</item>
+        <item>Steuerung</item>
     </string-array>
 
 </resources>

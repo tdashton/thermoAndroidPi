@@ -11,6 +11,8 @@
     <string name="control_set_temperature_detail">* is the currently set temperature</string>
     <string name="control_set_temperature_current">Current temperature: %s</string>
     <string name="control_set_temperature_status">Current status: %s</string>
+    <string name="control_list_cmd_time">Heat for %s minutes</string>
+    <string name="control_list_cmd_temp">Set temperature to %s</string>
     <string name="control_radio_time">Time</string>
     <string name="control_radio_temperature">Temperature</string>
     <string name="control_submit">Set</string>
@@ -32,6 +34,10 @@
     <string name="control_alert_dialog_server_ok_message">Updated thermostat value!</string>
     <string name="control_alert_dialog_dismiss">Dismiss</string>
 
+    <string name="control_hide_alert_dialog_title">Hide from list</string>
+    <string name="control_hide_alert_dialog_positive">Hide</string>
+    <string name="control_hide_alert_dialog_negative">Cancel</string>
+
     <string name="settings_shared_secret">Server shared secret</string>
     <string name="settings_gcm_token">GCM Token</string>
     <string name="settings_gcm_token.available">available</string>
@@ -40,6 +46,8 @@
     <string name="settings_location_url_base">Server base URL</string>
     <string name="settings_restore_tab">Remember last selected tab</string>
     <string name="settings_server_debug_output">Enable server debugging output</string>
+    <string name="settings_control_manual_input">Show manual input for control</string>
+    <string name="settings_hide_reset_all_hidden">Show hidden control values</string>
     <string name="label_settings_control_temperature_minimum">Min</string>
     <string name="label_settings_control_temperature_maximum">Max</string>
 
@@ -47,7 +55,7 @@
         name="drawer_menu_items">
         <item>Current</item>
         <item>Log</item>
-        <item>Set</item>
+        <item>Control</item>
     </string-array>
 
 </resources>
