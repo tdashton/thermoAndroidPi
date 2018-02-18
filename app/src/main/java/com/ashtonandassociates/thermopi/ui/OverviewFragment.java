@@ -19,6 +19,8 @@ import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 import com.ashtonandassociates.thermopi.util.NumberUtil;
 
+import java.util.Date;
+
 public class OverviewFragment extends Fragment {
 
 	public static final String TAG = OverviewFragment.class.getSimpleName();
@@ -42,7 +44,9 @@ public class OverviewFragment extends Fragment {
 			View container = getActivity().getLayoutInflater().inflate(R.layout.fragment_overview_sensor, null);
 			TextView mSensorLabel = (TextView) container.findViewById(R.id.sensor_x_label);
 			TextView mSensorValue = (TextView) container.findViewById(R.id.sensor_x_value);
-			mSensorDate.setText(currentResponse.data.get(i).datetime);
+			mSensorDate.setText(
+				new Date(currentResponse.data.get(i).datetime).toString()
+			);
 			mSensorLabel.setText(currentResponse.data.get(i).description);
 			Double temp = Double.valueOf(currentResponse.data.get(i).value);
 			mSensorValue.setText(NumberUtil.formatTemperature(temp));
