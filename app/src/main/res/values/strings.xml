@@ -49,7 +49,7 @@
     <string name="label_settings_control_temperature_maximum">Max</string>
 
     <string name="drawer_menu_item_current">Current</string>
-    <string name="drawer_menu_item_control">Control</string>
     <string name="drawer_menu_item_log">Log</string>
+    <string name="drawer_menu_item_control">Control</string>
 
 </resources>
