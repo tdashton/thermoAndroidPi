@@ -24,6 +24,10 @@ public class AppStateManager {
 		return this.apiNonce;
 	}
 
+	public boolean hasApiNonce() {
+		return this.apiNonce != null;
+	}
+
 	public String getApiSharedSecret() {
 		return this.apiSharedSecret;
 	}

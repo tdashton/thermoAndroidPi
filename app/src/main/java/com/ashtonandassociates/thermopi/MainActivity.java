@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity
 				break;
 
 			case 2:
+				this.getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
@@ -265,6 +266,9 @@ public class MainActivity extends AppCompatActivity
 
 	@Override
 	public void getApiNonce() {
+		if (AppStateManager.getInstance().hasApiNonce()) {
+			return;
+		}
 		if(mNonceResponseCallback != null) {
 			return;
 		}
