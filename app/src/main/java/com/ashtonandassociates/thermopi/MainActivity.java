@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
 		FragmentManager fragmentManager = getSupportFragmentManager();
+		this.mDrawerList.setItemChecked(position, true);
 
 		switch(position) {
 			case 0:
