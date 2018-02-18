@@ -32,12 +32,15 @@ import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
+import com.ashtonandassociates.thermopi.ui.drawer.DrawerAdapter;
+import com.ashtonandassociates.thermopi.ui.drawer.DrawerItem;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -55,8 +58,6 @@ public class MainActivity extends AppCompatActivity
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	public SharedPreferences sharedPrefs;
-
-	private String[] mDrawerItems;
 
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
@@ -106,13 +107,17 @@ public class MainActivity extends AppCompatActivity
 		Log.v(TAG, mGraphFragment.toString());
 		Log.v(TAG, mControlFragment.toString());
 
-		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
+		ArrayList<DrawerItem> mDrawerItems = new ArrayList<>();
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_current), R.drawable.ic_announcement_white_24dp));
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_log), R.drawable.ic_assessment_white_24dp));
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_control), R.drawable.ic_settings_power_white_24dp));
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
+		mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_item, mDrawerItems));
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		};
 
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerLayout.addDrawerListener(mDrawerToggle);
 
 		checkForSharedPreferences();
 	}
