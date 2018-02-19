@@ -507,8 +507,8 @@ public class ControlFragment extends Fragment
 	public void failure(RetrofitError error) {
 		Log.e(TAG, error.toString());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_message))
-				.setMessage(getActivity().getString(R.string.control_alert_dialog_server_error_message))
+				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_title))
+				.setMessage(String.format(getActivity().getString(R.string.control_alert_dialog_server_error_message), error.getKind()))
 				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
 	}
