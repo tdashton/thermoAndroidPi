@@ -53,6 +53,7 @@
         <item>Current</item>
         <item>Log</item>
         <item>Control</item>
+        <item>Debug</item>
     </string-array>
 
 </resources>

@@ -51,6 +51,7 @@
         <item>Akutell</item>
         <item>Protokoll</item>
         <item>Steuerung</item>
+        <item>Debug</item>
     </string-array>
 
 </resources>

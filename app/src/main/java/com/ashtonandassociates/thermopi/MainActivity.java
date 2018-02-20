@@ -30,6 +30,7 @@ import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
+import com.ashtonandassociates.thermopi.ui.DebugFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
@@ -38,6 +39,7 @@ import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit.Callback;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
 	private Fragment mControlFragment;
+	private Fragment mDebugFragment;
 
 	private ApiService service;
 	private Callback<NonceResponse> mNonceResponseCallback;
@@ -91,22 +94,31 @@ public class MainActivity extends AppCompatActivity
 		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
 		}
+		mDebugFragment = getSupportFragmentManager().findFragmentByTag("mDebugFragment");
+		if(mDebugFragment == null) {
+			mDebugFragment = new DebugFragment();
+		}
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
 					.add(R.id.content_frame, mControlFragment, "mControlFragment")
+					.add(R.id.content_frame, mDebugFragment, "mDebugFragment")
 					.hide(mGraphFragment)
 					.hide(mControlFragment)
+					.hide(mDebugFragment)
 					.commit();
 		}
 
-		Log.v(TAG, mMainFragment.toString());
-		Log.v(TAG, mGraphFragment.toString());
-		Log.v(TAG, mControlFragment.toString());
+//		Log.v(TAG, mMainFragment.toString());
+//		Log.v(TAG, mGraphFragment.toString());
+//		Log.v(TAG, mControlFragment.toString());
 
 		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
+		if (!sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
+			mDrawerItems = Arrays.copyOf(mDrawerItems, mDrawerItems.length - 1);
+		}
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -194,6 +206,7 @@ public class MainActivity extends AppCompatActivity
 						.show(mMainFragment)
 						.hide(mGraphFragment)
 						.hide(mControlFragment)
+						.hide(mDebugFragment)
 						.commit();
 				break;
 
@@ -202,6 +215,7 @@ public class MainActivity extends AppCompatActivity
 						.hide(mMainFragment)
 						.show(mGraphFragment)
 						.hide(mControlFragment)
+						.hide(mDebugFragment)
 						.commit();
 				break;
 
@@ -210,6 +224,16 @@ public class MainActivity extends AppCompatActivity
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
 						.show(mControlFragment)
+						.hide(mDebugFragment)
+						.commit();
+				break;
+
+			case 3:
+				fragmentManager.beginTransaction()
+						.hide(mMainFragment)
+						.hide(mGraphFragment)
+						.hide(mControlFragment)
+						.show(mDebugFragment)
 						.commit();
 				break;
 		}
@@ -360,7 +384,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void notifyApiListeners(Object responseClass) {
-		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
+		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment, mDebugFragment};
 		for(Fragment frag : fragments) {
 			if(frag == null) {
 				return;
