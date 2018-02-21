@@ -10,7 +10,7 @@ public class CurrentResponse {
 
 	public class Current {
 		public String value;
-		public String datetime;
+		public long datetime;
 		@SerializedName("fk_sensor")
 		public String fkSensor;
 		public String description;

@@ -73,7 +73,6 @@ public class ControlFragment extends Fragment
 	protected RadioGroup mRadioGroup;
 	protected View mTemperatureGroup;
 	protected View mTimeGroup;
-	protected View mControlDebugOutputGroup;
 	protected Button mTimeButton;
 	protected Button mTemperatureButton;
 	protected SeekBar mSeekBarTemperature;
@@ -81,7 +80,6 @@ public class ControlFragment extends Fragment
 	protected EditText mEditTextTime;
 	protected TextView mTemperatureCurrentTextView;
 	protected TextView mTemperatureStatusTextView;
-	protected TextView mControlDebugOutput;
 	protected ListView mListViewControlRecent;
 	protected RecentLogAdapter mListViewRecentAdapter;
 	/** Map<String, List<RecentLog> mListRecent; Eigentlich dies... */
@@ -166,14 +164,7 @@ public class ControlFragment extends Fragment
 		if(mInitialized == false) {
 			return;
 		}
-		if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
-			mControlDebugOutput.setText("source: " + controlReadResponse.source + "\n");
-		}
 		for(ControlReadResponse.Result result : controlReadResponse.result) {
-			if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
-				mControlDebugOutput.append(result.type.toString() + ": " + result.param.toString() + "\n");
-			}
-
 			if(result.type.equals(COMMAND_STATUS)) {
 				String status = getString(R.string.control_status_running_false);
 				if("1".equals(result.param)) {
@@ -244,8 +235,6 @@ public class ControlFragment extends Fragment
 		mTemperatureStatusTextView = (TextView)view.findViewById(R.id.control_set_temperature_status);
 		mTemperatureStatusTextView.setText(String.format(getString(R.string.control_set_temperature_status), "-"));
 
-		mControlDebugOutput = (TextView)view.findViewById(R.id.control_debug_textview_debug);
-
 		mTemperatureButton = (Button)view.findViewById(R.id.control_button_temperature);
 		mTemperatureButton.setOnClickListener(this);
 		mTimeButton = (Button)view.findViewById(R.id.control_button_time);
@@ -265,11 +254,6 @@ public class ControlFragment extends Fragment
 
 		int checked = sharedPrefs.getInt("controlMode", R.id.control_radio_time);
 		mRadioGroup.check(checked);
-
-		mControlDebugOutputGroup = view.findViewById(R.id.control_debug_layout_group);
-		if(sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
-			mControlDebugOutputGroup.setVisibility(View.VISIBLE);
-		}
 
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		TextView locationName = (TextView) view.findViewById(R.id.control_location_name);
@@ -320,7 +304,6 @@ public class ControlFragment extends Fragment
 		if(hidden == false) {
 			((ApiInterface)getActivity()).refreshControlValues();
 			((ApiInterface)getActivity()).refreshCurrentValues();
-			mControlDebugOutputGroup.setVisibility((sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false) ? View.VISIBLE : View.INVISIBLE));
 		}
 	}
 
@@ -507,8 +490,8 @@ public class ControlFragment extends Fragment
 	public void failure(RetrofitError error) {
 		Log.e(TAG, error.toString());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_message))
-				.setMessage(getActivity().getString(R.string.control_alert_dialog_server_error_message))
+				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_title))
+				.setMessage(String.format(getActivity().getString(R.string.control_alert_dialog_server_error_message), error.getKind()))
 				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
 	}

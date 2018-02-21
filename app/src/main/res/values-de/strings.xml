@@ -30,7 +30,7 @@
 
     <string name="control_alert_dialog_missing_value_message">Bitte einen Wert eingeben!</string>
     <string name="control_alert_dialog_server_error_title">Serverfehler!</string>
-    <string name="control_alert_dialog_server_error_message">Server returned an error!</string>
+    <string name="control_alert_dialog_server_error_message">Fehler bei der Datenübertragung: %s</string>
     <string name="control_alert_dialog_server_ok_message">Thermostat aktualisiert!</string>
     <string name="control_alert_dialog_dismiss">Verstanden</string>
 
@@ -49,5 +49,5 @@
     <string name="drawer_menu_item_current">Aktuell</string>
     <string name="drawer_menu_item_control">Steuerung</string>
     <string name="drawer_menu_item_log">Protokoll</string>
-
+    <string name="drawer_menu_item_debug">Debug</string>
 </resources>
