@@ -36,6 +36,7 @@
             android:id="@+id/settings_url_base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textUri"
             android:hint="..."/>
 
         <TextView
@@ -65,6 +66,7 @@
                 android:id="@+id/settings_control_temperature_minimum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:hint="..."/>
 
             <TextView
@@ -78,6 +80,7 @@
                 android:id="@+id/settings_control_temperature_maximum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:hint="..."/>
 
         </LinearLayout>
