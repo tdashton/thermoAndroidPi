@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.util.Constants;
@@ -50,6 +51,13 @@ public class DebugFragment extends Fragment {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		if(hidden == false) {
+			((ApiInterface)getActivity()).refreshControlValues();
+		}
 	}
 
 	@ApiListener(ControlReadResponse.class)
