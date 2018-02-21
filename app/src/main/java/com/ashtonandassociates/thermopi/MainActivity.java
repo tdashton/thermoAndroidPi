@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_log), R.drawable.ic_assessment_white_24dp));
 		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_control), R.drawable.ic_settings_power_white_24dp));
 		if (sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
-			mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_control), R.drawable.ic_bug_report_white_24dp));
+			mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_debug), R.drawable.ic_bug_report_white_24dp));
 		}
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
