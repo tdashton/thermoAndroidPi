@@ -60,6 +60,12 @@ public class DebugFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("isHidden", isHidden());
+	}
+
 	@ApiListener(ControlReadResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiControlReadResponse(ControlReadResponse controlReadResponse) {

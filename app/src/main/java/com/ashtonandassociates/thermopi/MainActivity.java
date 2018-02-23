@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity
 			active = 1;
 		} else if (mControlFragment.isVisible()) {
 			active = 2;
+		} else if (mDebugFragment.isVisible()) {
+			active = 3;
 		}
 		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
 		editor.commit();
