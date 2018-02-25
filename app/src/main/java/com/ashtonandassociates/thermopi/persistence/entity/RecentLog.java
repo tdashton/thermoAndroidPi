@@ -27,13 +27,11 @@ public class RecentLog
 
 	public Boolean hide = false;
 
-	public RecentLog() {};
+	public RecentLog() {}
 
 	public RecentLog(ControlRecentItem input) {
 		this.type = input.type;
 		this.param = input.value;
-//		this.count = i
-
 	}
 
 	public static Function<ControlRecentItem, RecentLog> transformFromControlRecentLog() {

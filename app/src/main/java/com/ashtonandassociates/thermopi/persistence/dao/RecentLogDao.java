@@ -13,6 +13,9 @@ import java.util.List;
 @Dao
 public interface RecentLogDao
 {
+	@Query("SELECT * FROM recent_log WHERE type = :type AND param = :param")
+	RecentLog getLogOfType(String type, String param);
+
 	@Query("SELECT * FROM recent_log WHERE type = :type AND hide = 0 ORDER BY count DESC")
 	List<RecentLog> getAllOfType(String type);
 
@@ -24,6 +27,9 @@ public interface RecentLogDao
 
 	@Query("DELETE FROM recent_log")
 	void removeAll();
+
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	void insert(RecentLog recentLog);
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAll(RecentLog... recentLogs);

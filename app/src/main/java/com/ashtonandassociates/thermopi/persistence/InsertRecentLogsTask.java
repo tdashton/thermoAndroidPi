@@ -33,7 +33,15 @@ public class InsertRecentLogsTask extends AsyncTask<RecentLog, Void, Integer>
         PiDatabase db = Room.databaseBuilder(this.application,
                 PiDatabase.class, "pi-database").fallbackToDestructiveMigration().build();
 
-        db.recentLogDao().insertAll(models);
+        for (RecentLog model : models) {
+            RecentLog dbModel = db.recentLogDao().getLogOfType(model.type, model.param);
+            if (dbModel != null) {
+                model.hide = dbModel.hide;
+                db.recentLogDao().update(model);
+            } else {
+                db.recentLogDao().insert(model);
+            }
+        }
         Log.d(TAG, String.format("Count RecentLog %s", db.recentLogDao().getCount()));
 
         db.close();
