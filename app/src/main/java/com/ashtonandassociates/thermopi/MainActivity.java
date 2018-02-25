@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity
 		if(service == null) {
 			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		}
-		if(this.mControlFragment.isHidden() == false) {
+		if(this.mControlFragment.isHidden() == false || this.mDebugFragment.isHidden() == false) {
 			refreshControlValues();
 		}
 		refreshControlLogValues();
