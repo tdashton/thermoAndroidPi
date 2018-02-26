@@ -484,6 +484,7 @@ public class ControlFragment extends Fragment
 		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
 		builder.show();
 		this.manager.setApiNonce(null);
+		((ApiInterface)getActivity()).getApiNonce();
 	}
 
 	@Override
