@@ -46,11 +46,8 @@
     <string name="settings_control_manual_input">Erlaube händische Engabe beim Steueren</string>
     <string name="settings_hide_reset_all_hidden">Versteckte Steuerungswerte erneuert einblenden</string>
 
-    <string-array
-        name="drawer_menu_items">
-        <item>Akutell</item>
-        <item>Protokoll</item>
-        <item>Steuerung</item>
-    </string-array>
-
+    <string name="drawer_menu_item_current">Aktuell</string>
+    <string name="drawer_menu_item_control">Steuerung</string>
+    <string name="drawer_menu_item_log">Protokoll</string>
+    <string name="drawer_menu_item_debug">Debug</string>
 </resources>

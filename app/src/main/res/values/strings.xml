@@ -48,11 +48,8 @@
     <string name="label_settings_control_temperature_minimum">Min</string>
     <string name="label_settings_control_temperature_maximum">Max</string>
 
-    <string-array
-        name="drawer_menu_items">
-        <item>Current</item>
-        <item>Log</item>
-        <item>Control</item>
-    </string-array>
-
+    <string name="drawer_menu_item_current">Current</string>
+    <string name="drawer_menu_item_log">Log</string>
+    <string name="drawer_menu_item_control">Control</string>
+    <string name="drawer_menu_item_debug">Debug</string>
 </resources>

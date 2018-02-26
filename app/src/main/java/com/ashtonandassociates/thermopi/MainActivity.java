@@ -30,14 +30,18 @@ import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
+import com.ashtonandassociates.thermopi.ui.DebugFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
+import com.ashtonandassociates.thermopi.ui.drawer.DrawerAdapter;
+import com.ashtonandassociates.thermopi.ui.drawer.DrawerItem;
 import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.common.collect.Lists;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -56,11 +60,10 @@ public class MainActivity extends AppCompatActivity
 	private ActionBarDrawerToggle mDrawerToggle;
 	public SharedPreferences sharedPrefs;
 
-	private String[] mDrawerItems;
-
 	private Fragment mMainFragment;
 	private Fragment mGraphFragment;
 	private Fragment mControlFragment;
+	private Fragment mDebugFragment;
 
 	private ApiService service;
 	private Callback<NonceResponse> mNonceResponseCallback;
@@ -91,28 +94,41 @@ public class MainActivity extends AppCompatActivity
 		if(mControlFragment == null) {
 			mControlFragment = new ControlFragment();
 		}
+		mDebugFragment = getSupportFragmentManager().findFragmentByTag("mDebugFragment");
+		if(mDebugFragment == null) {
+			mDebugFragment = new DebugFragment();
+		}
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mMainFragment, "mMainFragment")
 					.add(R.id.content_frame, mGraphFragment, "mGraphFragment")
 					.add(R.id.content_frame, mControlFragment, "mControlFragment")
+					.add(R.id.content_frame, mDebugFragment, "mDebugFragment")
 					.hide(mGraphFragment)
 					.hide(mControlFragment)
+					.hide(mDebugFragment)
 					.commit();
 		}
 
-		Log.v(TAG, mMainFragment.toString());
-		Log.v(TAG, mGraphFragment.toString());
-		Log.v(TAG, mControlFragment.toString());
+//		Log.v(TAG, mMainFragment.toString());
+//		Log.v(TAG, mGraphFragment.toString());
+//		Log.v(TAG, mControlFragment.toString());
 
-		mDrawerItems = getResources().getStringArray(R.array.drawer_menu_items);
+		ArrayList<DrawerItem> mDrawerItems = new ArrayList<>();
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_current), R.drawable.ic_announcement_white_24dp));
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_log), R.drawable.ic_assessment_white_24dp));
+		mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_control), R.drawable.ic_settings_power_white_24dp));
+		if (sharedPrefs.getBoolean(Constants.CONST_SERVER_DEBUG_OUTPUT, false)) {
+			mDrawerItems.add(new DrawerItem(getString(R.string.drawer_menu_item_debug), R.drawable.ic_bug_report_white_24dp));
+		}
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerItems));
+		mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_item, mDrawerItems));
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.app_name) {
 
 			/** Called when a drawer has settled in a completely open state. */
@@ -130,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		};
 
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerLayout.addDrawerListener(mDrawerToggle);
 
 		checkForSharedPreferences();
 	}
@@ -141,7 +157,7 @@ public class MainActivity extends AppCompatActivity
 		if(service == null) {
 			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		}
-		if(this.mControlFragment.isHidden() == false) {
+		if(this.mControlFragment.isHidden() == false || this.mDebugFragment.isHidden() == false) {
 			refreshControlValues();
 		}
 		refreshControlLogValues();
@@ -166,6 +182,8 @@ public class MainActivity extends AppCompatActivity
 			active = 1;
 		} else if (mControlFragment.isVisible()) {
 			active = 2;
+		} else if (mDebugFragment.isVisible()) {
+			active = 3;
 		}
 		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
 		editor.commit();
@@ -186,6 +204,7 @@ public class MainActivity extends AppCompatActivity
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on position
 		FragmentManager fragmentManager = getSupportFragmentManager();
+		this.mDrawerList.setItemChecked(position, true);
 
 		switch(position) {
 			case 0:
@@ -194,6 +213,7 @@ public class MainActivity extends AppCompatActivity
 						.show(mMainFragment)
 						.hide(mGraphFragment)
 						.hide(mControlFragment)
+						.hide(mDebugFragment)
 						.commit();
 				break;
 
@@ -202,6 +222,7 @@ public class MainActivity extends AppCompatActivity
 						.hide(mMainFragment)
 						.show(mGraphFragment)
 						.hide(mControlFragment)
+						.hide(mDebugFragment)
 						.commit();
 				break;
 
@@ -210,6 +231,16 @@ public class MainActivity extends AppCompatActivity
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
 						.show(mControlFragment)
+						.hide(mDebugFragment)
+						.commit();
+				break;
+
+			case 3:
+				fragmentManager.beginTransaction()
+						.hide(mMainFragment)
+						.hide(mGraphFragment)
+						.hide(mControlFragment)
+						.show(mDebugFragment)
 						.commit();
 				break;
 		}
@@ -360,7 +391,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void notifyApiListeners(Object responseClass) {
-		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment};
+		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment, mDebugFragment};
 		for(Fragment frag : fragments) {
 			if(frag == null) {
 				return;
