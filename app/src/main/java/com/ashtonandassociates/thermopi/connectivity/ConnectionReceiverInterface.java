@@ -1,4 +1,4 @@
-package com.ashtonandassociates.thermopi.receiver;
+package com.ashtonandassociates.thermopi.connectivity;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,34 +1,30 @@
-package com.ashtonandassociates.thermopi.receiver;
+package com.ashtonandassociates.thermopi.connectivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by tdashton on 28.02.18.
  */
-public class BroadcastReceiverService {
+public class BroadcastReceiverManager {
 
-    public static String TAG = BroadcastReceiverService.class.getSimpleName();
+    public static String TAG = BroadcastReceiverManager.class.getSimpleName();
 
-    protected static BroadcastReceiverService receiver;
+    protected static BroadcastReceiverManager receiver;
 
     protected List<ConnectionReceiverInterface> receivers;
 
-    public static BroadcastReceiverService getInstance() {
-        if (BroadcastReceiverService.receiver == null) {
-            BroadcastReceiverService.receiver = new BroadcastReceiverService();
+    public static BroadcastReceiverManager getInstance() {
+        if (BroadcastReceiverManager.receiver == null) {
+            BroadcastReceiverManager.receiver = new BroadcastReceiverManager();
         }
-        return BroadcastReceiverService.receiver;
+        return BroadcastReceiverManager.receiver;
     }
 
-    protected BroadcastReceiverService() {
+    protected BroadcastReceiverManager() {
         this.receivers = new ArrayList<>();
     }
 
