@@ -21,7 +21,7 @@
             android:label="@string/title_activity_settings">
         </activity>
         <receiver
-            android:name="com.ashtonandassociates.thermopi.receiver.ConnectionReceiver"
+            android:name="com.ashtonandassociates.thermopi.connectivity.ConnectionReceiver"
             android:enabled="true" >
             <intent-filter>
                 <!-- Intent filters for broadcast receiver -->

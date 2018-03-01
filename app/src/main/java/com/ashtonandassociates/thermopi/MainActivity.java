@@ -31,8 +31,8 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
-import com.ashtonandassociates.thermopi.receiver.BroadcastReceiverService;
-import com.ashtonandassociates.thermopi.receiver.ConnectionReceiverInterface;
+import com.ashtonandassociates.thermopi.connectivity.BroadcastReceiverManager;
+import com.ashtonandassociates.thermopi.connectivity.ConnectionReceiverInterface;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
 import com.ashtonandassociates.thermopi.ui.OverviewFragment;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 			int lastFragment = sharedPrefs.getInt(Constants.CONST_LAST_FRAGMENT, 0);
 			this.selectItem(lastFragment);
 		}
-		BroadcastReceiverService.getInstance().addReceiver(this);
+		BroadcastReceiverManager.getInstance().addReceiver(this);
 	}
 
 	@Override
