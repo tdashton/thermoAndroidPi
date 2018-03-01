@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity
 
 	protected static final int SETTINGS_ACTIVITY_REQUEST = 1;
 
+	protected static final int FRAGMENT_MAIN_INDEX = 0;
+	protected static final int FRAGMENT_GRAPH_INDEX = 1;
+	protected static final int FRAGMENT_CONTROL_INDEX = 2;
+	protected static final int FRAGMENT_DEBUG_INDEX = 3;
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -177,13 +182,13 @@ public class MainActivity extends AppCompatActivity
 	protected void onStop() {
 		super.onStop();
 		SharedPreferences.Editor editor = sharedPrefs.edit();
-		int active = 0;
+		int active = MainActivity.FRAGMENT_MAIN_INDEX;
 		if(mGraphFragment.isVisible()) {
-			active = 1;
+			active = MainActivity.FRAGMENT_GRAPH_INDEX;
 		} else if (mControlFragment.isVisible()) {
-			active = 2;
+			active = MainActivity.FRAGMENT_CONTROL_INDEX;
 		} else if (mDebugFragment.isVisible()) {
-			active = 3;
+			active = MainActivity.FRAGMENT_DEBUG_INDEX;
 		}
 		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
 		editor.commit();
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity
 		this.mDrawerList.setItemChecked(position, true);
 
 		switch(position) {
-			case 0:
+			case MainActivity.FRAGMENT_MAIN_INDEX:
 			default:
 				fragmentManager.beginTransaction()
 						.show(mMainFragment)
@@ -217,7 +222,7 @@ public class MainActivity extends AppCompatActivity
 						.commit();
 				break;
 
-			case 1:
+			case MainActivity.FRAGMENT_GRAPH_INDEX:
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.show(mGraphFragment)
@@ -226,7 +231,7 @@ public class MainActivity extends AppCompatActivity
 						.commit();
 				break;
 
-			case 2:
+			case MainActivity.FRAGMENT_CONTROL_INDEX:
 				this.getApiNonce();
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
@@ -236,7 +241,7 @@ public class MainActivity extends AppCompatActivity
 						.commit();
 				break;
 
-			case 3:
+			case MainActivity.FRAGMENT_DEBUG_INDEX:
 				fragmentManager.beginTransaction()
 						.hide(mMainFragment)
 						.hide(mGraphFragment)
