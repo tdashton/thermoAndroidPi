@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
 		editor.commit();
+		BroadcastReceiverManager.getInstance().removeReceiver(this);
 	}
 
 	@Override

@@ -34,6 +34,12 @@ public class BroadcastReceiverManager {
         }
     }
 
+    public void removeReceiver(ConnectionReceiverInterface receiver) {
+        if (this.receivers.contains(receiver)) {
+            this.receivers.remove(receiver);
+        }
+    }
+
     public void notifyReceivers(Context context, Intent intent) {
         for (ConnectionReceiverInterface receiver : this.receivers) {
             receiver.notificationReceived(context, intent);
