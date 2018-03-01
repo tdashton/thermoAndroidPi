@@ -1,5 +1,7 @@
 package com.ashtonandassociates.thermopi;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -29,6 +31,8 @@ import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
 import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
+import com.ashtonandassociates.thermopi.receiver.BroadcastReceiverService;
+import com.ashtonandassociates.thermopi.receiver.ConnectionReceiverInterface;
 import com.ashtonandassociates.thermopi.ui.ControlFragment;
 import com.ashtonandassociates.thermopi.ui.DebugFragment;
 import com.ashtonandassociates.thermopi.ui.GraphFragment;
@@ -49,7 +53,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
-	implements ApiInterface {
+	implements ApiInterface, ConnectionReceiverInterface {
 
 	private final String TAG = this.getClass().getSimpleName();
 
@@ -151,9 +155,7 @@ public class MainActivity extends AppCompatActivity
 		checkForSharedPreferences();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void doApiRefresh() {
 		if(service == null) {
 			service = ServiceGenerator.createService(ApiService.class, sharedPrefs);
 		}
@@ -165,12 +167,19 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		this.doApiRefresh();
+	}
+
+	@Override
 	protected void onStart() {
 		super.onStart();
 		if(sharedPrefs.getBoolean(Constants.CONST_REMEMBER_LAST_FRAGMENT, false)) {
 			int lastFragment = sharedPrefs.getInt(Constants.CONST_LAST_FRAGMENT, 0);
 			this.selectItem(lastFragment);
 		}
+		BroadcastReceiverService.getInstance().addReceiver(this);
 	}
 
 	@Override
@@ -187,6 +196,21 @@ public class MainActivity extends AppCompatActivity
 		}
 		editor.putInt(Constants.CONST_LAST_FRAGMENT, active);
 		editor.commit();
+	}
+
+	@Override
+	public void notificationReceived(Context context, Intent intent) {
+		if (intent.getAction() == ConnectivityManager.CONNECTIVITY_ACTION) {
+			ConnectivityManager connectivityManager =
+					(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo =
+					connectivityManager.getActiveNetworkInfo();
+
+			if (networkInfo != null && networkInfo.isConnected()) {
+				Log.d(TAG, "doingApiRefresh");
+				this.doApiRefresh();
+			}
+		}
 	}
 
 	protected class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -324,8 +348,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
-	public void refreshControlLogValues()
-	{
+	public void refreshControlLogValues() {
 		if(mControlHistoryResponseCallback != null) {
 			return;
 		}
@@ -375,7 +398,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void refreshControlValues() {
-		if(mControlReadResponseCallback!= null) {
+		if(mControlReadResponseCallback != null) {
 			return;
 		}
 		mControlReadResponseCallback = new Callback<ControlReadResponse>() {
