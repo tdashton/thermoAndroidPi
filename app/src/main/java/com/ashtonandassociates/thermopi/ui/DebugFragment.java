@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiListenerInterface;
+import com.ashtonandassociates.thermopi.api.ApiListenerService;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.util.Constants;
@@ -22,7 +24,7 @@ import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
  * Created by theKernel on 20.02.2018.
  */
 
-public class DebugFragment extends Fragment {
+public class DebugFragment extends Fragment implements ApiListenerInterface {
 
 	public static final String TAG = DebugFragment.class.getSimpleName();
 
@@ -37,6 +39,7 @@ public class DebugFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Nullable
@@ -51,6 +54,12 @@ public class DebugFragment extends Fragment {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		ApiListenerService.getInstance().unregisterListener(this);
 	}
 
 	@Override

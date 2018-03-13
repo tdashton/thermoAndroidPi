@@ -6,8 +6,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.api.ApiListenerService;
 import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
+
+import retrofit.client.Response;
 
 /**
  * Asynchronous task to insert the control values read from the server into
@@ -51,6 +54,6 @@ public class InsertRecentLogsTask extends AsyncTask<RecentLog, Void, Integer>
 
     @Override
     protected void onPostExecute(Integer integer) {
-        this.apiInterface.notifyApiListeners(new ControlLogsResponse());
+        ApiListenerService.getInstance().notifyApiListeners(new ControlLogsResponse());
     }
 }

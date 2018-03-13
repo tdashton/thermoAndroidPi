@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
 import com.ashtonandassociates.thermopi.SettingsActivity;
+import com.ashtonandassociates.thermopi.api.ApiListenerInterface;
+import com.ashtonandassociates.thermopi.api.ApiListenerService;
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
 import com.ashtonandassociates.thermopi.api.response.ControlCommandResponse;
 import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
@@ -51,7 +53,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ControlFragment extends Fragment
-	implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, Callback<ControlCommandResponse>, Observer<List<RecentLog>> {
+	implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener, ApiListenerInterface, Observer<List<RecentLog>> {
 
 	private static final String TAG = ControlFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -87,6 +89,24 @@ public class ControlFragment extends Fragment
 	protected RecentLog mLogToUpdate;
 	protected int mLogToUpdatePosition;
 	protected MainViewModel mMainViewModel;
+
+	protected Callback<ControlCommandResponse> mCallbackControlCommand = new Callback<ControlCommandResponse>() {
+		@Override
+		public void success(ControlCommandResponse response, Response response2) {
+			Log.d(TAG, response.toString());
+			ApiListenerService.getInstance().notifyApiListeners(response);
+		}
+
+		@Override
+		public void failure(RetrofitError error) {
+			Log.e(TAG, error.toString());
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+					.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_title))
+					.setMessage(String.format(getActivity().getString(R.string.control_alert_dialog_server_error_message), error.getKind()))
+					.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
+			builder.show();
+		}
+	};
 
 	protected SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
@@ -178,6 +198,24 @@ public class ControlFragment extends Fragment
 		}
 	}
 
+	@ApiListener(ControlCommandResponse.class)
+	@SuppressWarnings("unused")
+	public void onApiServiceResponse(ControlCommandResponse commandResponse) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		if(commandResponse.error != null) {
+			builder.setMessage(commandResponse.error.text);
+		} else {
+			builder.setMessage(getActivity().getString(R.string.control_alert_dialog_server_ok_message) + "\n" + commandResponse.result);
+			mEditTextTime.setText(null);
+			((ApiInterface)getActivity()).refreshControlValues();
+		}
+		ControlFragment.this.manager.setApiNonce(null);
+		((ApiInterface)getActivity()).getApiNonce();
+
+		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
+		builder.show();
+	}
+
 	@ApiListener(CurrentResponse.class)
 	@SuppressWarnings("unused")
 	public void onApiServiceResponse(CurrentResponse currentResponse) {
@@ -219,6 +257,7 @@ public class ControlFragment extends Fragment
 		this.mMainViewModel
 				.getLogs(ControlFragment.COMMAND_TEMP)
 				.observe(this, this);
+		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Override
@@ -262,6 +301,12 @@ public class ControlFragment extends Fragment
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		ApiListenerService.getInstance().unregisterListener(this);
 	}
 
 	@Override
@@ -349,6 +394,7 @@ public class ControlFragment extends Fragment
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 				.setMessage(getActivity().getString(R.string.control_alert_dialog_missing_value_message))
 				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
+
 		switch(id) {
 			case R.id.control_button_temperature:
 				Log.i(TAG, "temperature button");
@@ -359,7 +405,7 @@ public class ControlFragment extends Fragment
 				Double tempDouble = temp.getTemperatureDouble(
 						ApiTemperature.CONST_API_SCALE);
 				String tempString = Integer.toString(tempDouble.intValue());
-				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this);
+				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TEMP, tempString, this.getApiHashString(COMMAND_TEMP, tempString), this.mCallbackControlCommand);
 				break;
 			case R.id.control_button_time:
 				Log.i(TAG, "time button");
@@ -369,7 +415,7 @@ public class ControlFragment extends Fragment
 				}
 				Integer inputMinutes = Integer.parseInt(mEditTextTime.getText().toString());
 				Integer minutes = inputMinutes * 60;
-				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this);
+				((ApiInterface)getActivity()).getApiService().sendCommand(COMMAND_TIME, minutes.toString(), this.getApiHashString(COMMAND_TIME, minutes.toString()), this.mCallbackControlCommand);
 				break;
 		}
 	}
@@ -446,7 +492,7 @@ public class ControlFragment extends Fragment
 				item.getType(),
 				stringParam,
 				this.getApiHashString(item.getType(), stringParam),
-				this);
+				this.mCallbackControlCommand);
 	}
 
 	public void toggleManualInput(String type) {
@@ -468,33 +514,6 @@ public class ControlFragment extends Fragment
 			mTimeGroup.setVisibility(View.GONE);
 			mTemperatureGroup.setVisibility(View.GONE);
 		}
-	}
-
-	@Override
-	public void success(ControlCommandResponse response, Response response2) {
-		Log.d(TAG, response.toString());
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		if(response.error != null) {
-			builder.setMessage(response.error.text);
-		} else {
-			builder.setMessage(getActivity().getString(R.string.control_alert_dialog_server_ok_message) + "\n" + response.result);
-			mEditTextTime.setText(null);
-			((ApiInterface)getActivity()).refreshControlValues();
-		}
-		builder.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
-		builder.show();
-		this.manager.setApiNonce(null);
-		((ApiInterface)getActivity()).getApiNonce();
-	}
-
-	@Override
-	public void failure(RetrofitError error) {
-		Log.e(TAG, error.toString());
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-				.setTitle(getActivity().getString(R.string.control_alert_dialog_server_error_title))
-				.setMessage(String.format(getActivity().getString(R.string.control_alert_dialog_server_error_message), error.getKind()))
-				.setNeutralButton(getActivity().getString(R.string.control_alert_dialog_dismiss), null);
-		builder.show();
 	}
 
 	private String getApiHashString(String command, String param) {
