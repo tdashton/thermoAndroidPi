@@ -257,7 +257,6 @@ public class ControlFragment extends Fragment
 		this.mMainViewModel
 				.getLogs(ControlFragment.COMMAND_TEMP)
 				.observe(this, this);
-		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Override
@@ -301,6 +300,12 @@ public class ControlFragment extends Fragment
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Override
