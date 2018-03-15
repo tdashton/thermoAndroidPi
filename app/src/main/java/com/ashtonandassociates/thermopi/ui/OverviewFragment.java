@@ -61,12 +61,6 @@ public class OverviewFragment extends Fragment implements ApiListenerInterface {
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		ApiListenerService.getInstance().registerListener(this);
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_overview, null);
 		visibilitySaver.restoreVisibilityState(getFragmentManager(), this, savedInstanceState);
@@ -81,6 +75,12 @@ public class OverviewFragment extends Fragment implements ApiListenerInterface {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Override

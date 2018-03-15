@@ -39,7 +39,6 @@ public class DebugFragment extends Fragment implements ApiListenerInterface {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
-		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Nullable
@@ -54,6 +53,12 @@ public class DebugFragment extends Fragment implements ApiListenerInterface {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		ApiListenerService.getInstance().registerListener(this);
 	}
 
 	@Override
