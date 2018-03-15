@@ -1,5 +1,6 @@
 package com.ashtonandassociates.thermopi.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,13 +13,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.connectivity.BroadcastReceiverManager;
+import com.ashtonandassociates.thermopi.connectivity.ConnectionReceiver;
+import com.ashtonandassociates.thermopi.connectivity.ConnectionReceiverInterface;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.ashtonandassociates.thermopi.util.FragmentVisibilitySaver;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class GraphFragment extends Fragment {
+public class GraphFragment extends Fragment implements ConnectionReceiverInterface {
 
 	private static final String TAG = GraphFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -47,6 +51,18 @@ public class GraphFragment extends Fragment {
 		return view;
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		BroadcastReceiverManager.getInstance().addReceiver(this, ConnectionReceiver.CONNECTION_ACTIVITY_IS_CONNECTED);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		BroadcastReceiverManager.getInstance().removeReceiver(this);
+	}
+
 	public void loadUrl() {
 		SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Constants.CONST_SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 		String locationName = null;
@@ -71,5 +87,10 @@ public class GraphFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("isHidden", isHidden());
+	}
+
+	@Override
+	public void notificationReceived(Context context, Intent intent) {
+		this.loadUrl();
 	}
 }

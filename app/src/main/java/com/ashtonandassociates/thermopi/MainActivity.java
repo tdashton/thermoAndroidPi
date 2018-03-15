@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
@@ -29,6 +28,7 @@ import com.ashtonandassociates.thermopi.api.response.ControlReadResponse;
 import com.ashtonandassociates.thermopi.api.response.NonceResponse;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
+import com.ashtonandassociates.thermopi.connectivity.ConnectionReceiver;
 import com.ashtonandassociates.thermopi.persistence.InsertRecentLogsTask;
 import com.ashtonandassociates.thermopi.persistence.entity.RecentLog;
 import com.ashtonandassociates.thermopi.connectivity.BroadcastReceiverManager;
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
 			int lastFragment = sharedPrefs.getInt(Constants.CONST_LAST_FRAGMENT, 0);
 			this.selectItem(lastFragment);
 		}
-		BroadcastReceiverManager.getInstance().addReceiver(this);
+		BroadcastReceiverManager.getInstance().addReceiver(this, ConnectionReceiver.CONNECTION_ACTIVITY_IS_CONNECTED);
 	}
 
 	@Override
