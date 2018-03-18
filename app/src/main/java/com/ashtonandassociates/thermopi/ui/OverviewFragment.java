@@ -3,6 +3,7 @@ package com.ashtonandassociates.thermopi.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashtonandassociates.thermopi.R;
+import com.ashtonandassociates.thermopi.api.ApiListenerInterface;
+import com.ashtonandassociates.thermopi.api.ApiListenerService;
 import com.ashtonandassociates.thermopi.api.response.CurrentResponse;
 import com.ashtonandassociates.thermopi.api.annotation.*;
 import com.ashtonandassociates.thermopi.api.ApiInterface;
@@ -22,7 +25,7 @@ import com.ashtonandassociates.thermopi.util.NumberUtil;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class OverviewFragment extends Fragment {
+public class OverviewFragment extends Fragment implements ApiListenerInterface {
 
 	public static final String TAG = OverviewFragment.class.getSimpleName();
 	private final FragmentVisibilitySaver visibilitySaver = new FragmentVisibilitySaver();
@@ -72,6 +75,18 @@ public class OverviewFragment extends Fragment {
 		mInitialized = true;
 
 		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		ApiListenerService.getInstance().registerListener(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		ApiListenerService.getInstance().unregisterListener(this);
 	}
 
 	@Override

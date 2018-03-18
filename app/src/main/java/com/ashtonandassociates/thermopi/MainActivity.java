@@ -18,10 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.ashtonandassociates.thermopi.api.annotation.ApiListener;
+import com.ashtonandassociates.thermopi.api.ApiListenerService;
 import com.ashtonandassociates.thermopi.api.ApiService;
 import com.ashtonandassociates.thermopi.api.ServiceGenerator;
 import com.ashtonandassociates.thermopi.api.response.ControlLogsResponse;
@@ -43,8 +42,6 @@ import com.ashtonandassociates.thermopi.util.AppStateManager;
 import com.ashtonandassociates.thermopi.util.Constants;
 import com.google.common.collect.Lists;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -361,6 +358,7 @@ public class MainActivity extends AppCompatActivity
 		mControlHistoryResponseCallback = new Callback<ControlLogsResponse>() {
 			@Override
 			public void success(ControlLogsResponse controlLogsResponse, Response response) {
+				ApiListenerService.getInstance().notifyApiListeners(controlLogsResponse);
 				List<ControlLogsResponse.Result> result = controlLogsResponse.result;
 				List<RecentLog> daos = Lists.transform(result, RecentLog.transform());
 
@@ -390,7 +388,7 @@ public class MainActivity extends AppCompatActivity
 		mCurrentResponseCallback = new Callback<CurrentResponse>() {
 			@Override
 			public void success(CurrentResponse currentResponse, Response response) {
-				notifyApiListeners(currentResponse);
+				ApiListenerService.getInstance().notifyApiListeners(currentResponse);
 				mCurrentResponseCallback = null;
 			}
 
@@ -410,7 +408,7 @@ public class MainActivity extends AppCompatActivity
 		mControlReadResponseCallback = new Callback<ControlReadResponse>() {
 			@Override
 			public void success(ControlReadResponse controlReadResponse, Response response) {
-				notifyApiListeners(controlReadResponse);
+				ApiListenerService.getInstance().notifyApiListeners(controlReadResponse);
 				mControlReadResponseCallback = null;
 			}
 
@@ -421,30 +419,6 @@ public class MainActivity extends AppCompatActivity
 			}
 		};
 		service.readCommandValue(mControlReadResponseCallback);
-	}
-
-	public void notifyApiListeners(Object responseClass) {
-		Fragment[] fragments = {mMainFragment, mControlFragment, mGraphFragment, mDebugFragment};
-		for(Fragment frag : fragments) {
-			if(frag == null) {
-				return;
-			}
-			Class theClass = frag.getClass();
-			try	{
-				for(Method met : theClass.getMethods()){
-					if(met.isAnnotationPresent(ApiListener.class)) {
-						Class annotationResponseClass = met.getAnnotation(ApiListener.class).value();
-						if(annotationResponseClass == responseClass.getClass()) {
-							met.invoke(frag, responseClass);
-						}
-					}
-				}
-			} catch(IllegalAccessException iae) {
-				Log.e(TAG, iae.toString());
-			} catch(InvocationTargetException ite) {
-				Log.e(TAG, "ite " + ite.toString());
-			}
-		}
 	}
 
 	private void checkForSharedPreferences() {
