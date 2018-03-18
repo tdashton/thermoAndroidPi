@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ public class BroadcastReceiverManager {
     protected static BroadcastReceiverManager receiver;
 
     protected List<ConnectionReceiverInterface> receivers;
+    protected HashMap<ConnectionReceiverInterface, Integer> receiversActionMasks;
 
     public static BroadcastReceiverManager getInstance() {
         if (BroadcastReceiverManager.receiver == null) {
@@ -26,23 +28,29 @@ public class BroadcastReceiverManager {
 
     protected BroadcastReceiverManager() {
         this.receivers = new ArrayList<>();
+        this.receiversActionMasks = new HashMap<>();
     }
 
-    public void addReceiver(ConnectionReceiverInterface receiver) {
+    public void addReceiver(ConnectionReceiverInterface receiver, Integer actionMask) {
         if (!this.receivers.contains(receiver)) {
             this.receivers.add(receiver);
+            this.receiversActionMasks.put(receiver, actionMask);
         }
     }
 
     public void removeReceiver(ConnectionReceiverInterface receiver) {
         if (this.receivers.contains(receiver)) {
             this.receivers.remove(receiver);
+            this.receiversActionMasks.remove(receiver);
         }
     }
 
-    public void notifyReceivers(Context context, Intent intent) {
+    public void notifyReceivers(Context context, Intent intent, Integer action) {
         for (ConnectionReceiverInterface receiver : this.receivers) {
-            receiver.notificationReceived(context, intent);
+            int mask = this.receiversActionMasks.get(receiver).intValue();
+            if ((mask & action) == action) {
+                receiver.notificationReceived(context, intent);
+            }
         }
     }
 }
