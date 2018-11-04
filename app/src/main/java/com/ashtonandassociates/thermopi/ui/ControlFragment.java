@@ -529,8 +529,8 @@ public class ControlFragment extends Fragment
 			return null;
 		}
 
-		String hashMe = command.concat(param.concat(sharedSecret.concat(nonce)));
-		return HashUtil.getInstance().getMessageDigestHash(hashMe);
+		String hashMe = command.concat(param.concat(nonce));
+		return HashUtil.getInstance().hmacSha1(hashMe, sharedSecret);
 	}
 
 	private int temperatureToPercent(float temperature) {
